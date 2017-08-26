@@ -1,9 +1,11 @@
 
-use rusqlite::Connection;
 
 
 use clap::{ArgMatches};
 use std::path::Path;
+
+use db;
+
 
 #[derive(Debug)]
 struct Person {
@@ -13,65 +15,6 @@ struct Person {
 }
 
 
-
-#[derive(Debug)]
-struct Provider {
-    id: i32,
-    name: String,
-}
-
-
-
-#[derive(Debug)]
-struct Job {
-    id: i32,
-    name: String,
-    shell: String,
-}
-
-#[derive(Debug)]
-struct Variable_ID {
-    id: i32,
-    name: String
-}
-
-#[derive(Debug)]
-struct Variable_Value {
-    id: i32,
-    value: String
-}
-
-
-#[derive(Debug)]
-struct Variable_Pair {
-    id: i32,
-    variable_id: i32,
-    value: String
-}
-
-
-#[derive(Debug)]
-struct JobRequireVariable_ID {
-    id: i32,
-    variable_id: i32,
-}
-
-
-
-#[derive(Debug)]
-struct JobRequireVariable_Pair {
-    id: i32,
-    variable_pair: i32,
-}
-
-
-
-#[derive(Debug)]
-struct JobProvide {
-    id: i32,
-    provider: i32,
-    job: i32,
-}
 
 
 pub fn listy(direcory: &str) {
@@ -86,8 +29,14 @@ pub fn listy(direcory: &str) {
 
 
 fn elephanc() {
-    let conn = Connection::open_in_memory().unwrap();
-
+    let conn = db::connect();
+    db::create_tables(&conn);
+    db::provider_list(&conn);
+    db::insert_provider(&conn, "Steven".to_string());
+    db::provider_list(&conn);
+    db::insert_job(&conn, "Steven".to_string(), "".to_string());
+    db::insert_job_provide(&conn, 1, 1);
+    db::insert_job_depend(&conn, 1, 1,10);
     conn.execute("CREATE TABLE person (
                   id              INTEGER PRIMARY KEY,
                   name            TEXT NOT NULL,
