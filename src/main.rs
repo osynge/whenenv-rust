@@ -75,16 +75,6 @@ fn main() {
     if let Some(ref env) = matches.value_of("env") {
         println!("Using config file: {}", env);
     }
-    
-
-    
-    
-    if let Some(in_v) = matches.values_of("dir-scripts") {
-        for in_file in in_v {
-            println!("An input dir-scripts: {}", in_file);
-           loader::listy(&in_file);
-        }
-    }
     // Continued program logic goes here...
     loader::deligate(matches)
 }
