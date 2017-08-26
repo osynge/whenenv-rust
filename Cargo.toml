@@ -1,0 +1,8 @@
+[package]
+name = "whenenv"
+version = "0.0.1"
+authors = ["Owen Synge <owen.synge@jaysnest.de>"]
+
+[dependencies]
+clap = "2"
+rusqlite = "0.12.0"
