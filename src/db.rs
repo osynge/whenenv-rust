@@ -105,10 +105,12 @@ struct JobRequireVariable {
 
 
 fn table_create_require_variable(conn: &Connection)  {
-    conn.execute("CREATE TABLE require_variable (
+    conn.execute("CREATE TABLE JOB_REQUIRE_VARIABLE (
                   id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER,
-                  variable_id   INTEGER
+                  job           INTEGER NOT NULL,
+                  variable_id   INTEGER NOT NULL,
+                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
+                  FOREIGN KEY(variable_id) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )", &[]).unwrap();
 }
 
@@ -123,19 +125,21 @@ struct VariablePair {
 
 
 
-fn table_create_variable_pair(conn: &Connection)  {
-    conn.execute("CREATE TABLE VariablePair (
+fn table_create_variable_pair(conn: &Connection)  -> &Connection  {
+    conn.execute("CREATE TABLE  VARIABLE_PAIR (
                   id            INTEGER PRIMARY KEY ASC,
-                  variable_id   INTEGER,
-                  variable_value  TEXT
+                  variable_id   INTEGER NOT NULL,
+                  variable_value  TEXT,
+                  FOREIGN KEY(variable_id) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )", &[]).unwrap();
-    
+       return conn;
 }
 
 
 #[derive(Debug)]
 struct JobRequireVariablePair {
     id: i32,
+    job: i32,
     variable_pair: i32,
 }
 
@@ -143,10 +147,12 @@ struct JobRequireVariablePair {
 
 
 fn table_create_require_variable_pair(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE VariableId (
+    conn.execute("CREATE TABLE JOB_REQUIRE_VALUE (
                   id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER,
-                  variable_pair INTEGER
+                  job           INTEGER NOT NULL,
+                  variable_pair INTEGER NOT NULL,
+                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
+                  FOREIGN KEY(variable_pair) REFERENCES VARIABLE_PAIR(id) ON UPDATE CASCADE
                   )", &[]).unwrap();
     return conn;
 }
@@ -224,6 +230,64 @@ pub fn insert_job_depend(conn: &Connection, job: i32, provider: i32, sq_order: i
     conn.execute("INSERT INTO JOBDEPEND (job, provider, sq_order)
                   VALUES (?1, ?2, ?3)",
                  &[&me.job, &me.provider, &me.sq_order]).unwrap();
+}
+
+
+pub fn insert_job_variable_name(conn: &Connection, name: String) {
+
+    let me = VariableName {
+        id: 0,
+        name: name,
+    };
+    conn.execute("INSERT INTO VARIABLE_NAME (name)
+                  VALUES (?1)",
+                 &[&me.name]).unwrap();
+}
+
+
+
+pub fn insert_job_require_variable(conn: &Connection, job: i32,  require_id: i32) {
+
+    let me = JobRequireVariable {
+        id: 0,
+        job: job,
+        variable_id: require_id,
+
+    };
+    conn.execute("INSERT INTO JOB_REQUIRE_VARIABLE (job, variable_id)
+                  VALUES (?1, ?2)",
+                 &[&me.job, &me.variable_id]).unwrap();
+}
+
+
+
+
+pub fn insert_job_variable_pair(conn: &Connection, variable_id: i32, value: String) {
+
+    let me = VariablePair {
+        id: 0,
+        variable_id: variable_id,
+        variable_value: value,
+    };
+    conn.execute("INSERT INTO VARIABLE_PAIR (variable_id, variable_value)
+                  VALUES (?1, ?2)",
+                 &[&me.variable_id, &me.variable_value]).unwrap();
+}
+
+
+
+
+pub fn insert_job_require_variable_pair(conn: &Connection, job: i32,  require_id: i32) {
+
+    let me = JobRequireVariablePair {
+        id: 0,
+        job: job,
+        variable_pair: require_id,
+
+    };
+    conn.execute("INSERT INTO JOB_REQUIRE_VALUE (job, variable_pair)
+                  VALUES (?1, ?2)",
+                 &[&me.job, &me.variable_pair]).unwrap();
 }
 
 
