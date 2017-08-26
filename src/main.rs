@@ -1,8 +1,10 @@
 extern crate clap;
 extern crate rusqlite;
+
 use clap::{App, Arg};
 
 mod loader;
+mod db;
 
 fn main() {
 
