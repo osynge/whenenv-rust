@@ -1,5 +1,39 @@
 use rusqlite::Connection;
+use rusqlite::Error;
 
+#[derive(Debug)]
+pub struct FsDir {
+    pub id: i32,
+    pub name: String,
+}
+
+
+fn table_create_fs_dir(conn: &Connection) -> &Connection {
+    conn.execute("CREATE TABLE FS_DIR (
+                  id              INTEGER PRIMARY KEY ASC,
+                  name            TEXT NOT NULL UNIQUE
+                  )", &[]).unwrap();
+    return conn;
+}
+
+
+
+#[derive(Debug)]
+pub struct FsFile {
+    pub id: i32,
+    pub fk_fs_dir: i32,
+    pub name: String,
+}
+
+
+fn table_create_fs_file(conn: &Connection) -> &Connection {
+    conn.execute("CREATE TABLE FS_FILE (
+                  id                INTEGER PRIMARY KEY ASC,
+                  fk_fs_dir         INTEGER NOT NULL,
+                  name              TEXT NOT NULL UNIQUE
+                  )", &[]).unwrap();
+    return conn;
+}
 
 
 #[derive(Debug)]
@@ -168,6 +202,8 @@ pub fn connect() -> Connection {
 
 
 pub fn create_tables(conn: &Connection) -> &Connection  {
+    table_create_fs_dir(&conn);
+    table_create_fs_file(&conn);
     let newcon = table_create_provider(&conn);
     let newcon2 = table_create_job(&newcon);
     table_create_job_depend(&conn);
@@ -177,6 +213,63 @@ pub fn create_tables(conn: &Connection) -> &Connection  {
     table_create_require_variable(&conn);
     table_create_require_variable_pair(&conn);
     return newcon2;
+}
+
+pub fn insert_fs_dir(conn: &Connection, name: String) {
+
+    let me = FsDir {
+        id: 0,
+        name: name,
+    };
+    conn.execute("INSERT INTO FS_DIR (name)
+                  VALUES (?1)",
+                 &[&me.name]).unwrap();
+}
+
+pub fn list_fs_dir(conn: &Connection) -> Vec<FsDir> {
+    let mut stmt = conn.prepare("SELECT id, name FROM FS_DIR").unwrap();
+    let fs_dir_iter = stmt.query_map(&[], |row| {
+        FsDir {
+            id: row.get(0),
+            name: row.get(1)
+        }
+    }).unwrap();
+    let mut items = Vec::<FsDir>::new();
+    for person in fs_dir_iter {
+
+        items.push(person.unwrap());
+    }
+    return items;
+}
+
+
+pub fn insert_fs_file(conn: &Connection, fk_fs_dir: i32, name: String) {
+
+    let me = FsFile {
+        id: 0,
+        name: name,
+        fk_fs_dir : fk_fs_dir,
+    };
+    conn.execute("INSERT INTO FS_FILE (name, fk_fs_dir)
+                  VALUES (?1, ?2)",
+                 &[&me.name, &me.fk_fs_dir]).unwrap();
+}
+
+pub fn list_fs_file(conn: &Connection) -> Vec<FsFile> {
+    let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE").unwrap();
+    let fs_file_iter = stmt.query_map(&[], |row| {
+        FsFile {
+            id: row.get(0),
+            fk_fs_dir: row.get(1),
+            name: row.get(2),
+        }
+    }).unwrap();
+    let mut items = Vec::<FsFile>::new();
+    for person in fs_file_iter {
+
+        items.push(person.unwrap());
+    }
+    return items;
 }
 
 
@@ -189,6 +282,23 @@ pub fn insert_provider(conn: &Connection, name: String) {
     conn.execute("INSERT INTO PROVIDER (name)
                   VALUES (?1)",
                  &[&me.name]).unwrap();
+
+}
+
+pub fn list_provider(conn: &Connection)-> Vec<Provider> {
+    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER").unwrap();
+    let fs_file_iter = stmt.query_map(&[], |row| {
+        Provider {
+            id: row.get(0),
+            name: row.get(2),
+        }
+    }).unwrap();
+    let mut items = Vec::<Provider>::new();
+    for person in fs_file_iter {
+
+        items.push(person.unwrap());
+    }
+    return items;
 }
 
 
