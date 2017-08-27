@@ -1,8 +1,12 @@
 use clap::{ArgMatches};
 use std::path::Path;
-
 use db;
+use std::fs::File;
+use std::io::Read;
 
+use rustc_serialize::Encodable;
+use rustc_serialize::json::{self, Encoder};
+use rustc_serialize::json::Json;
 
 #[derive(Debug)]
 struct Person {
@@ -24,24 +28,48 @@ pub fn listy(direcory: &str) {
 }
 
 
-
-
-pub fn job_files_list(direcory: &str) {
+pub fn job_files_list(direcory: &str)  {
     let path = Path::new(direcory);
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
-            let p1 = entry.path();
-            let path = p1.as_path();
-            println!("dddd{:?}", path);
-
+            println!("job_files_list{:?}", entry.path());
         }
     }
 }
 
 
+
+
+pub fn listy2(direcory: &str) -> Vec<String>{
+    println!("listy2{:?}", direcory);
+    let mut items = Vec::<String>::new();
+
+    let path = Path::new(direcory);
+    for entry in path.read_dir().expect("read_dir call failed") {
+        if let Ok(entry) = entry {
+            let path = entry.path();
+            if path.is_dir() {
+                continue;
+            }
+            let pb_2 = path.as_path();
+            let as_path_buf = pb_2.as_os_str();
+            let path = String::new() + as_path_buf.to_str().unwrap() ;
+            items.push(path);
+
+        }
+    }
+    return items;
+}
+
+
+
+
 fn elephanc() {
     let conn = db::connect();
     db::create_tables(&conn);
+    db::insert_fs_dir(&conn, "Steven".to_string());
+    db::insert_fs_dir(&conn, "Steven2".to_string());
+    db::insert_fs_file(&conn, 0, "Steven".to_string());
     db::insert_provider(&conn, "Steven".to_string());
     db::provider_list(&conn);
     db::insert_job(&conn, "Steven".to_string(), "".to_string());
@@ -82,11 +110,17 @@ fn elephanc() {
 
 
 pub fn deligate(matches : ArgMatches) {
+
+    let conn = db::connect();
+    db::create_tables(&conn);
+
+
+
     if let Some(in_v) = matches.values_of("dir-scripts") {
         for in_file in in_v {
             //println!("An input dir-scripts: {}", in_file);
-           //listy(&in_file);
-           job_files_list(&in_file);
+           listy(&in_file);
+
         }
     }
 
@@ -95,16 +129,99 @@ pub fn deligate(matches : ArgMatches) {
     if let Some(in_v) = matches.values_of("env") {
         for in_file in in_v {
             println!("An input file: {}", in_file);
+            job_files_list(&in_file);
         }
     }
 
     if let Some(in_v) = matches.values_of("dir-jobs") {
         for in_file in in_v {
-            println!("An input file: {}", in_file);
-            listy(&in_file);
+            db::insert_fs_dir(&conn, in_file.to_string());
         }
     }
-    elephanc();
+    for directory in db::list_fs_dir(&conn) {
+        let foo = directory.id;
+        let foo_name = directory.name;
+        let file_list = listy2(&foo_name);
+        for fnccc in file_list {
+            println!("An input file: {}", fnccc);
+            db::insert_fs_file(&conn, foo, fnccc);
+        }
+    }
+    for filename in db::list_fs_file(&conn) {
+        println!("list_fs_file{:?}", filename);
+        let name = filename.name;
+        let mut f = File::open(name).expect("file not found");
+
+
+        let mut contents = String::new();
+        f.read_to_string(&mut contents).expect("something went wrong reading the file");
+
+
+
+
+        let json = Json::from_str(&contents).unwrap();
+        //println!("json={}", json);
+        let found = json.find_path(&["provides"]);
+        if found != None {
+            for item in found {
+                println!("provides={}", item);
+                let as_a_str = item.to_string();
+                db::insert_provider(&conn, as_a_str);
+            }
+        }
+        let found = json.find_path(&["name"]);
+        if found != None {
+            for item in found {
+                println!("name={}", item);
+            }
+        }
+        let found = json.find_path(&["script"]);
+        if found != None {
+            for item in found {
+                println!("script={}", item);
+            }
+        }
+        let found = json.find_path(&["variables"]);
+        if found != None {
+
+            for item in found {
+                println!("variables={}", item);
+                let bill = item.find_path(&["require_keys"]);
+                if bill != None {
+                    for item2 in bill {
+                        println!("variables::require_keys={}", item2);
+                    }
+                }
+                let bill = item.find_path(&["provides_keys"]);
+                if bill != None {
+                    for item2 in bill {
+                        println!("variables::provides_keys={}", item2);
+                    }
+                }
+                let bill = item.find_path(&["require_values"]);
+                if bill != None {
+                    for item2 in bill {
+                        let ben = item2.find_path(&[""]);
+
+                        for itme3 in ben {
+                            println!("variables::itme3={}", itme3);
+                        }
+                    }
+                }
+            }
+
+        }
+        let found = json.find_path(&["depends"]);
+        if found != None {
+            for item in found {
+                println!("depends={}", item);
+            }
+        }
+
+    }
+    for filename in db::list_provider(&conn) {
+        println!("list_provider{:?}", filename);
+    }
 }
 
 
