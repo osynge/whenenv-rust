@@ -1,5 +1,9 @@
 extern crate clap;
 extern crate rusqlite;
+#[macro_use]
+
+extern crate rustc_serialize;
+
 
 use clap::{App, Arg};
 
