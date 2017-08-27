@@ -279,21 +279,32 @@ pub fn insert_provider(conn: &Connection, name: String) {
         id: 0,
         name: name,
     };
-    conn.execute("INSERT INTO PROVIDER (name)
+    let george = conn.execute("INSERT INTO PROVIDER (name)
                   VALUES (?1)",
-                 &[&me.name]).unwrap();
+                 &[&me.name]);
+    println!("Found provider {:?}", george.is_err());
+    if george.is_err() {
+        return;
+
+    }
+    george.unwrap();
 
 }
 
 pub fn list_provider(conn: &Connection)-> Vec<Provider> {
     let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER").unwrap();
-    let fs_file_iter = stmt.query_map(&[], |row| {
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         Provider {
             id: row.get(0),
-            name: row.get(2),
+            name: row.get(1),
         }
-    }).unwrap();
+    });
     let mut items = Vec::<Provider>::new();
+    if wraped_fs_file_iter.is_err() {
+        return items;
+
+    }
+    let fs_file_iter = wraped_fs_file_iter.unwrap();
     for person in fs_file_iter {
 
         items.push(person.unwrap());
