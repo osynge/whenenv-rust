@@ -14,21 +14,22 @@ pub fn table_create_provider(conn: &Connection) -> &Connection {
     return conn;
 }
 
-pub fn insert_provider(conn: &Connection, name: String) {
-
+pub fn insert_provider(conn: &Connection,  name: &String) -> Result<i32, &'static str> {
+    let bill = name.clone();
     let me = Provider {
         id: 0,
-        name: name,
+        name: bill,
     };
     let provider_instance = conn.execute("INSERT INTO PROVIDER (name)
                   VALUES (?1)",
                  &[&me.name]);
     if provider_instance.is_err() {
-        return;
+        return Err("Insert failed");
     }
     provider_instance.unwrap();
-
+    return Ok(0);
 }
+
 
 pub fn list_provider(conn: &Connection)-> Vec<Provider> {
     let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER").unwrap();
@@ -63,4 +64,27 @@ pub fn provider_list(conn: &Connection) {
     for person in person_iter {
         println!("Found provider {:?}", person.unwrap());
     }
+}
+
+
+pub fn pk_provider_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<i32, &'static str>{
+    let bill = name.clone();
+    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER WHERE name = ?1").unwrap();
+    let provider_iter = stmt.query_map(&[&bill], |row| {
+        Provider {
+            id: row.get(0),
+            name: row.get(1),
+        }
+    }).unwrap();
+    let mut found = 0;
+    let mut items = Vec::<Provider>::new();
+    for person in provider_iter {
+        let bill= person.unwrap();
+        *pk = bill.id;
+        found = bill.id;
+    }
+    if found != 0 {
+        return Ok(found);
+    }
+    return Err("None found");
 }
