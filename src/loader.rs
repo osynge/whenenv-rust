@@ -3,7 +3,7 @@ use std::path::Path;
 use db;
 use std::fs::File;
 use std::io::Read;
-
+use rustc_serialize;
 use rustc_serialize::{Encodable};
 use rustc_serialize::json::{self, Encoder};
 use rustc_serialize::json::Json;
@@ -14,6 +14,8 @@ use rusqlite::Connection;
 use rusqlite::Error;
 
 use dbFsFile;
+
+use std::result;
 
 #[derive(Debug)]
 struct Person {
@@ -153,24 +155,120 @@ pub fn loader(name: &str) -> String {
 }
 
 
+fn json_loader_elephant_variable_pk(conn: &Connection, variable_pk :i32, text :&String) -> i32 {
+    return variable_pk;
+}
+
+
+fn json_loader_elephant_job_pk(conn: &Connection, text :&String) -> i32 {
+    let mut pk_job :i32 = 0;
+    let rc = db::pk_job_by_name(conn, &text, &mut pk_job);
+    match rc {
+        Ok(pk) => {
+            return pk_job;
+        }
+        Err(_) => {
+            let doink = db::insert_job(conn, &text);
+            if doink.is_err() {
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_job_by_name(conn, &text, &mut pk_job);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_job;
+                            }
+                        Err(_) => {
+                                println!("Failed to select job");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert job");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_job;
+}
+
+
+
+pub fn json_loader_elephant(conn: &Connection, json :&rustc_serialize::json::Json) {
+    let mut pk_job :i32 = 0;
+    let found = json.find_path(&["name"]);
+    if found != None {
+        for item in found {
+            let str_item = item.to_string();
+            pk_job = json_loader_elephant_job_pk(conn, &str_item);
+            println!("pk_job::name={}", pk_job);
+        }
+    }
+
+    let found = json.find_path(&["variables"]);
+    if found != None {
+
+        for item in found {
+            let bill = item.find_path(&["require_keys"]);
+            if bill != None {
+                for item2 in bill {
+                    if item2.is_array() {
+                        let ssd = item2.as_array();
+                        let sdf = ssd.unwrap();
+                        let george = sdf.len();
+                        let itemfdsd = sdf.iter();
+                        for elem in itemfdsd{
+                            println!("variables::require_key={}", elem.to_string());
+                        }
+                    }
+                }
+            }
+            let bill = item.find_path(&["provides_keys"]);
+            if bill != None {
+                for item2 in bill {
+
+                    if item2.is_array() {
+                        let ssd = item2.as_array();
+                        let sdf = ssd.unwrap();
+                        let george = sdf.len();
+                        let itemfdsd = sdf.iter();
+                        for elem in itemfdsd{
+                            println!("variables::provide_key={}", elem.to_string());
+                        }
+                    }
+                }
+            }
+            let bill = item.find_path(&["require_values"]);
+            if bill != None {
+                for item2 in bill {
+
+                    let ben = item2.find_path(&[""]);
+
+                    for itme3 in ben {
+                        println!("variables::itme3={}", itme3);
+                    }
+                }
+            }
+        }
+
+    }
+    println!("pk_job={}", pk_job);
+}
+
+
+
 
 pub fn json_loader_name(conn: &Connection, content: &str)  {
     let mut contents = String::new();
     let json = Json::from_str(&content);
-
-
-
+    let mut pk_job :i32 = 0;
     match json {
         Ok(json) => {
-            let found = json.find_path(&["name"]);
-            if found != None {
-                for item in found {
-
-                    db::insert_job(conn, item.to_string());
-
-                    //println!("name={}", item);
-                }
-            }
+            json_loader_elephant(conn, &json);
         }
         Err(_)=> {}
     }
