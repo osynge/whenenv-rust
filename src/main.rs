@@ -15,6 +15,7 @@ mod dbFsFile;
 mod dbProvider;
 mod dbJob;
 mod dbJobProvide;
+mod dbJobDepend;
 
 fn main() {
 
