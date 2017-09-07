@@ -1,92 +1,35 @@
 use rusqlite::Connection;
 use rusqlite::Error;
-
-#[derive(Debug)]
-pub struct FsDir {
-    pub id: i32,
-    pub name: String,
-}
-
-
-fn table_create_fs_dir(conn: &Connection) -> &Connection {
-    conn.execute("CREATE TABLE FS_DIR (
-                  id              INTEGER PRIMARY KEY ASC,
-                  name            TEXT NOT NULL UNIQUE
-                  )", &[]).unwrap();
-    return conn;
-}
-
-
-
-#[derive(Debug)]
-pub struct FsFile {
-    pub id: i32,
-    pub fk_fs_dir: i32,
-    pub name: String,
-}
+pub use dbFsDirType::FsDirType as FsDirType;
+pub use dbFsDirType::table_create_fs_dir_type as table_create_fs_dir_type;
+pub use dbFsDirType::insert_fs_dir_type as insert_fs_dir_type;
+pub use dbFsDirType::list_fs_dir_type as list_fs_dir_type;
+pub use dbFsDir::insert_fs_dir as insert_fs_dir;
+pub use dbFsDir::FsDir as FsDir;
+pub use dbFsDir::list_fs_dir as list_fs_dir;
+pub use dbFsDir::table_create_fs_dir as table_create_fs_dir;
+pub use dbFsFile::insert_fs_file as dbFsFile;
+pub use dbFsFile::insert_fs_file as insert_fs_file;
+pub use dbFsFile::list_fs_file as list_fs_file;
+pub use dbFsFile::pk_fs_file_by_name as pk_fs_file_by_name;
+pub use dbFsFile::table_create_fs_file as table_create_fs_file;
+pub use dbProvider::Provider as Provider;
+pub use dbProvider::table_create_provider as table_create_provider;
+pub use dbProvider::insert_provider as insert_provider;
+pub use dbProvider::list_provider as list_provider;
+pub use dbJob::Job as Job;
+pub use dbJob::table_create_job as table_create_job;
+pub use dbJob::insert_job as insert_job;
+pub use dbJob::list_job as list_job;
+pub use dbJob::pk_job_by_name as pk_job_by_name;
 
 
-fn table_create_fs_file(conn: &Connection) -> &Connection {
-    conn.execute("CREATE TABLE FS_FILE (
-                  id                INTEGER PRIMARY KEY ASC,
-                  fk_fs_dir         INTEGER NOT NULL,
-                  name              TEXT NOT NULL UNIQUE
-                  )", &[]).unwrap();
-    return conn;
-}
+pub use dbJobProvide::JobProvide as JobProvide;
+pub use dbJobProvide::table_create_job_provide as table_create_job_provide;
+pub use dbJobProvide::insert_job_provide as insert_job_type;
+pub use dbJobProvide::list_job_provide as list_job_type;
 
 
-#[derive(Debug)]
-pub struct Provider {
-    id: i32,
-    name: String,
-}
-
-
-fn table_create_provider(conn: &Connection) -> &Connection {
-    conn.execute("CREATE TABLE PROVIDER (
-                  id              INTEGER PRIMARY KEY ASC,
-                  name            TEXT NOT NULL UNIQUE
-                  )", &[]).unwrap();
-    return conn;
-}
-
-#[derive(Debug)]
-struct Job {
-    id: i32,
-    name: String,
-    shell: String,
-}
-
-
-fn table_create_job(conn: &Connection)  -> &Connection {
-    conn.execute("CREATE TABLE JOB (
-                  id              INTEGER PRIMARY KEY ASC,
-                  name            TEXT NOT NULL UNIQUE,
-                  shell           TEXT NOT NULL
-                  )", &[]).unwrap();
-    return conn;
-}
-
-
-#[derive(Debug)]
-struct JobProvide {
-    id: i32,
-    job: i32,
-    provider: i32,
-}
-
-
-fn table_create_job_provide(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE JOBPROVIDE (
-                  id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER,
-                  provider      INTEGER,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(provider) REFERENCES PROVIDER(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
-    return conn;
-}
 
 
 #[derive(Debug)]
@@ -201,7 +144,8 @@ pub fn connect() -> Connection {
 }
 
 
-pub fn create_tables(conn: &Connection) -> &Connection  {
+pub fn create_tables(conn: &Connection)  -> &Connection {
+    table_create_fs_dir_type(&conn);
     table_create_fs_dir(&conn);
     table_create_fs_file(&conn);
     let newcon = table_create_provider(&conn);
@@ -212,132 +156,8 @@ pub fn create_tables(conn: &Connection) -> &Connection  {
     table_create_variable_pair(&conn);
     table_create_require_variable(&conn);
     table_create_require_variable_pair(&conn);
-    return newcon2;
+    return &newcon;
 }
-
-pub fn insert_fs_dir(conn: &Connection, name: String) {
-
-    let me = FsDir {
-        id: 0,
-        name: name,
-    };
-    conn.execute("INSERT INTO FS_DIR (name)
-                  VALUES (?1)",
-                 &[&me.name]).unwrap();
-}
-
-pub fn list_fs_dir(conn: &Connection) -> Vec<FsDir> {
-    let mut stmt = conn.prepare("SELECT id, name FROM FS_DIR").unwrap();
-    let fs_dir_iter = stmt.query_map(&[], |row| {
-        FsDir {
-            id: row.get(0),
-            name: row.get(1)
-        }
-    }).unwrap();
-    let mut items = Vec::<FsDir>::new();
-    for person in fs_dir_iter {
-
-        items.push(person.unwrap());
-    }
-    return items;
-}
-
-
-pub fn insert_fs_file(conn: &Connection, fk_fs_dir: i32, name: String) {
-
-    let me = FsFile {
-        id: 0,
-        name: name,
-        fk_fs_dir : fk_fs_dir,
-    };
-    conn.execute("INSERT INTO FS_FILE (name, fk_fs_dir)
-                  VALUES (?1, ?2)",
-                 &[&me.name, &me.fk_fs_dir]).unwrap();
-}
-
-pub fn list_fs_file(conn: &Connection) -> Vec<FsFile> {
-    let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE").unwrap();
-    let fs_file_iter = stmt.query_map(&[], |row| {
-        FsFile {
-            id: row.get(0),
-            fk_fs_dir: row.get(1),
-            name: row.get(2),
-        }
-    }).unwrap();
-    let mut items = Vec::<FsFile>::new();
-    for person in fs_file_iter {
-
-        items.push(person.unwrap());
-    }
-    return items;
-}
-
-
-pub fn insert_provider(conn: &Connection, name: String) {
-
-    let me = Provider {
-        id: 0,
-        name: name,
-    };
-    let george = conn.execute("INSERT INTO PROVIDER (name)
-                  VALUES (?1)",
-                 &[&me.name]);
-    println!("Found provider {:?}", george.is_err());
-    if george.is_err() {
-        return;
-
-    }
-    george.unwrap();
-
-}
-
-pub fn list_provider(conn: &Connection)-> Vec<Provider> {
-    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER").unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        Provider {
-            id: row.get(0),
-            name: row.get(1),
-        }
-    });
-    let mut items = Vec::<Provider>::new();
-    if wraped_fs_file_iter.is_err() {
-        return items;
-
-    }
-    let fs_file_iter = wraped_fs_file_iter.unwrap();
-    for person in fs_file_iter {
-
-        items.push(person.unwrap());
-    }
-    return items;
-}
-
-
-pub fn insert_job(conn: &Connection, name: String, shell: String) {
-
-    let me = Job {
-        id: 0,
-        name: name,
-        shell: shell,
-    };
-    conn.execute("INSERT INTO JOB (name, shell)
-                  VALUES (?1, ?2)",
-                 &[&me.name, &me.shell]).unwrap();
-}
-
-
-pub fn insert_job_provide(conn: &Connection, job: i32, provider: i32) {
-
-    let me = JobProvide {
-        id: 0,
-        job: job,
-        provider: provider,
-    };
-    conn.execute("INSERT INTO JOBPROVIDE (job, provider)
-                  VALUES (?1, ?2)",
-                 &[&me.job, &me.provider]).unwrap();
-}
-
 
 
 pub fn insert_job_depend(conn: &Connection, job: i32, provider: i32, sq_order: i32) {
@@ -411,17 +231,3 @@ pub fn insert_job_require_variable_pair(conn: &Connection, job: i32,  require_id
                  &[&me.job, &me.variable_pair]).unwrap();
 }
 
-
-pub fn provider_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, name FROM PROVIDER").unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        Provider {
-            id: row.get(0),
-            name: row.get(1)
-        }
-    }).unwrap();
-
-    for person in person_iter {
-        println!("Found provider {:?}", person.unwrap());
-    }
-}
