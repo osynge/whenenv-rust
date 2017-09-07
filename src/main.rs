@@ -9,6 +9,12 @@ use clap::{App, Arg};
 
 mod loader;
 mod db;
+mod dbFsDirType;
+mod dbFsDir;
+mod dbFsFile;
+mod dbProvider;
+mod dbJob;
+mod dbJobProvide;
 
 fn main() {
 
@@ -52,10 +58,10 @@ fn main() {
                                     .help("directory storing json jobs.")
                                     .multiple(true)
                                     .takes_value(true))
-                        .arg(Arg::with_name("dir-scripts")
-                                    .long("dir-scripts")
-                                    .value_name("DIR_SCRIPT")
-                                    .help("directory storing jobs scripts.")
+                        .arg(Arg::with_name("dir-sh")
+                                    .long("dir-sh")
+                                    .value_name("DIR_SHELL")
+                                    .help("directory storing jobs shell scripts.")
                                     .multiple(true)
                                     .takes_value(true))
                         .arg(Arg::with_name("config")
