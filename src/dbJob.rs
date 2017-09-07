@@ -1,5 +1,9 @@
 use rusqlite::Connection;
+use std::result;
 
+
+#[derive(Debug)]
+pub enum Version { Version1, Version2 }
 
 #[derive(Debug)]
 pub struct Job {
@@ -28,19 +32,20 @@ pub fn table_create_job(conn: &Connection) {
 
 
 
-pub fn insert_job(conn: &Connection, name: String) {
+pub fn insert_job(conn: &Connection, name: &String) -> Result<Version, &'static str> {
 
     let me = Job {
         id: 0,
-        name: name,
+        name: name.clone(),
     };
     let load_instance = conn.execute("INSERT INTO JOB (name)
                   VALUES (?1)",
                  &[&me.name]);
     if load_instance.is_err() {
-        return;
+        return Err("Insert failed");
     }
     load_instance.unwrap();
+    return Ok(Version::Version1);
 }
 
 pub fn list_job(conn: &Connection)-> Vec<Job> {
@@ -63,18 +68,24 @@ pub fn list_job(conn: &Connection)-> Vec<Job> {
 }
 
 
-pub fn pk_job_by_name(conn: &Connection, name: String, pk: &mut i32) {
-    let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM JOB WHERE name =?1").unwrap();
-    let job_iter = stmt.query_map(&[&name], |row| {
+pub fn pk_job_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<Version, &'static str>{
+    let bill = name.clone();
+    let mut stmt = conn.prepare("SELECT id, name  FROM JOB WHERE name = ?1").unwrap();
+    let job_iter = stmt.query_map(&[&bill], |row| {
         Job {
             id: row.get(0),
-            name: row.get(2),
+            name: row.get(1),
         }
     }).unwrap();
+    let mut found = 0;
     let mut items = Vec::<Job>::new();
     for person in job_iter {
         let bill= person.unwrap();
         *pk = bill.id;
-        return;
+        found = 1;
     }
+    if found == 1 {
+        return Ok(Version::Version1);
+    }
+    return Err("None found");
 }
