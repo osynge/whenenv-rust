@@ -17,6 +17,7 @@ pub use dbProvider::Provider as Provider;
 pub use dbProvider::table_create_provider as table_create_provider;
 pub use dbProvider::insert_provider as insert_provider;
 pub use dbProvider::list_provider as list_provider;
+pub use dbProvider::pk_provider_by_name as pk_provider_by_name;
 pub use dbJob::Job as Job;
 pub use dbJob::table_create_job as table_create_job;
 pub use dbJob::insert_job as insert_job;
@@ -31,27 +32,9 @@ pub use dbJobProvide::list_job_provide as list_job_type;
 
 
 
-
-#[derive(Debug)]
-struct JobDepend {
-    id: i32,
-    job: i32,
-    provider: i32,
-    sq_order: i32,
-}
-
-
-fn table_create_job_depend(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE JOBDEPEND (
-                  id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER NOT NULL,
-                  provider      INTEGER NOT NULL,
-                  sq_order      INTEGER NOT NULL UNIQUE,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(provider) REFERENCES PROVIDER(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
-    return conn;
-}
+pub use dbJobDepend::JobDepend as JobDepend;
+pub use dbJobDepend::table_create_job_depend as table_create_job_depend;
+pub use dbJobDepend::insert_job_depend as insert_job_depend;
 
 
 
@@ -157,20 +140,6 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
     table_create_require_variable(&conn);
     table_create_require_variable_pair(&conn);
     return &newcon;
-}
-
-
-pub fn insert_job_depend(conn: &Connection, job: i32, provider: i32, sq_order: i32) {
-
-    let me = JobDepend {
-        id: 0,
-        job: job,
-        provider: provider,
-        sq_order: sq_order,
-    };
-    conn.execute("INSERT INTO JOBDEPEND (job, provider, sq_order)
-                  VALUES (?1, ?2, ?3)",
-                 &[&me.job, &me.provider, &me.sq_order]).unwrap();
 }
 
 
