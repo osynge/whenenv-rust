@@ -38,26 +38,12 @@ pub use dbVariableName::insert_variable_name as insert_variable_name;
 pub use dbVariableName::list_variable_name as list_variable_name;
 pub use dbVariableName::variable_name_list as variable_name_list;
 pub use dbVariableName::pk_variable_name_by_name as pk_variable_name_by_name;
-
-
-#[derive(Debug)]
-struct JobRequireVariable {
-    id: i32,
-    job: i32,
-    variable_id: i32,
-}
-
-
-fn table_create_require_variable(conn: &Connection)  {
-    conn.execute("CREATE TABLE JOB_REQUIRE_VARIABLE (
-                  id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER NOT NULL,
-                  variable_id   INTEGER NOT NULL,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(variable_id) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
-}
-
+pub use dbJobRequireVariable::JobRequireVariable as JobRequireVariable;
+pub use dbJobRequireVariable::table_create_job_require_variable as table_create_job_require_variable;
+pub use dbJobRequireVariable::insert_job_require_variable as insert_job_require_variable;
+pub use dbJobRequireVariable::list_job_require_variable as list_job_require_variable;
+pub use dbJobRequireVariable::job_require_variable_list as job_require_variable_list;
+pub use dbJobRequireVariable::pk_job_require_variable_by_name as pk_job_require_variable_by_name;
 
 #[derive(Debug)]
 struct VariablePair {
@@ -121,25 +107,11 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
     table_create_job_provide(&conn);
     table_create_variable_name(&conn);
     table_create_variable_pair(&conn);
-    table_create_require_variable(&conn);
+    table_create_job_require_variable(&conn);
     table_create_require_variable_pair(&conn);
     return &newcon;
 }
 
-
-
-pub fn insert_job_require_variable(conn: &Connection, job: i32,  require_id: i32) {
-
-    let me = JobRequireVariable {
-        id: 0,
-        job: job,
-        variable_id: require_id,
-
-    };
-    conn.execute("INSERT INTO JOB_REQUIRE_VARIABLE (job, variable_id)
-                  VALUES (?1, ?2)",
-                 &[&me.job, &me.variable_id]).unwrap();
-}
 
 
 

@@ -17,6 +17,7 @@ mod dbJob;
 mod dbJobProvide;
 mod dbJobDepend;
 mod dbVariableName;
+mod dbJobRequireVariable;
 
 
 fn main() {
