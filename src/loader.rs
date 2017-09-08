@@ -155,8 +155,40 @@ pub fn loader(name: &str) -> String {
 }
 
 
-fn elephant_variable_pk(conn: &Connection, variable_pk :i32, text :&String) -> i32 {
-    return variable_pk;
+fn elephant_variable_pk(conn: &Connection, text :&String) -> i32 {
+    let mut pk_variable :i32 = 0;
+    let rc = db::pk_variable_name_by_name(conn, &text, &mut pk_variable);
+    match rc {
+        Ok(pk) => {
+            return pk_variable;
+        }
+        Err(_) => {
+            let doink = db::insert_variable_name(conn, &text);
+            if doink.is_err() {
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_variable_name_by_name(conn, &text, &mut pk_variable);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_variable;
+                            }
+                        Err(_) => {
+                                println!("Failed to select variable");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert variable");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_variable;
 }
 
 
@@ -197,7 +229,9 @@ fn elephant_job_pk(conn: &Connection, pk_file :&i32, text :&String) -> i32 {
 }
 
 
-fn elephant_provider_pk(conn: &Connection, text :&String) -> i32 {
+fn elephant_provider_pk(conn: &Connection, in_text :&str) -> i32 {
+    let text = String::from(in_text);
+
     let mut pk_provider :i32 = 0;
     let rc = db::pk_provider_by_name(conn, &text, &mut pk_provider);
     match rc {
@@ -234,9 +268,51 @@ fn elephant_provider_pk(conn: &Connection, text :&String) -> i32 {
 }
 
 
+
+fn elephant_job_depend_pk(conn: &Connection, job: i32, provider: i32, sq_order: i32) -> i32 {
+    let mut pk_job_depend :i32 = 0;
+    let rc = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order, &mut pk_job_depend);
+    match rc {
+        Ok(pk) => {
+            return pk_job_depend;
+        }
+        Err(_) => {
+            let doink = db::insert_job_depend(conn, &job, &provider, &sq_order);
+            if doink.is_err() {
+                println!("Failed to insert");
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order, &mut pk_job_depend);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_job_depend;
+                            }
+                        Err(_) => {
+                                println!("Failed to select job_depend");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert job_depend");
+                    return 0;
+                }
+            }
+        }
+    }
+    return pk_job_depend;
+}
+
+
+
 pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_serialize::json::Json) {
     let mut pk_job :i32 = 0;
     let mut pk_provider :i32 = 0;
+    let mut pk_job_depend :i32 = 0;
+    let mut pk_variable_name :i32 = 0;
+    let mut order_job_depend :i32 = 0;
     let found = json.find_path(&["name"]);
     if found != None {
         for item in found {
@@ -248,9 +324,52 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
     let found = json.find_path(&["provides"]);
     if found != None {
         for item in found {
-            let str_item = item.to_string();
-            pk_provider = elephant_provider_pk(conn, &str_item);
-            println!("pk_provider::name={}", pk_provider);
+            if item.is_array() {
+                    let ssd = item.as_array();
+                    let sdf = ssd.unwrap();
+                    let george = sdf.len();
+                    let itemfdsd = sdf.iter();
+                    for elem in itemfdsd{
+                        if elem.is_string() {
+                                let sss = elem.as_string();
+                                let foo = sss.unwrap();
+                                        pk_provider = elephant_provider_pk(conn, &foo);
+
+                                }
+
+
+                        let str_item = elem.to_string();
+                        //pk_provider = elephant_provider_pk(conn, &str_item);
+                        //println!("pk_provider::name={}", pk_provider);
+                        }
+                    }
+                }
+            }
+    let found = json.find_path(&["depends"]);
+    if found != None {
+        for item in found {
+            if item.is_array() {
+                let ssd = item.as_array();
+                let sdf = ssd.unwrap();
+                let george = sdf.len();
+                let itemfdsd = sdf.iter();
+                for elem in itemfdsd{
+
+                    if elem.is_string() {
+                                let sss = elem.as_string();
+                                let foo = sss.unwrap();
+                                        pk_provider = elephant_provider_pk(conn, &foo);
+
+                                order_job_depend += 10;
+                                pk_provider = elephant_provider_pk(conn, &foo);
+                                pk_job_depend = elephant_job_depend_pk(conn, pk_job, pk_provider, order_job_depend);
+                                println!("pk_provider::name={}", pk_provider);
+
+                                }
+
+                    }
+            }
+
         }
     }
     println!("pk_provider::name={}", pk_provider);
@@ -268,11 +387,16 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                         let george = sdf.len();
                         let itemfdsd = sdf.iter();
                         for elem in itemfdsd{
-                            println!("variables::require_key={}", elem.to_string());
+                            if elem.is_string() {
+                                let sss = elem.as_string();
+                                let foo = sss.unwrap();
+                                let name = String::from(foo);
+                                pk_variable_name = elephant_variable_pk(conn, &name);
+                                }
+                            }
                         }
                     }
                 }
-            }
             let bill = item.find_path(&["provides_keys"]);
             if bill != None {
                 for item2 in bill {
@@ -283,11 +407,17 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                         let george = sdf.len();
                         let itemfdsd = sdf.iter();
                         for elem in itemfdsd{
-                            println!("variables::provide_key={}", elem.to_string());
+                            if elem.is_string() {
+                                let sss = elem.as_string();
+                                let foo = sss.unwrap();
+                                let name = String::from(foo);
+                                pk_variable_name = elephant_variable_pk(conn, &name);
+                                }
+
+                            }
                         }
                     }
                 }
-            }
             let bill = item.find_path(&["require_values"]);
             if bill != None {
                 for item2 in bill {
@@ -320,27 +450,6 @@ pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str)  {
     //return json.unwrap();
 }
 
-
-
-pub fn json_loader_require_keys(conn: &Connection, content: &str)  {
-    let mut contents = String::new();
-    let json = Json::from_str(&content);
-    match json {
-        Ok(json) => {
-            let found = json.find_path(&["require_keys"]);
-            if found != None {
-                for item in found {
-
-                    db::insert_job_variable_name(conn, item.to_string());
-
-                    //println!("require_keys={}", item);
-                }
-            }
-        }
-        Err(_)=> {}
-    }
-    //return json.unwrap();
-}
 
 
 
@@ -408,22 +517,18 @@ pub fn deligate(matches : ArgMatches) {
 
     }
 
-    for filename in db::list_fs_file(&conn) {
-        let name = filename.name;
-        json_loader_require_keys(&conn, &loader(&name));
-
-    }
-
-
-    for filename in db::list_fs_file(&conn) {
-        let name = filename.name;
-        json_loader_require_keys(&conn, &loader(&name));
-
-    }
 
 
     for filename in db::list_provider(&conn) {
         println!("list_provider{:?}", filename);
+    }
+
+    for filename in db::list_job_depend(&conn) {
+        println!("list_job_depend{:?}", filename);
+    }
+
+    for filename in db::list_variable_name(&conn) {
+        println!("list_variable_name{:?}", filename);
     }
 }
 
