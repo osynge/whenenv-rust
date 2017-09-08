@@ -8,6 +8,7 @@ pub enum Version { Version1, Version2 }
 #[derive(Debug)]
 pub struct Job {
     pub id: i32,
+    pub fk_file: i32,
     pub name: String,
 }
 
@@ -21,7 +22,9 @@ trait JobModuleTrait {
 pub fn table_create_job(conn: &Connection) {
     let load_table = conn.execute("CREATE TABLE JOB (
                   id              INTEGER PRIMARY KEY ASC,
-                  name            TEXT NOT NULL UNIQUE
+                  fk_file         INTEGER NOT NULL,
+                  name            TEXT NOT NULL UNIQUE,
+                  FOREIGN KEY(fk_file) REFERENCES FS_FILE(id) ON UPDATE CASCADE
                   )", &[]);
     if load_table.is_err() {
         println!("table_create_job Failed {:?}", load_table);
@@ -32,15 +35,16 @@ pub fn table_create_job(conn: &Connection) {
 
 
 
-pub fn insert_job(conn: &Connection, name: &String) -> Result<Version, &'static str> {
+pub fn insert_job(conn: &Connection, fk_file :&i32, name: &String) -> Result<Version, &'static str> {
 
     let me = Job {
         id: 0,
+        fk_file: fk_file.clone(),
         name: name.clone(),
     };
-    let load_instance = conn.execute("INSERT INTO JOB (name)
-                  VALUES (?1)",
-                 &[&me.name]);
+    let load_instance = conn.execute("INSERT INTO JOB (name, fk_file)
+                  VALUES (?1, ?2)",
+                 &[&me.name, fk_file]);
     if load_instance.is_err() {
         return Err("Insert failed");
     }
@@ -49,11 +53,12 @@ pub fn insert_job(conn: &Connection, name: &String) -> Result<Version, &'static 
 }
 
 pub fn list_job(conn: &Connection)-> Vec<Job> {
-    let mut stmt = conn.prepare("SELECT id, name FROM JOB").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_file, name FROM JOB").unwrap();
     let wraped_job_iter = stmt.query_map(&[], |row| {
         Job {
             id: row.get(0),
-            name: row.get(1)
+            fk_file: row.get(1),
+            name: row.get(2)
         }
     });
     let mut items = Vec::<Job>::new();
@@ -70,11 +75,12 @@ pub fn list_job(conn: &Connection)-> Vec<Job> {
 
 pub fn pk_job_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<Version, &'static str>{
     let bill = name.clone();
-    let mut stmt = conn.prepare("SELECT id, name  FROM JOB WHERE name = ?1").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_file, name  FROM JOB WHERE name = ?1").unwrap();
     let job_iter = stmt.query_map(&[&bill], |row| {
         Job {
             id: row.get(0),
-            name: row.get(1),
+            fk_file: row.get(1),
+            name: row.get(2),
         }
     }).unwrap();
     let mut found = 0;
