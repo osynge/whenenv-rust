@@ -44,28 +44,7 @@ pub use dbJobRequireVariable::insert_job_require_variable as insert_job_require_
 pub use dbJobRequireVariable::list_job_require_variable as list_job_require_variable;
 pub use dbJobRequireVariable::job_require_variable_list as job_require_variable_list;
 pub use dbJobRequireVariable::pk_job_require_variable_by_name as pk_job_require_variable_by_name;
-
-#[derive(Debug)]
-struct VariablePair {
-    id: i32,
-    variable_id: i32,
-    variable_value: String
-}
-
-
-
-
-fn table_create_variable_pair(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE  VARIABLE_PAIR (
-                  id            INTEGER PRIMARY KEY ASC,
-                  variable_id   INTEGER NOT NULL,
-                  variable_value  TEXT,
-                  FOREIGN KEY(variable_id) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
-       return conn;
-}
-
-
+pub use dbVariablePair::table_create_variable_pair as table_create_variable_pair;
 #[derive(Debug)]
 struct JobRequireVariablePair {
     id: i32,
@@ -116,19 +95,6 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
 
 
 
-pub fn insert_job_variable_pair(conn: &Connection, variable_id: i32, value: String) {
-
-    let me = VariablePair {
-        id: 0,
-        variable_id: variable_id,
-        variable_value: value,
-    };
-    conn.execute("INSERT INTO VARIABLE_PAIR (variable_id, variable_value)
-                  VALUES (?1, ?2)",
-                 &[&me.variable_id, &me.variable_value]).unwrap();
-}
-
-
 
 
 pub fn insert_job_require_variable_pair(conn: &Connection, job: i32,  require_id: i32) {
@@ -143,4 +109,3 @@ pub fn insert_job_require_variable_pair(conn: &Connection, job: i32,  require_id
                   VALUES (?1, ?2)",
                  &[&me.job, &me.variable_pair]).unwrap();
 }
-

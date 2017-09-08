@@ -18,7 +18,7 @@ mod dbJobProvide;
 mod dbJobDepend;
 mod dbVariableName;
 mod dbJobRequireVariable;
-
+mod dbVariablePair;
 
 fn main() {
 
@@ -42,12 +42,12 @@ fn main() {
                         .arg(Arg::with_name("verbose")
                                     .help("Increase log output.")
                                     .short("v")
-                                    .multiple(true) 
+                                    .multiple(true)
                                     .long("verbose"))
                         .arg(Arg::with_name("quiet")
                                     .help("Decrease log output.")
                                     .short("q")
-                                    .multiple(true) 
+                                    .multiple(true)
                                     .long("quiet"))
                         .arg(Arg::with_name("env")
                                     .short("e")
