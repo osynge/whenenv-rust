@@ -11,16 +11,16 @@ pub struct JobRequireVariable {
 
 pub fn table_create_job_require_variable(conn: &Connection)  {
     conn.execute("CREATE TABLE JOB_REQUIRE_VARIABLE (
-                  id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER NOT NULL,
-                  fk_variable   INTEGER NOT NULL,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
+                  id                    INTEGER PRIMARY KEY ASC,
+                  fk_job                INTEGER NOT NULL,
+                  fk_variable           INTEGER NOT NULL,
+                  FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
                   FOREIGN KEY(fk_variable) REFERENCES JOB_REQUIRE_VARIABLE(id) ON UPDATE CASCADE
                   )", &[]).unwrap();
 }
 
 
-pub fn insert_job_require_variable(conn: &Connection, job: &i32, variable: &i32, name: &String) -> Result<i32, &'static str> {
+pub fn insert_job_require_variable(conn: &Connection, job: &i32, variable: &i32) -> Result<i32, &'static str> {
     let me = JobRequireVariable {
         id: 0,
         fk_job: *job,
@@ -76,9 +76,10 @@ pub fn job_require_variable_list(conn: &Connection) {
     }
 }
 
-pub fn pk_job_require_variable_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<i32, &'static str>{
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE WHERE name = ?1").unwrap();
-    let job_require_variable_iter = stmt.query_map(&[name], |row| {
+
+pub fn pk_job_require_variable_by_name(conn: &Connection, job: &i32, variable: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE WHERE fk_job = ?1 AND fk_variable = ?2").unwrap();
+    let job_require_variable_iter = stmt.query_map(&[job, variable], |row| {
         JobRequireVariable {
             id: row.get(0),
             fk_job: row.get(1),
