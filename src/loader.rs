@@ -155,12 +155,12 @@ pub fn loader(name: &str) -> String {
 }
 
 
-fn json_loader_elephant_variable_pk(conn: &Connection, variable_pk :i32, text :&String) -> i32 {
+fn elephant_variable_pk(conn: &Connection, variable_pk :i32, text :&String) -> i32 {
     return variable_pk;
 }
 
 
-fn json_loader_elephant_job_pk(conn: &Connection, text :&String) -> i32 {
+fn elephant_job_pk(conn: &Connection, pk_file :&i32, text :&String) -> i32 {
     let mut pk_job :i32 = 0;
     let rc = db::pk_job_by_name(conn, &text, &mut pk_job);
     match rc {
@@ -168,7 +168,7 @@ fn json_loader_elephant_job_pk(conn: &Connection, text :&String) -> i32 {
             return pk_job;
         }
         Err(_) => {
-            let doink = db::insert_job(conn, &text);
+            let doink = db::insert_job(conn, &pk_file, &text);
             if doink.is_err() {
                 return 0;
             }
@@ -197,17 +197,63 @@ fn json_loader_elephant_job_pk(conn: &Connection, text :&String) -> i32 {
 }
 
 
+fn elephant_provider_pk(conn: &Connection, text :&String) -> i32 {
+    let mut pk_provider :i32 = 0;
+    let rc = db::pk_provider_by_name(conn, &text, &mut pk_provider);
+    match rc {
+        Ok(pk) => {
+            return pk_provider;
+        }
+        Err(_) => {
+            let doink = db::insert_provider(conn, &text);
+            if doink.is_err() {
+                println!("Failed to insert");
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_provider_by_name(conn, &text, &mut pk_provider);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_provider;
+                            }
+                        Err(_) => {
+                                println!("Failed to select provider");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert provider");
+                    return 0;
+                }
+            }
+        }
+    }
+    return pk_provider;
+}
 
-pub fn json_loader_elephant(conn: &Connection, json :&rustc_serialize::json::Json) {
+
+pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_serialize::json::Json) {
     let mut pk_job :i32 = 0;
+    let mut pk_provider :i32 = 0;
     let found = json.find_path(&["name"]);
     if found != None {
         for item in found {
             let str_item = item.to_string();
-            pk_job = json_loader_elephant_job_pk(conn, &str_item);
+            pk_job = elephant_job_pk(conn, &pk_file, &str_item);
             println!("pk_job::name={}", pk_job);
         }
     }
+    let found = json.find_path(&["provides"]);
+    if found != None {
+        for item in found {
+            let str_item = item.to_string();
+            pk_provider = elephant_provider_pk(conn, &str_item);
+            println!("pk_provider::name={}", pk_provider);
+        }
+    }
+    println!("pk_provider::name={}", pk_provider);
 
     let found = json.find_path(&["variables"]);
     if found != None {
@@ -256,44 +302,18 @@ pub fn json_loader_elephant(conn: &Connection, json :&rustc_serialize::json::Jso
         }
 
     }
-    println!("pk_job={}", pk_job);
 }
 
 
 
 
-pub fn json_loader_name(conn: &Connection, content: &str)  {
+pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str)  {
     let mut contents = String::new();
     let json = Json::from_str(&content);
     let mut pk_job :i32 = 0;
     match json {
         Ok(json) => {
-            json_loader_elephant(conn, &json);
-        }
-        Err(_)=> {}
-    }
-    //return json.unwrap();
-}
-
-
-pub fn json_loader_provides_keys(conn: &Connection, content: &str)  {
-    let mut contents = String::new();
-    let json = Json::from_str(&content);
-
-
-
-    match json {
-        Ok(json) => {
-            let found = json.find_path(&["provides_keys"]);
-            if found != None {
-                for item in found {
-                    let str_item = item.to_string();
-                    let str_item_clone1 = str_item.clone();
-                    db::insert_provider(conn, item.to_string());
-
-                    //println!("provides_keys={}", item);
-                }
-            }
+            json_loader_elephant(conn, &pk_file, &json);
         }
         Err(_)=> {}
     }
@@ -382,13 +402,9 @@ pub fn deligate(matches : ArgMatches) {
 
 
     for filename in db::list_fs_file(&conn) {
+        let pk_file = filename.id;
         let name = filename.name;
-        json_loader_name(&conn, &loader(&name));
-
-    }
-    for filename in db::list_fs_file(&conn) {
-        let name = filename.name;
-        json_loader_provides_keys(&conn, &loader(&name));
+        json_loader_name(&conn, &pk_file, &loader(&name));
 
     }
 
