@@ -32,7 +32,7 @@ pub fn insert_fs_dir(conn: &Connection, fk_type: i32, name: String) {
                  &[&fs_dir.fk_type, &fs_dir.name]);
     if dir_instance.is_err() {
         return;
-    }    
+    }
     dir_instance.unwrap();
 }
 
