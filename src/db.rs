@@ -23,37 +23,21 @@ pub use dbJob::table_create_job as table_create_job;
 pub use dbJob::insert_job as insert_job;
 pub use dbJob::list_job as list_job;
 pub use dbJob::pk_job_by_name as pk_job_by_name;
-
-
 pub use dbJobProvide::JobProvide as JobProvide;
 pub use dbJobProvide::table_create_job_provide as table_create_job_provide;
 pub use dbJobProvide::insert_job_provide as insert_job_type;
 pub use dbJobProvide::list_job_provide as list_job_type;
-
-
-
 pub use dbJobDepend::JobDepend as JobDepend;
 pub use dbJobDepend::table_create_job_depend as table_create_job_depend;
 pub use dbJobDepend::insert_job_depend as insert_job_depend;
-
-
-
-
-#[derive(Debug)]
-struct VariableName {
-    id: i32,
-    name: String,
-}
-
-
-
-fn table_create_variable_name(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE VARIABLE_NAME (
-                  id            INTEGER PRIMARY KEY ASC,
-                  name      TEXT
-                  )", &[]).unwrap();
-    return conn;
-}
+pub use dbJobDepend::pk_job_depend_by_all as pk_job_depend_by_all;
+pub use dbJobDepend::list_job_depend as list_job_depend;
+pub use dbVariableName::VariableName as VariableName;
+pub use dbVariableName::table_create_variable_name as table_create_variable_name;
+pub use dbVariableName::insert_variable_name as insert_variable_name;
+pub use dbVariableName::list_variable_name as list_variable_name;
+pub use dbVariableName::variable_name_list as variable_name_list;
+pub use dbVariableName::pk_variable_name_by_name as pk_variable_name_by_name;
 
 
 #[derive(Debug)]
@@ -140,18 +124,6 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
     table_create_require_variable(&conn);
     table_create_require_variable_pair(&conn);
     return &newcon;
-}
-
-
-pub fn insert_job_variable_name(conn: &Connection, name: String) {
-
-    let me = VariableName {
-        id: 0,
-        name: name,
-    };
-    conn.execute("INSERT INTO VARIABLE_NAME (name)
-                  VALUES (?1)",
-                 &[&me.name]).unwrap();
 }
 
 
