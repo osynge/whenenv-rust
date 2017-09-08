@@ -192,6 +192,43 @@ fn elephant_variable_pk(conn: &Connection, text :&String) -> i32 {
 }
 
 
+fn elephant_job_require_variables(conn: &Connection, pk_job :&i32, pk_variable: &i32) -> i32 {
+    let mut pk_job_require_variables :i32 = 0;
+    let rc = db::pk_job_require_variable_by_name(conn, &pk_job, &pk_variable, &mut pk_job_require_variables);
+    match rc {
+        Ok(pk) => {
+            return pk_job_require_variables;
+        }
+        Err(_) => {
+            let doink = db::insert_job_require_variable(conn, &pk_job, &pk_variable);
+            if doink.is_err() {
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_job_require_variable_by_name(conn, &pk_job, &pk_variable, &mut pk_job_require_variables);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_job_require_variables;
+                            }
+                        Err(_) => {
+                                println!("Failed to select job");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert job");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_job_require_variables;
+}
+
+
 fn elephant_job_pk(conn: &Connection, pk_file :&i32, text :&String) -> i32 {
     let mut pk_job :i32 = 0;
     let rc = db::pk_job_by_name(conn, &text, &mut pk_job);
@@ -392,6 +429,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                                 let foo = sss.unwrap();
                                 let name = String::from(foo);
                                 pk_variable_name = elephant_variable_pk(conn, &name);
+                                elephant_job_require_variables(conn, &pk_job, &pk_variable_name);
                                 }
                             }
                         }
@@ -520,15 +558,15 @@ pub fn deligate(matches : ArgMatches) {
 
 
     for filename in db::list_provider(&conn) {
-        println!("list_provider{:?}", filename);
+        println!("list_provider:{:?}", filename);
     }
 
     for filename in db::list_job_depend(&conn) {
-        println!("list_job_depend{:?}", filename);
+        println!("list_job_depend:{:?}", filename);
     }
 
     for filename in db::list_variable_name(&conn) {
-        println!("list_variable_name{:?}", filename);
+        println!("list_variable_name:{:?}", filename);
     }
 }
 
