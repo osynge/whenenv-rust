@@ -24,20 +24,23 @@ pub fn table_create_job_provide(conn: &Connection)  -> &Connection  {
 
 
 
-pub fn insert_job_provide(conn: &Connection, fk_job: i32 , fk_provider: i32, name: String) {
+
+
+pub fn insert_job_provide(conn: &Connection, job: &i32, provider: &i32) -> Result<i32, &'static str>{
 
     let me = JobProvide {
         id: 0,
-        fk_job: fk_job,
-        fk_provider: fk_provider,
+        fk_job: *job,
+        fk_provider: *provider,
     };
     let load_instance = conn.execute("INSERT INTO JOBPROVIDE (fk_job, fk_provider)
                   VALUES (?1, ?2)",
                  &[&me.fk_job, &me.fk_provider]);
     if load_instance.is_err() {
-        return;
+        return Err("Insert failed");
     }
     load_instance.unwrap();
+        return Ok(0);
 }
 
 
@@ -59,4 +62,30 @@ pub fn list_job_provide(conn: &Connection)-> Vec<JobProvide> {
         items.push(person.unwrap());
     }
     return items;
+}
+
+pub fn pk_job_provide_by_all(conn: &Connection, fk_job: &i32, provider: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+    let mut stmt = conn.prepare("SELECT JOBPROVIDE.id, JOBPROVIDE.fk_job, JOBPROVIDE.fk_provider FROM JOBPROVIDE WHERE JOBPROVIDE.fk_job = ?1 AND JOBPROVIDE.fk_provider=?2").unwrap();
+    let job_provide_iter = stmt.query_map(&[fk_job, provider], |row| {
+        JobProvide {
+            id: row.get(0),
+            fk_job: row.get(1),
+            fk_provider: row.get(2),
+        }
+    });
+    if job_provide_iter.is_err() {
+        return Err("Insert failed");
+    }
+    let result = job_provide_iter.unwrap();
+    let mut found = 0;
+    let mut items = Vec::<i32>::new();
+    for person in result {
+        let bill= person.unwrap();
+        *pk = bill.id;
+        found = 1;
+    }
+    if found != 0 {
+        return Ok(found);
+    }
+    return Err("None found");
 }
