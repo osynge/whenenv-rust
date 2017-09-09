@@ -25,8 +25,9 @@ pub use dbJob::list_job as list_job;
 pub use dbJob::pk_job_by_name as pk_job_by_name;
 pub use dbJobProvide::JobProvide as JobProvide;
 pub use dbJobProvide::table_create_job_provide as table_create_job_provide;
-pub use dbJobProvide::insert_job_provide as insert_job_type;
+pub use dbJobProvide::insert_job_provide as insert_job_provide;
 pub use dbJobProvide::list_job_provide as list_job_type;
+pub use dbJobProvide::pk_job_provide_by_all as pk_job_provide_by_all;
 pub use dbJobDepend::JobDepend as JobDepend;
 pub use dbJobDepend::table_create_job_depend as table_create_job_depend;
 pub use dbJobDepend::insert_job_depend as insert_job_depend;
@@ -45,6 +46,11 @@ pub use dbJobRequireVariable::list_job_require_variable as list_job_require_vari
 pub use dbJobRequireVariable::job_require_variable_list as job_require_variable_list;
 pub use dbJobRequireVariable::pk_job_require_variable_by_name as pk_job_require_variable_by_name;
 pub use dbVariablePair::table_create_variable_pair as table_create_variable_pair;
+pub use dbVariablePair::insert_variable_pair as insert_variable_pair;
+
+pub use dbVariablePair::pk_variable_pair_by_name as pk_variable_pair_by_name;
+pub use dbVariablePair::variable_pair_list as variable_pair_list;
+
 #[derive(Debug)]
 struct JobRequireVariablePair {
     id: i32,
