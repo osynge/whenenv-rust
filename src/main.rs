@@ -19,6 +19,8 @@ mod dbJobDepend;
 mod dbVariableName;
 mod dbJobRequireVariable;
 mod dbVariablePair;
+mod dbJobRequireVariablePair;
+
 
 fn main() {
 

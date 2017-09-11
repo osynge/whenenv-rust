@@ -51,29 +51,11 @@ pub use dbVariablePair::insert_variable_pair as insert_variable_pair;
 pub use dbVariablePair::pk_variable_pair_by_name as pk_variable_pair_by_name;
 pub use dbVariablePair::variable_pair_list as variable_pair_list;
 
-#[derive(Debug)]
-struct JobRequireVariablePair {
-    id: i32,
-    job: i32,
-    variable_pair: i32,
-}
-
-
-
-
-fn table_create_require_variable_pair(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE JOB_REQUIRE_VALUE (
-                  id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER NOT NULL,
-                  variable_pair INTEGER NOT NULL,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(variable_pair) REFERENCES VARIABLE_PAIR(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
-    return conn;
-}
-
-
-
+pub use dbJobRequireVariablePair::table_create_job_require_variable_pair as table_create_job_require_variable_pair;
+pub use dbJobRequireVariablePair::insert_job_require_variable_pair as insert_job_require_variable_pair;
+pub use dbJobRequireVariablePair::list_job_require_variable_pair as list_job_require_variable_pair;
+pub use dbJobRequireVariablePair::job_require_variable_pair_list as job_require_variable_pair_list;
+pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all as pk_job_require_variable_pair_by_all;
 
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
@@ -93,25 +75,10 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
     table_create_variable_name(&conn);
     table_create_variable_pair(&conn);
     table_create_job_require_variable(&conn);
-    table_create_require_variable_pair(&conn);
+    table_create_job_require_variable_pair(&conn);
     return &newcon;
 }
 
 
 
 
-
-
-
-pub fn insert_job_require_variable_pair(conn: &Connection, job: i32,  require_id: i32) {
-
-    let me = JobRequireVariablePair {
-        id: 0,
-        job: job,
-        variable_pair: require_id,
-
-    };
-    conn.execute("INSERT INTO JOB_REQUIRE_VALUE (job, variable_pair)
-                  VALUES (?1, ?2)",
-                 &[&me.job, &me.variable_pair]).unwrap();
-}
