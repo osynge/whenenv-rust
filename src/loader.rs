@@ -306,7 +306,6 @@ fn elephant_provider_pk(conn: &Connection, in_text :&str) -> i32 {
 }
 
 
-
 fn elephant_job_depend_pk(conn: &Connection, job: i32, provider: i32, sq_order: i32) -> i32 {
     let mut pk_job_depend :i32 = 0;
     let rc = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order, &mut pk_job_depend);
@@ -399,7 +398,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                     let str_item = itemfdsd.as_string();
                     let foo = str_item.unwrap();
                     pk_job = elephant_job_pk(conn, &pk_file, &foo);
-                    println!("pk_job::name={}", pk_job);
+                    //println!("pk_job::name={}", pk_job);
                 }
             }
             else
@@ -411,7 +410,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                 let sdf = resulkt.unwrap();
                 let mut itemfdsd = sdf.clone();
                 if itemfdsd.is_array() {
-                    println!("is_arrayxxxxx");
+                    //println!("is_arrayxxxxx");
 
                     let ssd = itemfdsd.as_array();
                     let sdf = ssd.unwrap();
@@ -421,16 +420,16 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                             let sss = elem.as_string();
                             let foo = sss.unwrap();
                             pk_provider = elephant_provider_pk(conn, &foo);
-                            println!("elephant_provider_pk={}", foo);
+                            //println!("elephant_provider_pk={}", foo);
                             let sq_order = 1;
                             pk_provider = elephant_job_depend_pk(conn, pk_job, pk_provider, sq_order);
-                            println!("pk_provider::name={}", pk_provider);
+                            //println!("pk_provider::name={}", pk_provider);
                         }
                     }
                 }
             }
             if movie.contains_key("depends") {
-                println!("depends");
+                //println!("depends");
                 let resulkt = movie.get("provides");
                 let sdf = resulkt.unwrap();
                 let mut itemfdsd = sdf.clone();
@@ -449,7 +448,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                                     order_job_depend += 10;
                                     pk_provider = elephant_provider_pk(conn, &foo);
                                     pk_job_depend = elephant_job_depend_pk(conn, pk_job, pk_provider, order_job_depend);
-                                    println!("pk_provider::name={}", pk_provider);
+                                    //println!("pk_provider::name={}", pk_provider);
 
                         }
                     }
@@ -504,6 +503,29 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                             }
                         }
                         if iVariables.contains_key("require_values") {
+                            let resulkdtvv = iVariables.get("require_values");
+                            let sdfc = resulkdtvv.unwrap();
+                            let mut itemfdsdff = sdfc.clone();
+
+                            if itemfdsdff.is_object(){
+                                let sssbill = itemfdsdff.as_object();
+                                for &dict_key in &sssbill {
+                                    //let value_deep = sssbill.get(&dict_key);
+                                    if dict_key.contains_key("provides_keys") {
+
+                                        println!("require_values:dict_key:{:?}", dict_key);
+                                    }
+                                    if iVariables.contains_key("provides_keys") {
+                                        println!("require_values:dict_key:{:?}", dict_key);
+                                    }
+                                    if iVariables.contains_key("provides_keys") {
+                                        println!("require_values:dict_key:{:?}", dict_key);
+                                    }
+                                    if iVariables.contains_key("provides_keys") {
+                                        println!("require_values:dict_key:{:?}", dict_key);
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -518,27 +540,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
 
         for item in found {
 
-            let bill = item.find_path(&["provides_keys"]);
-            if bill != None {
-                for item2 in bill {
-
-                    if item2.is_array() {
-                        let ssd = item2.as_array();
-                        let sdf = ssd.unwrap();
-                        let george = sdf.len();
-                        let itemfdsd = sdf.iter();
-                        for elem in itemfdsd{
-                            if elem.is_string() {
-                                let sss = elem.as_string();
-                                let foo = sss.unwrap();
-                                let name = String::from(foo);
-                                pk_variable_name = elephant_variable_pk(conn, &name);
-                                }
-
-                            }
-                        }
-                    }
-                }
             let bill = item.find_path(&["require_values"]);
 
             if bill != None {
@@ -601,7 +602,7 @@ pub fn deligate(matches : ArgMatches) {
         // If we specified the multiple() setting we can get all the values
     if let Some(in_v) = matches.values_of("env") {
         for in_file in in_v {
-            println!("An input file: {}", in_file);
+            //println!("An input file: {}", in_file);
             job_files_list(&in_file);
         }
     }
@@ -617,12 +618,12 @@ pub fn deligate(matches : ArgMatches) {
         let foo_name = directory.name;
         let file_list = listy2(&foo_name);
         for fnccc in file_list {
-            println!("An input file: {}", fnccc);
+            //println!("An input file: {}", fnccc);
             let s1 = fnccc.clone();
             db::insert_fs_file(&conn, foo, fnccc);
             let mut pk = 10;
             db::pk_fs_file_by_name(&conn, s1, &mut pk);
-            println!("ssss: {}", pk);
+            //println!("ssss: {}", pk);
         }
     }
 
@@ -636,27 +637,51 @@ pub fn deligate(matches : ArgMatches) {
     }
 
 
-
-
-    for filename in db::list_fs_file(&conn) {
-        let pk_file = filename.id;
-        let name = filename.name;
-        json_loader_name(&conn, &pk_file, &loader(&name));
+    // iterate over everything.
+    for (filename, contents) in &scores {
+        let mut pkfsfile : i32 = 0;
+        let filenameStr = filename.clone();
+        let doop = db::pk_fs_file_by_name(&conn, filenameStr, & mut pkfsfile);
+        json_loader_name(&conn, &pkfsfile, &contents);
 
     }
 
 
-
-    for filename in db::list_provider(&conn) {
-        println!("list_provider:{:?}", filename);
-    }
-
-    for filename in db::list_job_depend(&conn) {
-        println!("list_job_depend:{:?}", filename);
-    }
-
-    for filename in db::list_variable_name(&conn) {
-        println!("list_variable_name:{:?}", filename);
-    }
     db::variable_pair_list(&conn);
+}
+
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn list_provider() {
+        use db;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        for filename in db::list_provider(&conn) {
+            println!("list_provider:{:?}", filename);
+        }
+
+    }
+
+    #[test]
+    fn list_job_depend() {
+        use db;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        for filename in db::list_job_depend(&conn) {
+            println!("list_job_depend:{:?}", filename);
+        }
+    }
+    #[test]
+    fn list_variable_name() {
+        use db;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        for filename in db::list_variable_name(&conn) {
+            println!("list_variable_name:{:?}", filename);
+        }
+    }
+
 }
