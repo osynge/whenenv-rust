@@ -1,6 +1,44 @@
 use rusqlite::Connection;
 use db;
 
+
+pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
+    let mut pk_variable :i32 = 0;
+    let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
+    match rc {
+        Ok(pk) => {
+            return pk_variable;
+        }
+        Err(_) => {
+            let doink = db::insert_fs_dir_type(conn, &text);
+            if doink.is_err() {
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
+                    match doin3k {
+                        Ok(pk) => {
+                            return pk_variable;
+                            }
+                        Err(_) => {
+                                println!("Failed to select variable");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert variable");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_variable;
+}
+
+
 pub fn elephant_variable_pk(conn: &Connection, text :&String) -> i32 {
     let mut pk_variable :i32 = 0;
     let rc = db::pk_variable_name_by_name(conn, &text, &mut pk_variable);
