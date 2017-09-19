@@ -1,6 +1,5 @@
-
-use clap::{App, Arg};
-
+use clap::Arg;
+use clap::App;
 use loader;
 
 pub fn cli_clap() {
@@ -18,7 +17,7 @@ pub fn cli_clap() {
     // triggered with "-c file" or "--config file" or "--config=file" and finally a positional
     // argument which is the input file we want to work with, this will be the only required
     // argument.
-    let matches = App::new("whenenv")
+    let application = App::new("whenenv")
                         .about("Parses an input file to do awesome things")
                         .version("0.0.1")
                         .author("Owen Synge <osynge@googlemail.com>")
@@ -56,8 +55,8 @@ pub fn cli_clap() {
                                     .long("config")
                                     .value_name("FILE")
                                     .help("Sets a custom config file")
-                                    .takes_value(true))
-                        .get_matches();
+                                    .takes_value(true));
+    let matches = application.get_matches();
 
     // We can find out whether or not debugging was turned on
     if matches.is_present("debug") {
@@ -73,7 +72,5 @@ pub fn cli_clap() {
         println!("Using config file: {}", env);
     }
     // Continued program logic goes here...
-    loader::deligate(matches)
-
-    
+    loader::deligate(matches);
 }
