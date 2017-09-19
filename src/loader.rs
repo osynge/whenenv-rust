@@ -16,6 +16,7 @@ use rusqlite::Error;
 use dbFsFile;
 use std::result;
 use json_loader_elephant::json_loader_elephant;
+use elephant;
 
 #[derive(Debug)]
 struct Person {
@@ -50,14 +51,15 @@ pub fn job_files_list(direcory: &str)  {
 
 pub fn deligate(conn: &Connection, matches : ArgMatches) {
     if let Some(in_v) = matches.values_of("dir-scripts") {
+        let str_shell_files_list = String::from("shell_files");
+        let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
         for in_file in in_v {
-            //println!("An input dir-scripts: {}", in_file);
-           listy(&in_file);
+            let filename = in_file.to_string();
+            db::insert_fs_dir(&conn, pk_directory_type_shell, filename);
+            listy(&in_file);
 
         }
     }
-
-
         // If we specified the multiple() setting we can get all the values
     if let Some(in_v) = matches.values_of("env") {
         for in_file in in_v {
@@ -67,9 +69,11 @@ pub fn deligate(conn: &Connection, matches : ArgMatches) {
     }
 
     if let Some(in_v) = matches.values_of("dir-jobs") {
+        let str_job_files_list = String::from("job_files");
+        let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
         for in_file in in_v {
             let filename = in_file.to_string();
-            db::insert_fs_dir(&conn, 0, filename);
+            db::insert_fs_dir(&conn, pk_directory_type_jobs, filename);
         }
     }
 }
