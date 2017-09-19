@@ -102,13 +102,7 @@ pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str)  {
 
 
 
-pub fn deligate(matches : ArgMatches) {
-
-    let conn = db::connect();
-    db::create_tables(&conn);
-
-
-
+pub fn deligate(conn: &Connection, matches : ArgMatches) {
     if let Some(in_v) = matches.values_of("dir-scripts") {
         for in_file in in_v {
             //println!("An input dir-scripts: {}", in_file);

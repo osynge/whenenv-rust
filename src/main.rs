@@ -23,5 +23,9 @@ mod json_loader_elephant;
 mod cli_clap;
 
 fn main() {
-    cli_clap::cli_clap();
+    let conn = db::connect();
+    db::create_tables(&conn);
+
+
+    cli_clap::cli_clap(&conn);
 }
