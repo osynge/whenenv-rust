@@ -21,6 +21,7 @@ mod dbVariablePair;
 mod dbJobRequireVariablePair;
 mod json_loader_elephant;
 mod cli_clap;
+mod jobs_load;
 
 fn main() {
     let conn = db::connect();
@@ -28,4 +29,5 @@ fn main() {
 
 
     cli_clap::cli_clap(&conn);
+    jobs_load::load(&conn);
 }
