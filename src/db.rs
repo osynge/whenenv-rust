@@ -4,6 +4,7 @@ pub use dbFsDirType::FsDirType as FsDirType;
 pub use dbFsDirType::table_create_fs_dir_type as table_create_fs_dir_type;
 pub use dbFsDirType::insert_fs_dir_type as insert_fs_dir_type;
 pub use dbFsDirType::list_fs_dir_type as list_fs_dir_type;
+pub use dbFsDirType::pk_fs_dir_type_by_name as pk_fs_dir_type_by_name;
 pub use dbFsDir::insert_fs_dir as insert_fs_dir;
 pub use dbFsDir::FsDir as FsDir;
 pub use dbFsDir::list_fs_dir as list_fs_dir;
@@ -56,6 +57,7 @@ pub use dbJobRequireVariablePair::insert_job_require_variable_pair as insert_job
 pub use dbJobRequireVariablePair::list_job_require_variable_pair as list_job_require_variable_pair;
 pub use dbJobRequireVariablePair::job_require_variable_pair_list as job_require_variable_pair_list;
 pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all as pk_job_require_variable_pair_by_all;
+
 
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
