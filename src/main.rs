@@ -22,6 +22,7 @@ mod dbJobRequireVariablePair;
 mod json_loader_elephant;
 mod cli_clap;
 mod jobs_load;
+mod elephant;
 
 fn main() {
     let conn = db::connect();
