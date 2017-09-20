@@ -13,8 +13,9 @@ pub struct FsDir {
 pub fn table_create_fs_dir(conn: &Connection) -> &Connection {
     conn.execute("CREATE TABLE FS_DIR (
                   id              INTEGER PRIMARY KEY ASC,
-                  fk_type             INTEGER,
-                  name            TEXT NOT NULL UNIQUE
+                  fk_type         INTEGER NOT NULL,
+                  name            TEXT NOT NULL UNIQUE,
+                  FOREIGN KEY(fk_type) REFERENCES FS_DIR_TYPE(id) ON UPDATE CASCADE
                   )", &[]).unwrap();
     return conn;
 }
