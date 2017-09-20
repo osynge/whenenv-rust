@@ -1,9 +1,10 @@
 use clap::Arg;
 use clap::App;
+use clap::{ArgMatches};
 use loader;
 use rusqlite::Connection;
 
-pub fn cli_clap(conn: &Connection) {
+pub fn cli_clap(conn: &Connection) -> ArgMatches{
 
     let application = App::new("whenenv")
                         .about("Parses an input file to do awesome things")
@@ -60,5 +61,6 @@ pub fn cli_clap(conn: &Connection) {
         println!("Using config file: {}", env);
     }
     // Continued program logic goes here...
-    loader::deligate(conn, matches);
+    //loader::deligate(conn, matches);
+    return matches;
 }
