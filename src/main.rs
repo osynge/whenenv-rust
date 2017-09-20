@@ -29,6 +29,8 @@ fn main() {
     db::create_tables(&conn);
 
 
-    cli_clap::cli_clap(&conn);
+    let clp_matches = cli_clap::cli_clap(&conn);
+    loader::deligate(&conn, clp_matches);
+
     jobs_load::load(&conn);
 }
