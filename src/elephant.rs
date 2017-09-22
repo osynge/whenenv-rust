@@ -10,7 +10,7 @@ pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
     let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
     match rc {
         Ok(pk) => {
-            return pk_variable;
+            return pk;
         }
         Err(_) => {
             let doink = db::insert_fs_dir_type(conn, &text);
@@ -22,6 +22,51 @@ pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
                     let doin3k = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
                     match doin3k {
                         Ok(pk) => {
+                            return pk;
+                            }
+                        Err(_) => {
+                                println!("Failed to select variable");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert variable");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_variable;
+}
+
+
+
+
+pub fn elephant_directory(conn: &Connection, fk_directory_type :&i32, text : &String) -> i32 {
+    let mut pk_variable :i32 = 0;
+    let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory_type, &text);
+    match list_fs_dir_by_all_result {
+        Ok(pk) => {
+            for item in pk {
+                pk_variable = item.id;
+            }
+        }
+        Err(_) => {
+            let doink = db::insert_fs_dir(conn, &fk_directory_type, &text);
+            if doink.is_err() {
+                println!("Failed to insert_fs_dir variable");
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::list_fs_dir_by_all(conn, &fk_directory_type, &text);
+                    match doin3k {
+                        Ok(pk) => {
+                            for item in pk {
+                                pk_variable = item.id;
+                            }
                             return pk_variable;
                             }
                         Err(_) => {
@@ -42,24 +87,71 @@ pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
 }
 
 
-pub fn elephant_session(conn: &Connection, text : &String) -> i32 {
+
+pub fn elephant_file(conn: &Connection, fk_directory :&i32, text : &str) -> i32 {
     let mut pk_variable :i32 = 0;
-    let rc = db::pk_session_by_uuid(conn, &text, &mut pk_variable);
-    match rc {
+    let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory, &text);
+    match list_fs_dir_by_all_result {
         Ok(pk) => {
-            return pk_variable;
+            for item in pk {
+                pk_variable = item.id;
+            }
         }
         Err(_) => {
-            let doink = db::insert_session(conn, text.clone());
+            let doink = db::insert_fs_dir(conn, &fk_directory, &text);
+            if doink.is_err() {
+                println!("Failed to insert_fs_dir variable");
+                return 0;
+            }
+            match doink {
+                Ok(pk) => {
+                    let doin3k = db::list_fs_dir_by_all(conn, &fk_directory, &text);
+                    match doin3k {
+                        Ok(pk) => {
+                            for item in pk {
+                                pk_variable = item.id;
+                            }
+                            return pk_variable;
+                            }
+                        Err(_) => {
+                                println!("Failed to select variable");
+                                return 0;
+                            }
+                        }
+                    }
+                Err(_) => {
+                    println!("Failed to insert variable");
+                    return 0;
+                }
+            }
+
+        }
+    }
+    return pk_variable;
+}
+
+
+
+
+
+pub fn elephant_session(conn: &Connection, text : &String) -> i32 {
+    let mut pk_variable :i32 = 0;
+    let rc = db::pk_session_by_uuid(conn, &text);
+    match rc {
+        Ok(pk) => {
+            return pk;
+        }
+        Err(_) => {
+            let doink = db::insert_session(conn, &text);
             if doink.is_err() {
                 return 0;
             }
             match doink {
                 Ok(pk) => {
-                    let doin3k = dbSession::pk_session_by_uuid(conn, &text, &mut pk_variable);
+                    let doin3k = dbSession::pk_session_by_uuid(conn, &text);
                     match doin3k {
                         Ok(pk) => {
-                            return pk_variable;
+                            return pk;
                             }
                         Err(_) => {
                                 println!("Failed to select variable");
@@ -341,4 +433,65 @@ pub fn elephant_job_provide_variables(conn: &Connection, job: i32, provider: i32
         }
     }
     return pk_job_provide;
+}
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn elephant_directory_type() {
+        use db;
+        use elephant;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_job_files_list = String::from("job_files");
+        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        assert !(pk_dir_type == 1);
+
+    }
+
+    #[test]
+    fn elephant_directory() {
+        use db;
+        use elephant;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_job_files_list = String::from("job_files");
+        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        assert !(pk_dir_type == 1);
+        let str_dir_one_list = String::from("dir_one");
+        let str_directory_path = String::from("directory_path");
+        let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
+        assert !(pk_dir == 1);
+
+    }
+    #[test]
+    fn elephant_session() {
+        use db;
+        use elephant;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_session_uuid = String::from("session uuid");
+        let pk_dir_type = elephant::elephant_session(&conn, &str_session_uuid);
+        assert !(pk_dir_type == 1);
+    }
+
+
+    #[test]
+    fn elephant_file() {
+        use db;
+        use elephant;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_job_files_list = String::from("job_files");
+        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        assert !(pk_dir_type == 1);
+        let str_dir_one_list = String::from("dir_one");
+        let str_directory_path = String::from("directory_path");
+        let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
+        assert !(pk_dir == 1);
+        let str_file_path = String::from("file_path");
+        let pk_file = elephant::elephant_file(&conn, &pk_dir, &str_file_path);
+        assert !(pk_file == 1);
+    }
 }
