@@ -28,11 +28,18 @@ struct Person {
 
 
 
-pub fn listy(direcory: &str) {
+pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) {
     let path = Path::new(direcory);
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
-            println!("aaaa{:?}", entry.path());
+            let path_result = entry.path();
+            let path_string = path_result.to_str();
+            match path_string {
+                Some(pk) => {
+                    let pk_file = elephant::elephant_file(&conn, pk_directory, pk);
+                }
+                None => {}
+           }
         }
     }
 }
@@ -53,17 +60,28 @@ pub fn deligate(conn: &Connection, matches : &ArgMatches) {
     if let Some(in_v) = matches.values_of("dir-scripts") {
         let str_shell_files_list = String::from("shell_files");
         let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
-        for in_file in in_v {
-            let filename = in_file.to_string();
-            db::insert_fs_dir(&conn, pk_directory_type_shell, filename);
+        for in_dir in in_v {
+            let dirname = in_dir.to_string();
+            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+            listy(&conn, &pk_directory, &dirname);
         }
     }
     if let Some(in_v) = matches.values_of("dir-jobs") {
         let str_job_files_list = String::from("job_files");
         let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
-        for in_file in in_v {
-            let filename = in_file.to_string();
-            db::insert_fs_dir(&conn, pk_directory_type_jobs, filename);
+        for in_dir in in_v {
+            let dirname = in_dir.to_string();
+            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
+            listy(&conn, &pk_directory, &dirname);
+        }
+    }
+    if let Some(in_v) = matches.values_of("dir-py") {
+        let str_py_files_list = String::from("python_files");
+        let pk_directory_type_py = elephant::elephant_directory_type(&conn, &str_py_files_list);
+        for in_dir in in_v {
+            let dirname = in_dir.to_string();
+            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_py, &dirname);
+            listy(&conn, &pk_directory, &dirname);
         }
     }
 }
@@ -92,9 +110,7 @@ mod tests {
         for filename in db::list_provider(&conn) {
             println!("list_provider:{:?}", filename);
         }
-
     }
-
     #[test]
     fn list_job_depend() {
         use db;
