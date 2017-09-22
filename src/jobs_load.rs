@@ -10,6 +10,9 @@ use rustc_serialize::{Encodable};
 use rustc_serialize::json::{self, Encoder};
 use rustc_serialize::json::Json;
 use json_loader_elephant::json_loader_elephant;
+use elephant;
+
+
 pub fn listy2(direcory: &str) -> Vec<String>{
     println!("listy2{:?}", direcory);
     let mut items = Vec::<String>::new();
@@ -57,7 +60,6 @@ pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str)  {
         }
         Err(_)=> {}
     }
-    //return json.unwrap();
 }
 
 
@@ -76,14 +78,14 @@ pub fn load(conn: &Connection)  {
             //println!("ssss: {}", pk);
         }
     }
-
-
     let mut scores = HashMap::new();
-    for filename in db::list_fs_file(&conn) {
+    let str_job_files_list = String::from("job_files");
+    let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
+    for filename in db::list_fs_file_type(&conn, &pk_directory_type_jobs) {
         let mut name = String::from(filename.name);
         let name2 = name.clone();
         let loader_rc = loader(name2.trim());
-        scores.insert(name,loader_rc );
+        scores.insert(name,loader_rc);
     }
 
 
@@ -93,10 +95,7 @@ pub fn load(conn: &Connection)  {
         let filenameStr = filename.clone();
         let doop = db::pk_fs_file_by_name(&conn, filenameStr, & mut pkfsfile);
         let fred = json_loader_name(&conn, &pkfsfile, &contents);
-
     }
-
-
     db::variable_pair_list(&conn);
     
 }
