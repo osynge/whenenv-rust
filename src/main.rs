@@ -23,6 +23,9 @@ mod json_loader_elephant;
 mod cli_clap;
 mod jobs_load;
 mod elephant;
+mod dbSession;
+mod dbEnviroment;
+
 
 fn main() {
     let conn = db::connect();
