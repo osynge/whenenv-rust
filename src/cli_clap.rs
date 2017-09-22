@@ -52,21 +52,5 @@ pub fn cli_clap(number: &u32) -> ArgMatches{
                                     .help("Sets a custom config file")
                                     .takes_value(true));
     let matches = application.get_matches();
-
-    // We can find out whether or not debugging was turned on
-    if matches.is_present("debug") {
-        println!("Debugging is turned on");
-    }
-
-    // If we wanted to some custom initialization based off some configuration file provided
-    // by the user, we could get the file (A string of the file)
-    if let Some(ref file) = matches.value_of("config") {
-        println!("Using config file: {}", file);
-    }
-    if let Some(ref env) = matches.value_of("env") {
-        println!("Using config file: {}", env);
-    }
-    // Continued program logic goes here...
-    //loader::deligate(conn, matches);
     return matches;
 }
