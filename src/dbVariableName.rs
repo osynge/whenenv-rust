@@ -71,9 +71,11 @@ pub fn variable_name_list(conn: &Connection) {
     }
 }
 
-pub fn pk_variable_name_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'static str>{
+	let mut output = 0;
+	let bill = String::from(name);
     let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1").unwrap();
-    let variable_name_iter = stmt.query_map(&[name], |row| {
+    let variable_name_iter = stmt.query_map(&[&name], |row| {
         VariableName {
             id: row.get(0),
             name: row.get(1),
@@ -84,14 +86,13 @@ pub fn pk_variable_name_by_name(conn: &Connection, name: &String, pk: &mut i32) 
     }
     let result = variable_name_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill= person.unwrap();
-        *pk = bill.id;
+        output = bill.id;
         found = 1;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(output);
     }
     return Err("None found");
 }
