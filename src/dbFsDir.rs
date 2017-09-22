@@ -89,7 +89,7 @@ pub fn list_fs_dir_filter(conn: &Connection)-> Vec<FsDir> {
 
 
 
-pub fn list_fs_dir_by_all(conn: &Connection, fk_fs_type: &i32, name: &String) -> Result<Vec<FsDir>, &'static str> {
+pub fn list_fs_dir_by_all(conn: &Connection, fk_fs_type: &i32, name: &str) -> Result<Vec<FsDir>, &'static str> {
     let mut stmt = conn.prepare("SELECT FS_DIR.id, FS_DIR.fk_type, FS_DIR.name  FROM FS_DIR
         INNER JOIN FS_DIR_TYPE
         on FS_DIR.fk_type = FS_DIR_TYPE.id
@@ -108,11 +108,16 @@ pub fn list_fs_dir_by_all(conn: &Connection, fk_fs_type: &i32, name: &String) ->
     }
     let result = fs_dir_iter.unwrap();
     let mut items = Vec::<FsDir>::new();
+    let mut found = 0;
     for person in result {
         let dir = person.unwrap();
         items.push(dir);
+        found = 1;
     }
-    return Ok(items);
+    if found != 0 {
+        return Ok(items);
+    }
+    return Err("None found");
 }
 
 
@@ -141,15 +146,16 @@ mod tests {
         let insert_fs_dir_result = dbFsDir::insert_fs_dir(&conn,  &pk_dir_type, &str_directory_path);
         let fs_dir_result = insert_fs_dir_result.unwrap();
         assert !(fs_dir_result == 0);
+        let freed = 1;
         let list_fs_dir_result = dbFsDir::list_fs_dir_by_all(&conn, &pk_dir_type, &str_directory_path) ;
         let vec_dir = list_fs_dir_result.unwrap();
-        counter = 0;
+        let mut counter2 = 0;
         let mut pk_dir = 0;
         for dir in vec_dir {
-            counter += 1;
+            counter2 += 1;
             pk_dir = dir.id;
         }
-        assert !(counter == 1);
+        assert !(counter2 == 1);
         assert !(pk_dir == 1);
     }
 }
