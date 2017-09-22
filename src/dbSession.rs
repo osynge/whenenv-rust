@@ -18,11 +18,11 @@ pub fn table_create_session(conn: &Connection) -> &Connection {
 }
 
 
-pub fn insert_session(conn: &Connection, uuid: String) -> Result<i32, &'static str> {
+pub fn insert_session(conn: &Connection, uuid: &str) -> Result<i32, &'static str> {
 
     let session = Session {
         id: 0,
-        uuid: uuid,
+        uuid: uuid.to_string(),
     };
     let mut found = 0;
     let dir_instance = conn.execute("INSERT INTO WHENENV_SESSION (uuid)
@@ -61,7 +61,7 @@ pub fn list_session(conn: &Connection)-> Vec<Session> {
 
 
 
-pub fn pk_session_by_uuid(conn: &Connection, uuid: &String, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_session_by_uuid(conn: &Connection, uuid: &String, ) -> Result<i32, &'static str>{
     let mut stmt = conn.prepare("SELECT id, uuid  FROM WHENENV_SESSION WHERE uuid = ?1").unwrap();
     let insert_session_iter = stmt.query_map(&[uuid], |row| {
         Session {
@@ -74,16 +74,38 @@ pub fn pk_session_by_uuid(conn: &Connection, uuid: &String, pk: &mut i32) -> Res
     }
     let result = insert_session_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
+    let mut pksession = 0;
+    let mut items = Vec::<Session>::new();
     for person in result {
-        let bill= person.unwrap();
-        *pk = bill.id;
+        let unwrapped = person.unwrap();
+        pksession = unwrapped.id;
         found = 1;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(pksession);
     }
     return Err("None found");
 }
 
 
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn insert_session() {
+        use db;
+        use elephant;
+        use dbSession;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_session_insert = String::from("job_files");
+        let pk_directory_type_jobs = dbSession::insert_session(&conn, &str_session_insert);
+        let vec_dir_type = dbSession::list_session(&conn);
+        let mut counter = 0;
+        for dir_type in vec_dir_type {
+            counter += 1;
+        }
+        assert !(counter == 1);
+    }
+}
