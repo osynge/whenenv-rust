@@ -83,7 +83,8 @@ pub fn job_require_variable_pair_list(conn: &Connection) {
 }
 
 
-pub fn pk_job_require_variable_pair_by_all(conn: &Connection, job: &i32, variable_pair: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_job_require_variable_pair_by_all(conn: &Connection, job: &i32, variable_pair: &i32) -> Result<i32, &'static str>{
+    let mut output = 0;
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair  FROM VARIABLE_PAIR WHERE name = ?1").unwrap();
     let variable_pair_iter = stmt.query_map(&[job, variable_pair], |row| {
         JobRequireVariablePair {
@@ -100,11 +101,11 @@ pub fn pk_job_require_variable_pair_by_all(conn: &Connection, job: &i32, variabl
     let mut items = Vec::<i32>::new();
     for person in result {
         let bill= person.unwrap();
-        *pk = bill.id;
+        output = bill.id;
         found = 1;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(output);
     }
     return Err("None found");
 }
