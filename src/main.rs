@@ -33,9 +33,9 @@ fn main() {
     db::create_tables(&conn);
     
     let some_value = 10;
-    let clp_matches = cli_clap::cli_clap(&some_value);
-    loader::deligate(&conn, clp_matches.clone());
+    let clap_matches = cli_clap::cli_clap(&some_value);
+    loader::deligate(&conn, &clap_matches);
     let pk_session = elephant::elephant_session(&conn, &session_uuid);
-    loader::enviroment(&conn, pk_session, clp_matches);
+    loader::enviroment(&conn, pk_session, &clap_matches);
     jobs_load::load(&conn);
 }

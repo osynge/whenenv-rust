@@ -49,7 +49,7 @@ pub fn job_files_list(direcory: &str)  {
 
 
 
-pub fn deligate(conn: &Connection, matches : ArgMatches) {
+pub fn deligate(conn: &Connection, matches : &ArgMatches) {
     if let Some(in_v) = matches.values_of("dir-scripts") {
         let str_shell_files_list = String::from("shell_files");
         let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
@@ -69,7 +69,7 @@ pub fn deligate(conn: &Connection, matches : ArgMatches) {
 }
 
 
-pub fn enviroment(conn: &Connection, pk_session : i32, matches : ArgMatches) {
+pub fn enviroment(conn: &Connection, pk_session : i32, matches : &ArgMatches) {
     if let Some(in_v) = matches.values_of("env") {
         for in_file in in_v {
             let filename = in_file.to_string();
