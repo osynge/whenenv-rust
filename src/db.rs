@@ -1,5 +1,9 @@
 use rusqlite::Connection;
 use rusqlite::Error;
+pub use dbSession::insert_session as insert_session;
+pub use dbSession::pk_session_by_uuid as pk_session_by_uuid;
+pub use dbEnviroment::pk_enviroment_by_name as pk_enviroment_by_name;
+pub use dbEnviroment::insert_enviroment as insert_enviroment;
 pub use dbFsDirType::FsDirType as FsDirType;
 pub use dbFsDirType::table_create_fs_dir_type as table_create_fs_dir_type;
 pub use dbFsDirType::insert_fs_dir_type as insert_fs_dir_type;
@@ -59,6 +63,9 @@ pub use dbJobRequireVariablePair::job_require_variable_pair_list as job_require_
 pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all as pk_job_require_variable_pair_by_all;
 
 
+use dbSession;
+use dbEnviroment;
+
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
     conn.execute("PRAGMA foreign_keys = ON;", &[]).unwrap();
@@ -67,6 +74,7 @@ pub fn connect() -> Connection {
 
 
 pub fn create_tables(conn: &Connection)  -> &Connection {
+    dbSession::table_create_session(&conn);
     table_create_fs_dir_type(&conn);
     table_create_fs_dir(&conn);
     table_create_fs_file(&conn);
@@ -78,6 +86,7 @@ pub fn create_tables(conn: &Connection)  -> &Connection {
     table_create_variable_pair(&conn);
     table_create_job_require_variable(&conn);
     table_create_job_require_variable_pair(&conn);
+    dbEnviroment::table_create_enviroment(&conn);
     return &newcon;
 }
 
