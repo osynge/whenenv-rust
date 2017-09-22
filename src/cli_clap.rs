@@ -4,7 +4,7 @@ use clap::{ArgMatches};
 use loader;
 use rusqlite::Connection;
 
-pub fn cli_clap(conn: &Connection) -> ArgMatches{
+pub fn cli_clap(number: &u32) -> ArgMatches{
 
     let application = App::new("whenenv")
                         .about("Parses an input file to do awesome things")
@@ -37,6 +37,12 @@ pub fn cli_clap(conn: &Connection) -> ArgMatches{
                                     .long("dir-sh")
                                     .value_name("DIR_SHELL")
                                     .help("directory storing jobs shell scripts.")
+                                    .multiple(true)
+                                    .takes_value(true))
+                        .arg(Arg::with_name("dir-py")
+                                    .long("dir-py")
+                                    .value_name("DIR_PYTHON")
+                                    .help("directory storing jobs python scripts.")
                                     .multiple(true)
                                     .takes_value(true))
                         .arg(Arg::with_name("config")
