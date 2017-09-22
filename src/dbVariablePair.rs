@@ -24,11 +24,11 @@ pub fn table_create_variable_pair(conn: &Connection) {
 }
 
 
-pub fn insert_variable_pair(conn: &Connection, fk_variable :i32, name: &String) -> Result<i32, &'static str> {
+pub fn insert_variable_pair(conn: &Connection, fk_variable :&i32, name: &String) -> Result<i32, &'static str> {
     let bill = fk_variable;
     let me = VariablePair {
         id : 0,
-        fk_variable: bill,
+        fk_variable: bill.clone(),
         variable_value: name.clone(),
     };
     let variable_pair_instance = conn.execute("INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)
@@ -81,9 +81,12 @@ pub fn variable_pair_list(conn: &Connection) {
 }
 
 
-pub fn pk_variable_pair_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<i32, &'static str>{
-    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR WHERE name = ?1").unwrap();
-    let variable_pair_iter = stmt.query_map(&[name], |row| {
+pub fn pk_variable_pair_by_name(conn: &Connection, fk_variable :&i32, name: &str) -> Result<i32, &'static str>{
+    let mut output = 0;
+    let bill = String::from(name);
+    let mut stmt = conn.prepare("SELECT VARIABLE_PAIR.id, VARIABLE_PAIR.fk_variable, VARIABLE_PAIR.variable_value  FROM VARIABLE_PAIR
+		WHERE VARIABLE_PAIR.fk_variable = ?1 AND VARIABLE_PAIR.variable_value = ?2").unwrap();
+    let variable_pair_iter = stmt.query_map(&[fk_variable,&bill], |row| {
         VariablePair {
             id: row.get(0),
             fk_variable: row.get(1),
@@ -98,11 +101,11 @@ pub fn pk_variable_pair_by_name(conn: &Connection, name: &String, pk: &mut i32) 
     let mut items = Vec::<i32>::new();
     for person in result {
         let bill= person.unwrap();
-        *pk = bill.id;
+        output = bill.id;
         found = 1;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(output);
     }
     return Err("None found");
 }
