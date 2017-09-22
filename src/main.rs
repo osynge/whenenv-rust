@@ -29,11 +29,13 @@ mod dbEnviroment;
 
 fn main() {
     let conn = db::connect();
+    let session_uuid = "".to_string();
     db::create_tables(&conn);
-
-
-    let clp_matches = cli_clap::cli_clap(&conn);
-    loader::deligate(&conn, clp_matches);
-
+    
+    let some_value = 10;
+    let clp_matches = cli_clap::cli_clap(&some_value);
+    loader::deligate(&conn, clp_matches.clone());
+    let pk_session = elephant::elephant_session(&conn, &session_uuid);
+    loader::enviroment(&conn, pk_session, clp_matches);
     jobs_load::load(&conn);
 }
