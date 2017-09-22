@@ -3,6 +3,8 @@ use db;
 use dbSession;
 
 
+
+
 pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
     let mut pk_variable :i32 = 0;
     let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
@@ -76,42 +78,44 @@ pub fn elephant_session(conn: &Connection, text : &String) -> i32 {
     return pk_variable;
 }
 
-
-pub fn elephant_directory_type(conn: &Connection, text : &String) -> i32 {
-    let mut pk_variable :i32 = 0;
-    let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
+pub fn elephant_enviroment(conn: &Connection, pk_session :&i32, pk_variable: &i32) -> i32 {
+    let mut pk_enviroment :i32 = 0;
+    let rc = db::pk_enviroment_by_name(conn, &pk_session, &pk_variable, &mut pk_enviroment);
     match rc {
         Ok(pk) => {
-            return pk_variable;
+            return pk_enviroment;
         }
         Err(_) => {
-            let doink = db::insert_fs_dir_type(conn, &text);
+            let doink = db::insert_enviroment(conn, &pk_session, &pk_enviroment);
             if doink.is_err() {
                 return 0;
             }
             match doink {
                 Ok(pk) => {
-                    let doin3k = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
+                    let doin3k = db::pk_enviroment_by_name(conn, &pk_session, &pk_variable, &mut pk_enviroment);
                     match doin3k {
                         Ok(pk) => {
-                            return pk_variable;
+                            return pk_enviroment;
                             }
                         Err(_) => {
-                                println!("Failed to select variable");
+                                println!("Failed to select job");
                                 return 0;
                             }
                         }
                     }
                 Err(_) => {
-                    println!("Failed to insert variable");
+                    println!("Failed to insert job");
                     return 0;
                 }
             }
 
         }
     }
-    return pk_variable;
+    return pk_enviroment;
 }
+
+
+
 
 
 pub fn elephant_variable_pk(conn: &Connection, text :&String) -> i32 {
