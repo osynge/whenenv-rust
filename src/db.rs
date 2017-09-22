@@ -13,6 +13,10 @@ pub use dbFsDir::insert_fs_dir as insert_fs_dir;
 pub use dbFsDir::FsDir as FsDir;
 pub use dbFsDir::list_fs_dir as list_fs_dir;
 pub use dbFsDir::table_create_fs_dir as table_create_fs_dir;
+pub use dbFsDir::list_fs_dir_by_all as list_fs_dir_by_all;
+pub use dbFsFile::list_fs_file_type as list_fs_file_type;
+
+
 pub use dbFsFile::insert_fs_file as dbFsFile;
 pub use dbFsFile::insert_fs_file as insert_fs_file;
 pub use dbFsFile::list_fs_file as list_fs_file;
