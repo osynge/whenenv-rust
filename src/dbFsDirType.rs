@@ -2,8 +2,8 @@ use rusqlite::Connection;
 
 #[derive(Debug)]
 pub struct FsDirType {
-    id: i32,
-    name: String,
+    pub id: i32,
+    pub name: String,
 }
 
 
@@ -99,3 +99,22 @@ pub fn pk_fs_dir_type_by_name(conn: &Connection, name: &String, pk: &mut i32) ->
 
 
 
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn insert_fs_dir_type() {
+        use db;
+        use elephant;
+        use dbFsDirType;
+        let conn = db::connect();
+        db::create_tables(&conn);
+        let str_job_files_list = String::from("job_files");
+        let pk_directory_type_jobs = dbFsDirType::insert_fs_dir_type(&conn, &str_job_files_list);
+        let vec_dir_type = dbFsDirType::list_fs_dir_type(&conn);
+        let mut counter = 0;
+        for dir_type in vec_dir_type {
+            counter += 1;
+        }
+        assert !(counter == 1);
+    }
+}
