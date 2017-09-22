@@ -56,24 +56,26 @@ pub fn deligate(conn: &Connection, matches : ArgMatches) {
         for in_file in in_v {
             let filename = in_file.to_string();
             db::insert_fs_dir(&conn, pk_directory_type_shell, filename);
-            listy(&in_file);
-
         }
     }
-        // If we specified the multiple() setting we can get all the values
-    if let Some(in_v) = matches.values_of("env") {
-        for in_file in in_v {
-            //println!("An input file: {}", in_file);
-            job_files_list(&in_file);
-        }
-    }
-
     if let Some(in_v) = matches.values_of("dir-jobs") {
         let str_job_files_list = String::from("job_files");
         let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
         for in_file in in_v {
             let filename = in_file.to_string();
             db::insert_fs_dir(&conn, pk_directory_type_jobs, filename);
+        }
+    }
+}
+
+
+pub fn enviroment(conn: &Connection, pk_session : i32, matches : ArgMatches) {
+    if let Some(in_v) = matches.values_of("env") {
+        for in_file in in_v {
+            let filename = in_file.to_string();
+            let mut text = "".to_string();
+            let pk_variable_name = elephant::elephant_variable_pk(&conn, &filename);
+            let session = elephant::elephant_enviroment(&conn, &pk_session, &pk_variable_name);
         }
     }
 }
