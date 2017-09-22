@@ -83,7 +83,8 @@ pub fn job_depend_list(conn: &Connection) {
     }
 }
 
-pub fn pk_job_depend_by_all(conn: &Connection, fk_job: &i32, provider: &i32, sq_order: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_job_depend_by_all(conn: &Connection, fk_job: &i32, provider: &i32, sq_order: &i32) -> Result<i32, &'static str>{
+    let mut output = 0;
     let mut stmt = conn.prepare("SELECT JobDepend.id, JobDepend.fk_job, JobDepend.fk_provider, JobDepend.sq_order  FROM JobDepend WHERE JobDepend.fk_job = ?1 AND JobDepend.fk_provider=?2 AND JobDepend.sq_order=?3 ").unwrap();
     let job_depend_iter = stmt.query_map(&[fk_job, provider, sq_order], |row| {
         JobDepend {
@@ -101,11 +102,11 @@ pub fn pk_job_depend_by_all(conn: &Connection, fk_job: &i32, provider: &i32, sq_
     let mut items = Vec::<i32>::new();
     for person in result {
         let bill= person.unwrap();
-        *pk = bill.id;
+        output = bill.id;
         found = 1;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(output);
     }
     return Err("None found");
 }
