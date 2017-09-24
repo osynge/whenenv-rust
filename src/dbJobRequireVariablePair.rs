@@ -13,10 +13,10 @@ pub struct JobRequireVariablePair {
 pub fn table_create_job_require_variable_pair(conn: &Connection) {
     let load_table = conn.execute("CREATE TABLE JOB_REQUIRE_VALUE (
                   id            INTEGER PRIMARY KEY ASC,
-                  job           INTEGER NOT NULL,
-                  variable_pair INTEGER NOT NULL,
-                  FOREIGN KEY(job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(variable_pair) REFERENCES VARIABLE_PAIR(id) ON UPDATE CASCADE
+                  fk_job           INTEGER NOT NULL,
+                  fk_variable_pair INTEGER NOT NULL,
+                  FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
+                  FOREIGN KEY(fk_variable_pair) REFERENCES VARIABLE_PAIR(id) ON UPDATE CASCADE
                   )", &[]);
     if load_table.is_err() {
         println!("table_create_job Failed {:?}", load_table);
@@ -33,7 +33,7 @@ pub fn insert_job_require_variable_pair(conn: &Connection, job :&i32, variable_p
         fk_variable_pair: *variable_pair,
 
     };
-    let variable_pair_instance = conn.execute("INSERT INTO JOB_REQUIRE_VALUE (job, variable_pair)
+    let variable_pair_instance = conn.execute("INSERT INTO JOB_REQUIRE_VALUE (fk_job, fk_variable_pair)
                   VALUES (?1, ?2)",
                  &[&me.fk_job, &me.fk_variable_pair]);
     if variable_pair_instance.is_err() {
@@ -45,7 +45,7 @@ pub fn insert_job_require_variable_pair(conn: &Connection, job :&i32, variable_p
 
 
 pub fn list_job_require_variable_pair(conn: &Connection)-> Vec<JobRequireVariablePair> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair  FROM VARIABLE_PAIR").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair  FROM JOB_REQUIRE_VALUE").unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         JobRequireVariablePair {
             id: row.get(0),
@@ -68,7 +68,7 @@ pub fn list_job_require_variable_pair(conn: &Connection)-> Vec<JobRequireVariabl
 
 
 pub fn job_require_variable_pair_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair FROM VARIABLE_PAIR").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair FROM JOB_REQUIRE_VALUE").unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         JobRequireVariablePair {
             id: row.get(0),
@@ -85,7 +85,7 @@ pub fn job_require_variable_pair_list(conn: &Connection) {
 
 pub fn pk_job_require_variable_pair_by_all(conn: &Connection, job: &i32, variable_pair: &i32) -> Result<i32, &'static str>{
     let mut output = 0;
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable_pair  FROM VARIABLE_PAIR WHERE name = ?1").unwrap();
+    let mut stmt = conn.prepare("SELECT JOB_REQUIRE_VALUE.id, JOB_REQUIRE_VALUE.fk_job, JOB_REQUIRE_VALUE.fk_variable_pair  FROM JOB_REQUIRE_VALUE WHERE JOB_REQUIRE_VALUE.fk_job = ?1 AND JOB_REQUIRE_VALUE.fk_variable_pair = ?2").unwrap();
     let variable_pair_iter = stmt.query_map(&[job, variable_pair], |row| {
         JobRequireVariablePair {
             id: row.get(0),
