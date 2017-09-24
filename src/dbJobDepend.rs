@@ -44,7 +44,7 @@ pub fn insert_job_depend(conn: &Connection, job: &i32, provider: &i32, sq_order:
 
 
 pub fn list_job_depend(conn: &Connection)-> Vec<JobDepend> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order  FROM JobDepend").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order  FROM JOBDEPEND").unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         JobDepend {
             id: row.get(0),
@@ -68,7 +68,7 @@ pub fn list_job_depend(conn: &Connection)-> Vec<JobDepend> {
 
 
 pub fn job_depend_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order FROM JobDepend").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order FROM JOBDEPEND").unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         JobDepend {
             id: row.get(0),
@@ -85,7 +85,7 @@ pub fn job_depend_list(conn: &Connection) {
 
 pub fn pk_job_depend_by_all(conn: &Connection, fk_job: &i32, provider: &i32, sq_order: &i32) -> Result<i32, &'static str>{
     let mut output = 0;
-    let mut stmt = conn.prepare("SELECT JobDepend.id, JobDepend.fk_job, JobDepend.fk_provider, JobDepend.sq_order  FROM JobDepend WHERE JobDepend.fk_job = ?1 AND JobDepend.fk_provider=?2 AND JobDepend.sq_order=?3 ").unwrap();
+    let mut stmt = conn.prepare("SELECT JOBDEPEND.id, JOBDEPEND.fk_job, JOBDEPEND.fk_provider, JOBDEPEND.sq_order  FROM JOBDEPEND WHERE JOBDEPEND.fk_job = ?1 AND JOBDEPEND.fk_provider=?2 AND JOBDEPEND.sq_order=?3 ").unwrap();
     let job_depend_iter = stmt.query_map(&[fk_job, provider, sq_order], |row| {
         JobDepend {
             id: row.get(0),
