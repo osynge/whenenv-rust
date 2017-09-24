@@ -51,7 +51,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                             pk_provider = elephant::elephant_provider_pk(conn, &foo);
                             //println!("elephant_provider_pk={}", foo);
                             let sq_order = 1;
-                            pk_provider = elephant::elephant_job_depend_pk(conn, pk_job, pk_provider, sq_order);
+                            pk_provider = elephant::elephant_job_depend_pk(conn, &pk_job, &pk_provider, &sq_order);
                             //println!("pk_provider::name={}", pk_provider);
                         }
                     }
@@ -76,7 +76,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
 
                                     order_job_depend += 10;
                                     pk_provider = elephant::elephant_provider_pk(conn, &foo);
-                                    pk_job_depend = elephant::elephant_job_depend_pk(conn, pk_job, pk_provider, order_job_depend);
+                                    pk_job_depend = elephant::elephant_job_depend_pk(conn, &pk_job, &pk_provider, &order_job_depend);
                                     //println!("pk_provider::name={}", pk_provider);
 
                         }
@@ -126,7 +126,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                                         let foo = sss.unwrap();
                                         let name = String::from(foo);
                                         pk_variable_name = elephant::elephant_variable_pk(conn, &name);
-                                        elephant::elephant_job_provide_variables(conn, pk_job, pk_variable_name);
+                                        elephant::elephant_job_provide_variables(conn, &pk_job, &pk_variable_name);
                                     }
                                 }
                             }
@@ -135,29 +135,28 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json :&rustc_seria
                             let resulkdtvv = iVariables.get("require_values");
                             let sdfc = resulkdtvv.unwrap();
                             let mut itemfdsdff = sdfc.clone();
-
                             if itemfdsdff.is_object(){
                                 let sssbill = itemfdsdff.as_object();
                                 for &dict_key in &sssbill {
                                     //let value_deep = sssbill.get(&dict_key);
-                                    if dict_key.contains_key("provides_keys") {
-
-                                        println!("require_values:dict_key:{:?}", dict_key);
-                                    }
-                                    if iVariables.contains_key("provides_keys") {
-                                        println!("require_values:dict_key:{:?}", dict_key);
-                                    }
-                                    if iVariables.contains_key("provides_keys") {
-                                        println!("require_values:dict_key:{:?}", dict_key);
-                                    }
-                                    if iVariables.contains_key("provides_keys") {
-                                        println!("require_values:dict_key:{:?}", dict_key);
-                                    }
+                                    let mut key_want : String;
+                                    let mut value_want : String;
+                                    for variable_name in dict_key.keys(){
+										pk_variable_name = elephant::elephant_variable_pk(&conn, &variable_name);
+                                        let value = dict_key.get(variable_name);
+                                        let unwrapped = value.unwrap();
+                                        if unwrapped.is_string(){
+                                            let sss = unwrapped.as_string();
+                                            let foo = sss.unwrap();
+                                            let name = String::from(foo);
+                                            let variable_pair_pk = elephant::elephant_variable_pair_pk(&conn, &pk_variable_name, &name);
+                                            let job_depend_pair_pk = elephant::elephant_job_depend_pair_pk(&conn, &pk_job, &variable_pair_pk);
+										}
+									}
                                 }
                             }
                         }
                     }
-
                 }
             }
         }
