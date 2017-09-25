@@ -154,13 +154,13 @@ pub fn elephant_session(conn: &Connection, text : &String) -> i32 {
                             return pk;
                             }
                         Err(_) => {
-                                println!("Failed to select variable");
+                                println!("Failed to select session");
                                 return 0;
                             }
                         }
                     }
                 Err(_) => {
-                    println!("Failed to insert variable");
+                    println!("Failed to insert session");
                     return 0;
                 }
             }
@@ -408,7 +408,8 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
         Err(_) => {
             let doink = db::insert_job_require_variable_pair(conn, &job, &variable_pair);
             if doink.is_err() {
-                println!("Failed to insert job_depend_pair{}", variable_pair);
+                println!("Failed to insert job_depend_pair:{}{}", variable_pair, job);
+
                 return 0;
             }
             match doink {
