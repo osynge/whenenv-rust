@@ -24,12 +24,13 @@ pub fn table_create_variable_pair(conn: &Connection) {
 }
 
 
-pub fn insert_variable_pair(conn: &Connection, fk_variable :&i32, name: &String) -> Result<i32, &'static str> {
+pub fn insert_variable_pair(conn: &Connection, fk_variable :&i32, name: &str) -> Result<i32, &'static str> {
     let bill = fk_variable;
+    let mut john = String::from(name);
     let me = VariablePair {
         id : 0,
         fk_variable: bill.clone(),
-        variable_value: name.clone(),
+        variable_value: john,
     };
     let variable_pair_instance = conn.execute("INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)
                   VALUES (?1 ?2)",
