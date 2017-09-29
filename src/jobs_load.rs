@@ -97,6 +97,5 @@ pub fn load(conn: &Connection)  {
         let fred = json_loader_name(&conn, &pkfsfile, &contents);
     }
     db::variable_pair_list(&conn);
-    
 }
 
