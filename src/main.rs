@@ -3,7 +3,7 @@ extern crate rusqlite;
 #[macro_use]
 
 extern crate rustc_serialize;
-
+extern crate uuid;
 
 
 mod loader;
@@ -26,16 +26,18 @@ mod elephant;
 mod dbSession;
 mod dbEnviroment;
 
+use uuid::Uuid;
+
 
 fn main() {
+    let session_uuid = Uuid::new_v4();
+    let session_uuid_string = session_uuid.simple().to_string();
     let conn = db::connect();
-    let session_uuid = "".to_string();
     db::create_tables(&conn);
-    
     let some_value = 10;
     let clap_matches = cli_clap::cli_clap(&some_value);
     loader::deligate(&conn, &clap_matches);
-    let pk_session = elephant::elephant_session(&conn, &session_uuid);
+    let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
     loader::enviroment(&conn, pk_session, &clap_matches);
     jobs_load::load(&conn);
 }
