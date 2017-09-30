@@ -50,7 +50,19 @@ pub fn cli_clap(number: &u32) -> ArgMatches{
                                     .long("config")
                                     .value_name("FILE")
                                     .help("Sets a custom config file")
-                                    .takes_value(true));
+                                    .takes_value(true))
+                        .arg(Arg::with_name("target")
+                                    .short("t")
+                                    .long("target")
+                                    .value_name("TARGET")
+                                    .help("Sets the provider to be selected.")
+                                    .takes_value(true))
+                        .arg(Arg::with_name("list-provides")
+                                    .long("list-provides")
+                                    .help("list-provides"))
+                        .arg(Arg::with_name("session")
+                                    .long("session")
+                                    .help("session"));
     let matches = application.get_matches();
     return matches;
 }
