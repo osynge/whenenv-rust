@@ -17,13 +17,24 @@ use dbFsFile;
 use std::result;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
+use std::collections::HashSet;
 
-#[derive(Debug)]
-struct Person {
-    id: i32,
-    name: String,
-    data: Option<Vec<u8>>
+pub fn actions_get(matches : &ArgMatches) -> HashSet<String> {
+	let mut vec_actions = HashSet::<String>::new();
+
+	if let Some(in_v) = matches.values_of("list-provides") {
+        let bill = String::from("load-jobs");
+        vec_actions.insert(bill);
+    }
+    if let Some(in_v) = matches.values_of("session") {
+        let bill = String::from("load-jobs");
+        vec_actions.insert(bill);
+        let str_load_scripts = String::from("load-scripts");
+        vec_actions.insert(str_load_scripts);
+    }
+    return vec_actions;
 }
+
 
 
 
@@ -57,33 +68,40 @@ pub fn job_files_list(direcory: &str)  {
 
 
 pub fn deligate(conn: &Connection, matches : &ArgMatches) {
-    if let Some(in_v) = matches.values_of("dir-scripts") {
-        let str_shell_files_list = String::from("shell_files");
-        let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
-        for in_dir in in_v {
-            let dirname = in_dir.to_string();
-            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-            listy(&conn, &pk_directory, &dirname);
-        }
-    }
-    if let Some(in_v) = matches.values_of("dir-jobs") {
-        let str_job_files_list = String::from("job_files");
-        let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
-        for in_dir in in_v {
-            let dirname = in_dir.to_string();
-            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
-            listy(&conn, &pk_directory, &dirname);
-        }
-    }
-    if let Some(in_v) = matches.values_of("dir-py") {
-        let str_py_files_list = String::from("python_files");
-        let pk_directory_type_py = elephant::elephant_directory_type(&conn, &str_py_files_list);
-        for in_dir in in_v {
-            let dirname = in_dir.to_string();
-            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_py, &dirname);
-            listy(&conn, &pk_directory, &dirname);
-        }
-    }
+	let actions = actions_get(matches);
+	let matcher = String::from("load-jobs");
+	if actions.contains(&matcher) {
+		if let Some(in_v) = matches.values_of("dir-jobs") {
+			let str_job_files_list = String::from("job_files");
+			let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
+			for in_dir in in_v {
+				let dirname = in_dir.to_string();
+				let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
+				listy(&conn, &pk_directory, &dirname);
+			}
+		}
+	}
+	let str_load_scripts = String::from("load-scripts");
+	if actions.contains(&str_load_scripts) {
+		if let Some(in_v) = matches.values_of("dir-scripts") {
+			let str_shell_files_list = String::from("shell_files");
+			let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
+			for in_dir in in_v {
+				let dirname = in_dir.to_string();
+				let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+				listy(&conn, &pk_directory, &dirname);
+			}
+		}
+		if let Some(in_v) = matches.values_of("dir-py") {
+			let str_py_files_list = String::from("python_files");
+			let pk_directory_type_py = elephant::elephant_directory_type(&conn, &str_py_files_list);
+			for in_dir in in_v {
+				let dirname = in_dir.to_string();
+				let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_py, &dirname);
+				listy(&conn, &pk_directory, &dirname);
+			}
+		}
+	}
 }
 
 
