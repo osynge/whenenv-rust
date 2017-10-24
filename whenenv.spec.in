@@ -1,0 +1,74 @@
+Summary:  whenenv removes branching in shell scripts typical use might be running jenkins matrix builds.
+Name: @PACKAGE@
+Version: @VERSION@
+Release: 1
+License:	LGPL-2.0
+Group: Build/Automation
+Prefix: @SPEC_PREFIX@
+URL: http://yokel.org
+Source: http://yokel.org/@PACKAGE@-@VERSION@.tar.gz
+BuildRoot: %{_tmppath}/%{name}-root
+%description -n @PACKAGE@
+whenenv is designed to keep the branching involved in build and
+functional test scripts from growing out of control.
+
+You specify a list of environment variables and whenenv will then
+try and reuse existing scrimps to process the request.
+
+If it fails to find suitable scripts you should specify some minium script.
+
+When launching whenenv, always specify the PRODUCT environment variable. The
+components of the build are isolated and reusable.
+
+
+
+#
+# Prep
+#
+%prep
+%setup -q -n @PACKAGE@-@VERSION@
+
+./configure  \
+    --prefix=%{prefix} \
+    --bindir=%{_bindir} \
+    --docdir=@docdir@ \
+#
+# Build
+#
+%build
+touch hello
+
+#
+# Install
+#
+%install
+
+if [ -d $RPM_BUILD_ROOT ]; then rm -rf $RPM_BUILD_ROOT; fi
+mkdir -p $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+#
+# Script sections (Try to avoid them in Testbed 1 context)
+#
+%post
+%preun
+%postun
+
+
+
+%defattr (-,root,root)
+
+%files
+%{_bindir}/whenenv
+
+%doc
+%{prefix}/doc/@PACKAGE@/AUTHORS
+%{prefix}/doc/@PACKAGE@/COPYING
+%{prefix}/doc/@PACKAGE@/ChangeLog
+%{prefix}/doc/@PACKAGE@/INSTALL
+
+
+%changelog
