@@ -36,6 +36,34 @@ fi
 AC_SUBST(RPM_DIR)
 
 
+
+dnl Specify --enable-debug to make a development release.  By default,
+dnl we build in public release mode.
+
+AC_ARG_ENABLE(debug,
+              AC_HELP_STRING([--enable-debug],
+                             [Build Rust code with debugging information [default=no]]),
+              [debug_release=$enableval],
+              [debug_release=no])
+
+AC_MSG_CHECKING(whether to build Rust code with debugging information)
+if test "x$debug_release" = "xyes" ; then
+    AC_MSG_RESULT(yes)
+    CARGO_TARGET_DIR=debug
+    CARGO_RELEASE_ARGS=""
+    SPEC_CONFIG="--enable-debug"
+else
+    AC_MSG_RESULT(no)
+    CARGO_TARGET_DIR=release
+    CARGO_RELEASE_ARGS="--release"
+    SPEC_CONFIG=""
+fi
+AM_CONDITIONAL([DEBUG_RELEASE], [test "x$debug_release" = "xyes"])
+
+AC_SUBST([CARGO_RELEASE_ARGS])
+AC_SUBST([SPEC_CONFIG])
+
+
 SPEC_PREFIX="/usr"
 AC_SUBST(SPEC_PREFIX)
 
@@ -46,7 +74,7 @@ AC_SUBST(PACKAGE_TARNAME)
 LT_INIT
 
 
-CARGO_TARGET_DIR=release
+
 AC_SUBST(CARGO_TARGET_DIR)
 
 AC_SUBST(VERSION)
