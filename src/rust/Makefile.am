@@ -29,8 +29,9 @@ EXTRA_PROGRAMS = target/@CARGO_TARGET_DIR@/whenenv
 # we need this dummy target for make dist
 target_@CARGO_TARGET_DIR@_whenenv_SOURCES =
 
+
 all-local:
-	cargo build --release
+	cargo build @CARGO_RELEASE_ARGS@
 
 clean-local:
 	-cargo clean
