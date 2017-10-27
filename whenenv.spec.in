@@ -32,12 +32,12 @@ components of the build are isolated and reusable.
     --prefix=%{prefix} \
     --bindir=%{_bindir} \
     --docdir=@docdir@ \
+    @SPEC_CONFIG@
 #
 # Build
 #
 %build
-touch hello
-
+make
 #
 # Install
 #
