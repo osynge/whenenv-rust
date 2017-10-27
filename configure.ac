@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([whenenv], [0.1])
+AC_INIT([whenenv], [0.0.1])
 AM_INIT_AUTOMAKE([1.6 foreign subdir-objects])
 m4_ifdef([AM_SILENT_RULES], [
     AM_SILENT_RULES([yes])
@@ -90,11 +90,15 @@ AC_CONFIG_FILES([
   whenenv.spec
 ])
 
+
 AC_CONFIG_FILES([
   src/Makefile
 ])
 AC_CONFIG_FILES([
   src/rust/Makefile
+])
+AC_CONFIG_FILES([
+  src/rust/Cargo.toml
 ])
 AC_OUTPUT
 
