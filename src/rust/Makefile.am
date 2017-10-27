@@ -1,3 +1,4 @@
+# Cargo binding
 
 EXTRA_DIST = Cargo.toml \
     src/cli_clap.rs \
@@ -41,3 +42,8 @@ install-exec-local:
 DISTCLEANFILES =                                \
 	$(desktop_files)                        \
 	$(null)
+
+
+check:
+	cargo check
+	cargo test
