@@ -75,7 +75,6 @@ pub fn pk_session_by_uuid(conn: &Connection, uuid: &String, ) -> Result<i32, &'s
     let result = insert_session_iter.unwrap();
     let mut found = 0;
     let mut pksession = 0;
-    let mut items = Vec::<Session>::new();
     for person in result {
         let unwrapped = person.unwrap();
         pksession = unwrapped.id;
