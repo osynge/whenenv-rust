@@ -1,0 +1,11 @@
+{
+    "name" : "chroot_packages_install_scientific",
+    "provides" : ["chroot_packages_install"],
+    "script" : "chroot_packages_install_scientific.sh",
+    "variables" : {
+        "require_values" : {
+            "PY_OS" : "Scientific Linux"
+            },
+        "require_keys" : [ "CHROOT", "BUILD_DEPS_RPM"]
+    }
+}

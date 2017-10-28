@@ -1,0 +1,2 @@
+TOXCMD="tox"
+export TOXCMD

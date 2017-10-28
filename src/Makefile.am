@@ -1,2 +1,2 @@
 
-SUBDIRS = rust
+SUBDIRS = rust data

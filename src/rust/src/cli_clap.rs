@@ -1,14 +1,15 @@
 use clap::Arg;
 use clap::App;
 use clap::{ArgMatches};
-use loader;
+use autoconf;
 use rusqlite::Connection;
 
 pub fn cli_clap(number: &u32) -> ArgMatches{
 
-    let application = App::new("whenenv")
+
+    let application = App::new(autoconf::package())
                         .about("Parses an input file to do awesome things")
-                        .version("0.0.1")
+                        .version(autoconf::version_cli())
                         .author("Owen Synge <osynge@googlemail.com>")
                         .arg(Arg::with_name("verbose")
                                     .help("Increase log output.")

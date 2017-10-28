@@ -1,0 +1,10 @@
+{
+    "name" : "git_checkout_test",
+    "provides" : ["checkout_test"],
+    "script" : "chrootes_git_checkout_development.sh",
+    "enviroment" : "chroot",
+    "variables" : { "provides_keys" : ["BUILD_SRC"],
+        "require_values" : { },
+        "require_keys" : [ "GIT_SRC" ]
+    }
+}

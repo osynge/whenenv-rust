@@ -1,0 +1,9 @@
+{
+    "name" : "tests_skip",
+    "provides" : ["unittests"],
+    "script" : "tests_skip.sh",
+    "variables" : {
+        "require_values" : { },
+        "require_keys" : []
+    }
+}

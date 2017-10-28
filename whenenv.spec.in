@@ -6,7 +6,7 @@ License:	LGPL-2.0
 Group: Build/Automation
 Prefix: @SPEC_PREFIX@
 URL: http://yokel.org
-Source: http://yokel.org/@PACKAGE@-@VERSION@.tar.gz
+Source: http://yokel.org/@PACKAGE@-@VERSION@.tar.xz
 BuildRoot: %{_tmppath}/%{name}-root
 %description -n @PACKAGE@
 whenenv is designed to keep the branching involved in build and
@@ -32,6 +32,9 @@ components of the build are isolated and reusable.
     --prefix=%{prefix} \
     --bindir=%{_bindir} \
     --docdir=@docdir@ \
+    --with-git-hash=@GIT_HASH@ \
+    --with-job-dir=%{prefix}/@jobdir@/ \
+    --with-shell-dir=%{prefix}/@shelldir@/ \
     @SPEC_CONFIG@
 #
 # Build
@@ -63,6 +66,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %{_bindir}/whenenv
+
+
+%{prefix}/@jobdir@/*.json
+
+
+%{prefix}/@shelldir@/*.sh
+
 
 %doc
 %{prefix}/doc/@PACKAGE@/AUTHORS

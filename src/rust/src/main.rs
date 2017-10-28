@@ -25,6 +25,7 @@ mod jobs_load;
 mod elephant;
 mod dbSession;
 mod dbEnviroment;
+mod autoconf;
 
 use uuid::Uuid;
 

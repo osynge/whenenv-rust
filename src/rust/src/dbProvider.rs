@@ -77,7 +77,6 @@ pub fn pk_provider_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Re
         }
     }).unwrap();
     let mut found = 0;
-    let mut items = Vec::<Provider>::new();
     for person in provider_iter {
         let bill= person.unwrap();
         *pk = bill.id;
