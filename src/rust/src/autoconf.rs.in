@@ -1,0 +1,32 @@
+// Note this file is tempated using autotools
+
+use std::result;
+
+pub fn githash() -> &'static str {
+    "@GIT_HASH@"
+}
+
+
+pub fn jobdir() -> &'static str {
+    "@jobdir@"
+}
+
+
+pub fn shelldir() -> &'static str {
+    "@shelldir@"
+}
+
+
+pub fn version() -> &'static str {
+    "@VERSION@"
+}
+
+
+pub fn package() -> &'static str {
+    "@PACKAGE@"
+}
+
+
+pub fn version_cli() -> &'static str {
+    "@VERSION@-@GIT_HASH@"
+}
