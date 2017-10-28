@@ -6,7 +6,7 @@ License:	LGPL-2.0
 Group: Build/Automation
 Prefix: @SPEC_PREFIX@
 URL: http://yokel.org
-Source: http://yokel.org/@PACKAGE@-@VERSION@.tar.gz
+Source: http://yokel.org/@PACKAGE@-@VERSION@.tar.xz
 BuildRoot: %{_tmppath}/%{name}-root
 %description -n @PACKAGE@
 whenenv is designed to keep the branching involved in build and

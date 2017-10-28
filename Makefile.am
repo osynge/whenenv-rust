@@ -58,12 +58,12 @@ EXTRA_DIST =  $(elekickerdoc_DATA)
 
 
 
-srpm: dist @PACKAGE@.spec
+srpm: dist-xz @PACKAGE@.spec
 	mkdir -p $(topdir)/SOURCES \
 	$(topdir)/SPECS \
 	$(topdir)/BUILD \
 	$(topdir)/RPMS $(topdir)/SRPMS
-	cp @PACKAGE@-@VERSION@.tar.gz $(topdir)/SOURCES
+	cp @PACKAGE@-@VERSION@.tar.xz $(topdir)/SOURCES
 	cp @PACKAGE@.spec $(topdir)/SPECS
 
 rpm: srpm
