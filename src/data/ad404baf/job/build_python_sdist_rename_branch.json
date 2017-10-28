@@ -1,0 +1,14 @@
+{
+    "name" : "build_python_sdist_rename_branch",
+    "provides" : ["build_python_sdist_rename"],
+    "script" : "build_python_sdist_rename_development.sh",
+    "variables" : {
+        "require_values" : { "BUILD_TYPE" : "disttools"},
+        "require_keys" : [ "BRANCH" ]
+    },
+	"depends": [
+		"build_env_os",
+		"build_env_release",
+        "build_env_flavor"
+	]
+}

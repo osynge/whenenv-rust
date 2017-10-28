@@ -1,0 +1,22 @@
+{
+    "name" : "build_autotools_default",
+    "provides" : ["build_package"],
+    "script" : "build_autotools_default.sh",
+    "inherits" : ["branch_testing"],
+    "variables" : {
+        "require_values" : { "BUILD_TYPE" : "autotools"},
+        "require_keys" : [
+            "SRC_VERSION",
+            "PRODUCT",
+            "BUILD_SRC"
+            ]
+    },
+    "depends" : [
+        "checkout_date",
+        "autotools_version_build",
+        "autotools_version_bootstrap",
+        "autotools_configure",
+        "autotools_make",
+        "autotools_make_package"
+        ]
+}

@@ -1,0 +1,14 @@
+{
+	"name": "build_env_discover",
+	"provides": ["build_env_discover"],
+	"variables": {
+		"require_values": {},
+		"require_keys": [],
+		"provides_keys": []
+	},
+	"depends": [
+		"build_env_os",
+		"build_env_release",
+        "build_env_flavor"
+	]
+}
