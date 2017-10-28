@@ -18,6 +18,7 @@ use std::result;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
 use std::collections::HashSet;
+use autoconf;
 
 pub fn actions_get(matches : &ArgMatches) -> HashSet<String> {
 	let mut vec_actions = HashSet::<String>::new();
@@ -81,8 +82,16 @@ pub fn deligate(conn: &Connection, matches : &ArgMatches) {
 			}
 		}
 	}
+    else {
+        let str_job_files_list = String::from(autoconf::jobdir());
+        let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_jobs, &str_job_files_list);
+        listy(&conn, &pk_directory, &str_job_files_list);
+    }
 	let str_load_scripts = String::from("load-scripts");
 	if actions.contains(&str_load_scripts) {
+        let str_shell_files_list = String::from("shell_files");
+        let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
 		if let Some(in_v) = matches.values_of("dir-scripts") {
 			let str_shell_files_list = String::from("shell_files");
 			let pk_directory_type_shell = elephant::elephant_directory_type(&conn, &str_shell_files_list);
@@ -92,6 +101,11 @@ pub fn deligate(conn: &Connection, matches : &ArgMatches) {
 				listy(&conn, &pk_directory, &dirname);
 			}
 		}
+        else {
+            let dirname = String::from(autoconf::shelldir());
+            let pk_directory = elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+            listy(&conn, &pk_directory, &dirname);
+        }
 		if let Some(in_v) = matches.values_of("dir-py") {
 			let str_py_files_list = String::from("python_files");
 			let pk_directory_type_py = elephant::elephant_directory_type(&conn, &str_py_files_list);
