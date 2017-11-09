@@ -10,6 +10,8 @@ aclocal -I config
 libtoolize --automake
 touch AUTHORS
 touch ChangeLog
+touch NEWS
+touch README
 automake --add-missing --copy
 autoconf
 
