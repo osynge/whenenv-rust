@@ -15,6 +15,7 @@ touch AUTHORS
 touch ChangeLog
 touch NEWS
 touch README
+touch COPYING
 automake --add-missing --copy
 autoconf
 
