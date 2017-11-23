@@ -11,10 +11,7 @@ use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::result::Result;
 use rusqlite::Connection;
-use rusqlite::Error;
-
 use dbFsFile;
-use std::result;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
 use std::collections::HashSet;
