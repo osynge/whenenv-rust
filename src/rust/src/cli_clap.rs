@@ -2,7 +2,6 @@ use clap::Arg;
 use clap::App;
 use clap::{ArgMatches};
 use autoconf;
-use rusqlite::Connection;
 
 pub fn cli_clap(number: &u32) -> ArgMatches{
 
