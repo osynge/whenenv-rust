@@ -86,7 +86,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 }
             }
             if movie.contains_key("variables") {
-                println!("variables");
                 let resulkt = movie.get("variables");
                 let sdf = resulkt.unwrap();
                 let mut itemfdsd = sdf.clone();
@@ -113,13 +112,12 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                             }
                         }
                         if iVariables.contains_key("provides_keys") {
-                            let resulkdt = movie.get("provides_keys");
+                            let resulkt = iVariables.get("provides_keys");
                             let sdf = resulkt.unwrap();
-                            let mut itemfdsd = sdf.clone();
+                            let itemfdsd = sdf.clone();
                             if itemfdsd.is_array() {
                                 let ssd = itemfdsd.as_array();
                                 let sdf = ssd.unwrap();
-                                let george = sdf.len();
                                 let itemfdsd = sdf.iter();
                                 for elem in itemfdsd {
                                     if elem.is_string() {
@@ -136,13 +134,11 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                         if iVariables.contains_key("require_values") {
                             let resulkdtvv = iVariables.get("require_values");
                             let sdfc = resulkdtvv.unwrap();
-                            let mut itemfdsdff = sdfc.clone();
+                            let itemfdsdff = sdfc.clone();
                             if itemfdsdff.is_object() {
                                 let sssbill = itemfdsdff.as_object();
                                 for &dict_key in &sssbill {
                                     //let value_deep = sssbill.get(&dict_key);
-                                    let mut key_want: String;
-                                    let mut value_want: String;
                                     for variable_name in dict_key.keys() {
                                         let variable_name_clone = variable_name.clone();
 
