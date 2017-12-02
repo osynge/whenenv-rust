@@ -36,7 +36,7 @@ pub fn insert_variable_pair(
     let me = VariablePair {
         id: 0,
         variable_value: name.to_string(),
-        fk_variable: fk_variable.clone(),
+        fk_variable: *fk_variable,
     };
     let variable_pair_instance = conn.execute(
         "INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)

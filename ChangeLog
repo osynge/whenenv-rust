@@ -1,0 +1,3 @@
+0.0.3
+~~~~~
+  - No longer crashes when passed invalid directories as paths

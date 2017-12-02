@@ -109,8 +109,8 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                         Ok(pk) => {
                             for item in pk {
                                 pk_variable = item.id;
+                                return pk_variable;
                             }
-                            return pk_variable;
                         }
                         Err(_) => {
                             println!("Failed to select variable");
@@ -169,13 +169,13 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
     return pk_variable;
 }
 
+
 pub fn elephant_enviroment(
     conn: &Connection,
     pk_session: &i32,
-    pk_variable: &i32,
+    pk_enviroment: &i32,
 ) -> Result<i32, &'static str> {
-    let mut pk_enviroment: i32 = 0;
-    let rc = db::pk_enviroment_by_name(conn, &pk_session, &pk_variable, &mut pk_enviroment);
+    let rc = db::pk_enviroment_by_name(conn, &pk_session, &pk_enviroment);
     match rc {
         Ok(pk) => {
             return rc;
@@ -187,18 +187,17 @@ pub fn elephant_enviroment(
             }
             match doink {
                 Ok(pk) => {
-                    let doin3k = db::pk_enviroment_by_name(
-                        conn,
-                        &pk_session,
-                        &pk_variable,
-                        &mut pk_enviroment,
-                    );
+                    let doin3k = db::pk_enviroment_by_name(conn, &pk_session, &pk_enviroment);
                     match doin3k {
                         Ok(pk) => {
-                            return Ok(pk_enviroment);
+                            let bill = *pk_enviroment;
+                            return Ok(bill);
                         }
                         Err(_) => {
-                            println!("Failed to select job");
+                            println!("Failed to pk_enviroment_by_name");
+
+                            println!("Found pk_session {:?}", pk_session);
+                            println!("Found pk_enviroment {:?}", pk_enviroment);
                             return doin3k;
                         }
                     }
@@ -212,7 +211,6 @@ pub fn elephant_enviroment(
         }
     }
 }
-
 
 
 pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'static str> {
@@ -264,6 +262,7 @@ pub fn elephant_variable_pair_pk(
         Err(_) => {
             let doink = db::insert_variable_pair(conn, fk_variable, &text);
             if doink.is_err() {
+                println!("Failed to pk_variable_pair_by_name");
                 return doink;
             }
             match doink {
@@ -274,13 +273,13 @@ pub fn elephant_variable_pair_pk(
                             return Ok(pk);
                         }
                         Err(_) => {
-                            //println!("Failed to select variable");
+                            println!("Failed to pk_variable_pair_by_name");
                             return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    //println!("Failed to insert variable");
+                    println!("Failed to insert_variable_pair");
                     return doink;
                 }
             }
@@ -335,8 +334,6 @@ pub fn elephant_job_require_variables(conn: &Connection, pk_job: &i32, pk_variab
     }
     return pk_job_require_variables;
 }
-
-
 
 
 pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {

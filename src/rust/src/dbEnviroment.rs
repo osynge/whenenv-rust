@@ -25,13 +25,13 @@ pub fn table_create_enviroment(conn: &Connection) {
 
 pub fn insert_enviroment(
     conn: &Connection,
-    job: &i32,
-    variable: &i32,
+    session: &i32,
+    variable_pair: &i32,
 ) -> Result<i32, &'static str> {
     let me = WhenenvEnviroment {
         id: 0,
-        fk_session: *job,
-        fk_variable_pair: *variable,
+        fk_session: *session,
+        fk_variable_pair: *variable_pair,
     };
     let enviroment_instance = conn.execute(
         "INSERT INTO WHENENV_ENVIROMENT (fk_session, fk_variable_pair)
@@ -39,12 +39,12 @@ pub fn insert_enviroment(
         &[&me.fk_session, &me.fk_variable_pair],
     );
     if enviroment_instance.is_err() {
-        return Err("Insert failed");
+        println!("failed insert_enviroment {:?}", me);
+        return Err("insert_enviroment");
     }
     enviroment_instance.unwrap();
     return Ok(0);
 }
-
 
 pub fn list_enviroment(conn: &Connection) -> Vec<WhenenvEnviroment> {
     let mut stmt = conn.prepare(
@@ -91,12 +91,19 @@ pub fn enviroment_list(conn: &Connection) {
 
 pub fn pk_enviroment_by_name(
     conn: &Connection,
-    job: &i32,
-    variable: &i32,
-    pk: &mut i32,
+    session: &i32,
+    variable_pair: &i32,
 ) -> Result<i32, &'static str> {
-    let mut stmt = conn.prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT WHERE fk_session = ?1 AND fk_variable_pair = ?2").unwrap();
-    let enviroment_iter = stmt.query_map(&[job, variable], |row| {
+    let mut output = 0;
+    let mut stmt = conn.prepare(
+        "SELECT
+        WHENENV_ENVIROMENT.id,
+        WHENENV_ENVIROMENT.fk_session,
+        WHENENV_ENVIROMENT.fk_variable_pair
+        FROM WHENENV_ENVIROMENT
+        WHERE WHENENV_ENVIROMENT.fk_session = ?1 AND WHENENV_ENVIROMENT.fk_variable_pair = ?2",
+    ).unwrap();
+    let enviroment_iter = stmt.query_map(&[session, variable_pair], |row| {
         WhenenvEnviroment {
             id: row.get(0),
             fk_session: row.get(1),
@@ -104,6 +111,7 @@ pub fn pk_enviroment_by_name(
         }
     });
     if enviroment_iter.is_err() {
+        println!("pk_enviroment_by_name cccccccccccccccccccc");
         return Err("Insert failed dfdf");
     }
     let result = enviroment_iter.unwrap();
@@ -111,11 +119,12 @@ pub fn pk_enviroment_by_name(
     let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
-        *pk = bill.id;
-        found = 1;
+        output = bill.id;
     }
-    if found != 0 {
-        return Ok(found);
+    if output != 0 {
+        return Ok(output);
     }
+    //println!("None found session {:?}", session);
+    //println!("None found variable_pair {:?}", variable_pair);
     return Err("None found");
 }
