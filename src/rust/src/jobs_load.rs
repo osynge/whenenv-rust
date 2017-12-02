@@ -14,10 +14,15 @@ use elephant;
 
 
 pub fn listy2(direcory: &str) -> Vec<String> {
-    println!("listy2{:?}", direcory);
     let mut items = Vec::<String>::new();
 
     let path = Path::new(direcory);
+    if path.exists() == false {
+        return items;
+    }
+    if path.is_dir() == false {
+        return items;
+    }
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
             let path = entry.path();
@@ -33,7 +38,6 @@ pub fn listy2(direcory: &str) -> Vec<String> {
     }
     return items;
 }
-
 
 
 pub fn loader(name: &str) -> String {
