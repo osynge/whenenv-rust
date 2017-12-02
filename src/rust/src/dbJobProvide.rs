@@ -9,14 +9,17 @@ pub struct JobProvide {
 }
 
 
-pub fn table_create_job_provide(conn: &Connection)  -> &Connection  {
-    let load_table = conn.execute("CREATE TABLE JOBPROVIDE (
+pub fn table_create_job_provide(conn: &Connection) -> &Connection {
+    let load_table = conn.execute(
+        "CREATE TABLE JOBPROVIDE (
                   id            INTEGER PRIMARY KEY ASC,
                   fk_job           INTEGER,
                   fk_provider      INTEGER,
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
                   FOREIGN KEY(fk_provider) REFERENCES PROVIDER(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
+                  )",
+        &[],
+    ).unwrap();
     return conn;
 }
 
@@ -26,26 +29,33 @@ pub fn table_create_job_provide(conn: &Connection)  -> &Connection  {
 
 
 
-pub fn insert_job_provide(conn: &Connection, job: &i32, provider: &i32) -> Result<i32, &'static str>{
+pub fn insert_job_provide(
+    conn: &Connection,
+    job: &i32,
+    provider: &i32,
+) -> Result<i32, &'static str> {
 
     let me = JobProvide {
         id: 0,
         fk_job: *job,
         fk_provider: *provider,
     };
-    let load_instance = conn.execute("INSERT INTO JOBPROVIDE (fk_job, fk_provider)
+    let load_instance = conn.execute(
+        "INSERT INTO JOBPROVIDE (fk_job, fk_provider)
                   VALUES (?1, ?2)",
-                 &[&me.fk_job, &me.fk_provider]);
+        &[&me.fk_job, &me.fk_provider],
+    );
     if load_instance.is_err() {
         return Err("Insert failed");
     }
     load_instance.unwrap();
-        return Ok(0);
+    return Ok(0);
 }
 
 
-pub fn list_job_provide(conn: &Connection)-> Vec<JobProvide> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider FROM JOBPROVIDE").unwrap();
+pub fn list_job_provide(conn: &Connection) -> Vec<JobProvide> {
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider FROM JOBPROVIDE")
+        .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         JobProvide {
             id: row.get(0),
@@ -64,7 +74,12 @@ pub fn list_job_provide(conn: &Connection)-> Vec<JobProvide> {
     return items;
 }
 
-pub fn pk_job_provide_by_all(conn: &Connection, fk_job: &i32, provider: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_job_provide_by_all(
+    conn: &Connection,
+    fk_job: &i32,
+    provider: &i32,
+    pk: &mut i32,
+) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT JOBPROVIDE.id, JOBPROVIDE.fk_job, JOBPROVIDE.fk_provider FROM JOBPROVIDE WHERE JOBPROVIDE.fk_job = ?1 AND JOBPROVIDE.fk_provider=?2").unwrap();
     let job_provide_iter = stmt.query_map(&[fk_job, provider], |row| {
         JobProvide {
@@ -80,7 +95,7 @@ pub fn pk_job_provide_by_all(conn: &Connection, fk_job: &i32, provider: &i32, pk
     let mut found = 0;
     let mut items = Vec::<i32>::new();
     for person in result {
-        let bill= person.unwrap();
+        let bill = person.unwrap();
         *pk = bill.id;
         found = 1;
     }

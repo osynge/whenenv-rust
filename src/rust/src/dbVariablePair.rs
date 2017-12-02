@@ -5,17 +5,20 @@ use std::result;
 pub struct VariablePair {
     id: i32,
     fk_variable: i32,
-    variable_value: String
+    variable_value: String,
 }
 
 
 pub fn table_create_variable_pair(conn: &Connection) {
-    let load_table = conn.execute("CREATE TABLE  VARIABLE_PAIR (
+    let load_table = conn.execute(
+        "CREATE TABLE  VARIABLE_PAIR (
                   id            INTEGER PRIMARY KEY ASC,
                   fk_variable   INTEGER NOT NULL,
                   variable_value  TEXT,
                   FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
-                  )", &[]);
+                  )",
+        &[],
+    );
     if load_table.is_err() {
         println!("table_create_job Failed {:?}", load_table);
         return;
@@ -24,17 +27,23 @@ pub fn table_create_variable_pair(conn: &Connection) {
 }
 
 
-pub fn insert_variable_pair(conn: &Connection, fk_variable :&i32, name: &str) -> Result<i32, &'static str> {
+pub fn insert_variable_pair(
+    conn: &Connection,
+    fk_variable: &i32,
+    name: &str,
+) -> Result<i32, &'static str> {
     let bill = fk_variable;
     let mut john = String::from(name);
     let me = VariablePair {
-        id : 0,
+        id: 0,
         fk_variable: bill.clone(),
         variable_value: john,
     };
-    let variable_pair_instance = conn.execute("INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)
+    let variable_pair_instance = conn.execute(
+        "INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)
                   VALUES (?1 ?2)",
-                 &[&me.fk_variable, &me.variable_value]);
+        &[&me.fk_variable, &me.variable_value],
+    );
     if variable_pair_instance.is_err() {
         return Err("Insert failed");
     }
@@ -43,8 +52,9 @@ pub fn insert_variable_pair(conn: &Connection, fk_variable :&i32, name: &str) ->
 }
 
 
-pub fn list_variable_pair(conn: &Connection)-> Vec<VariablePair> {
-    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR").unwrap();
+pub fn list_variable_pair(conn: &Connection) -> Vec<VariablePair> {
+    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR")
+        .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         VariablePair {
             id: row.get(0),
@@ -67,7 +77,8 @@ pub fn list_variable_pair(conn: &Connection)-> Vec<VariablePair> {
 
 
 pub fn variable_pair_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value FROM VARIABLE_PAIR").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value FROM VARIABLE_PAIR")
+        .unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         VariablePair {
             id: row.get(0),
@@ -82,12 +93,16 @@ pub fn variable_pair_list(conn: &Connection) {
 }
 
 
-pub fn pk_variable_pair_by_name(conn: &Connection, fk_variable :&i32, name: &str) -> Result<i32, &'static str>{
+pub fn pk_variable_pair_by_name(
+    conn: &Connection,
+    fk_variable: &i32,
+    name: &str,
+) -> Result<i32, &'static str> {
     let mut output = 0;
     let bill = String::from(name);
     let mut stmt = conn.prepare("SELECT VARIABLE_PAIR.id, VARIABLE_PAIR.fk_variable, VARIABLE_PAIR.variable_value  FROM VARIABLE_PAIR
 		WHERE VARIABLE_PAIR.fk_variable = ?1 AND VARIABLE_PAIR.variable_value = ?2").unwrap();
-    let variable_pair_iter = stmt.query_map(&[fk_variable,&bill], |row| {
+    let variable_pair_iter = stmt.query_map(&[fk_variable, &bill], |row| {
         VariablePair {
             id: row.get(0),
             fk_variable: row.get(1),
@@ -101,7 +116,7 @@ pub fn pk_variable_pair_by_name(conn: &Connection, fk_variable :&i32, name: &str
     let mut found = 0;
     let mut items = Vec::<i32>::new();
     for person in result {
-        let bill= person.unwrap();
+        let bill = person.unwrap();
         output = bill.id;
         found = 1;
     }

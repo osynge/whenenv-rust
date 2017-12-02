@@ -7,22 +7,24 @@ pub struct Provider {
 
 
 pub fn table_create_provider(conn: &Connection) -> &Connection {
-    conn.execute("CREATE TABLE PROVIDER (
+    conn.execute(
+        "CREATE TABLE PROVIDER (
                   id              INTEGER PRIMARY KEY ASC,
                   name            TEXT NOT NULL UNIQUE
-                  )", &[]).unwrap();
+                  )",
+        &[],
+    ).unwrap();
     return conn;
 }
 
-pub fn insert_provider(conn: &Connection,  name: &String) -> Result<i32, &'static str> {
+pub fn insert_provider(conn: &Connection, name: &String) -> Result<i32, &'static str> {
     let bill = name.clone();
-    let me = Provider {
-        id: 0,
-        name: bill,
-    };
-    let provider_instance = conn.execute("INSERT INTO PROVIDER (name)
+    let me = Provider { id: 0, name: bill };
+    let provider_instance = conn.execute(
+        "INSERT INTO PROVIDER (name)
                   VALUES (?1)",
-                 &[&me.name]);
+        &[&me.name],
+    );
     if provider_instance.is_err() {
         return Err("Insert failed");
     }
@@ -31,7 +33,7 @@ pub fn insert_provider(conn: &Connection,  name: &String) -> Result<i32, &'stati
 }
 
 
-pub fn list_provider(conn: &Connection)-> Vec<Provider> {
+pub fn list_provider(conn: &Connection) -> Vec<Provider> {
     let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER").unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         Provider {
@@ -57,7 +59,7 @@ pub fn provider_list(conn: &Connection) {
     let person_iter = stmt.query_map(&[], |row| {
         Provider {
             id: row.get(0),
-            name: row.get(1)
+            name: row.get(1),
         }
     }).unwrap();
 
@@ -67,9 +69,14 @@ pub fn provider_list(conn: &Connection) {
 }
 
 
-pub fn pk_provider_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_provider_by_name(
+    conn: &Connection,
+    name: &String,
+    pk: &mut i32,
+) -> Result<i32, &'static str> {
     let bill = name.clone();
-    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER WHERE name = ?1").unwrap();
+    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER WHERE name = ?1")
+        .unwrap();
     let provider_iter = stmt.query_map(&[&bill], |row| {
         Provider {
             id: row.get(0),
@@ -78,7 +85,7 @@ pub fn pk_provider_by_name(conn: &Connection, name: &String, pk: &mut i32) -> Re
     }).unwrap();
     let mut found = 0;
     for person in provider_iter {
-        let bill= person.unwrap();
+        let bill = person.unwrap();
         *pk = bill.id;
         found = bill.id;
     }

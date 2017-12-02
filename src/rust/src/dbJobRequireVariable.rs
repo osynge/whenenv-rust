@@ -9,27 +9,35 @@ pub struct JobRequireVariable {
 }
 
 
-pub fn table_create_job_require_variable(conn: &Connection)  {
-    conn.execute("CREATE TABLE JOB_REQUIRE_VARIABLE (
+pub fn table_create_job_require_variable(conn: &Connection) {
+    conn.execute(
+        "CREATE TABLE JOB_REQUIRE_VARIABLE (
                   id                    INTEGER PRIMARY KEY ASC,
                   fk_job                INTEGER NOT NULL,
                   fk_variable           INTEGER NOT NULL,
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
                   FOREIGN KEY(fk_variable) REFERENCES JOB_REQUIRE_VARIABLE(id) ON UPDATE CASCADE
-                  )", &[]).unwrap();
+                  )",
+        &[],
+    ).unwrap();
 }
 
 
-pub fn insert_job_require_variable(conn: &Connection, job: &i32, variable: &i32) -> Result<i32, &'static str> {
+pub fn insert_job_require_variable(
+    conn: &Connection,
+    job: &i32,
+    variable: &i32,
+) -> Result<i32, &'static str> {
     let me = JobRequireVariable {
         id: 0,
         fk_job: *job,
         fk_variable: *variable,
-
     };
-    let job_require_variable_instance = conn.execute("INSERT INTO JOB_REQUIRE_VARIABLE (fk_job, fk_variable)
+    let job_require_variable_instance = conn.execute(
+        "INSERT INTO JOB_REQUIRE_VARIABLE (fk_job, fk_variable)
                   VALUES (?1, ?2)",
-                 &[&me.fk_job, &me.fk_variable]);
+        &[&me.fk_job, &me.fk_variable],
+    );
     if job_require_variable_instance.is_err() {
         return Err("Insert failed");
     }
@@ -38,8 +46,9 @@ pub fn insert_job_require_variable(conn: &Connection, job: &i32, variable: &i32)
 }
 
 
-pub fn list_job_require_variable(conn: &Connection)-> Vec<JobRequireVariable> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE").unwrap();
+pub fn list_job_require_variable(conn: &Connection) -> Vec<JobRequireVariable> {
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
+        .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         JobRequireVariable {
             id: row.get(0),
@@ -62,7 +71,8 @@ pub fn list_job_require_variable(conn: &Connection)-> Vec<JobRequireVariable> {
 
 
 pub fn job_require_variable_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE").unwrap();
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
+        .unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         JobRequireVariable {
             id: row.get(0),
@@ -77,7 +87,12 @@ pub fn job_require_variable_list(conn: &Connection) {
 }
 
 
-pub fn pk_job_require_variable_by_name(conn: &Connection, job: &i32, variable: &i32, pk: &mut i32) -> Result<i32, &'static str>{
+pub fn pk_job_require_variable_by_name(
+    conn: &Connection,
+    job: &i32,
+    variable: &i32,
+    pk: &mut i32,
+) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE WHERE fk_job = ?1 AND fk_variable = ?2").unwrap();
     let job_require_variable_iter = stmt.query_map(&[job, variable], |row| {
         JobRequireVariable {
@@ -93,7 +108,7 @@ pub fn pk_job_require_variable_by_name(conn: &Connection, job: &i32, variable: &
     let mut found = 0;
     let mut items = Vec::<i32>::new();
     for person in result {
-        let bill= person.unwrap();
+        let bill = person.unwrap();
         *pk = bill.id;
         found = 1;
     }
@@ -102,5 +117,3 @@ pub fn pk_job_require_variable_by_name(conn: &Connection, job: &i32, variable: &
     }
     return Err("None found");
 }
-
-

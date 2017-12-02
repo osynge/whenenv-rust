@@ -6,14 +6,14 @@ use std::fs::File;
 use std::io::Read;
 
 use std::collections::HashMap;
-use rustc_serialize::{Encodable};
+use rustc_serialize::Encodable;
 use rustc_serialize::json::{self, Encoder};
 use rustc_serialize::json::Json;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
 
 
-pub fn listy2(direcory: &str) -> Vec<String>{
+pub fn listy2(direcory: &str) -> Vec<String> {
     println!("listy2{:?}", direcory);
     let mut items = Vec::<String>::new();
 
@@ -26,7 +26,7 @@ pub fn listy2(direcory: &str) -> Vec<String>{
             }
             let pb_2 = path.as_path();
             let as_path_buf = pb_2.as_os_str();
-            let path = String::new() + as_path_buf.to_str().unwrap() ;
+            let path = String::new() + as_path_buf.to_str().unwrap();
             items.push(path);
 
         }
@@ -41,7 +41,9 @@ pub fn loader(name: &str) -> String {
 
 
     let mut contents = String::new();
-    f.read_to_string(&mut contents).expect("something went wrong reading the file");
+    f.read_to_string(&mut contents).expect(
+        "something went wrong reading the file",
+    );
 
     return contents;
 
@@ -49,21 +51,21 @@ pub fn loader(name: &str) -> String {
 
 
 
-pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str)  {
+pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str) {
     let mut contents = String::new();
     let json = Json::from_str(&content);
-    let mut pk_job :i32 = 0;
+    let mut pk_job: i32 = 0;
     match json {
         Ok(json) => {
             json_loader_elephant(conn, &pk_file, &json);
             //json_loader_elephant_deps_depth1(conn, &pk_file, &json);
         }
-        Err(_)=> {}
+        Err(_) => {}
     }
 }
 
 
-pub fn load(conn: &Connection)  {
+pub fn load(conn: &Connection) {
 
     for directory in db::list_fs_dir(&conn) {
         let foo = directory.id;
@@ -85,17 +87,16 @@ pub fn load(conn: &Connection)  {
         let mut name = String::from(filename.name);
         let name2 = name.clone();
         let loader_rc = loader(name2.trim());
-        scores.insert(name,loader_rc);
+        scores.insert(name, loader_rc);
     }
 
 
     // iterate over everything.
     for (filename, contents) in &scores {
-        let mut pkfsfile : i32 = 0;
+        let mut pkfsfile: i32 = 0;
         let filenameStr = filename.clone();
-        let doop = db::pk_fs_file_by_name(&conn, filenameStr, & mut pkfsfile);
+        let doop = db::pk_fs_file_by_name(&conn, filenameStr, &mut pkfsfile);
         let fred = json_loader_name(&conn, &pkfsfile, &contents);
     }
     db::variable_pair_list(&conn);
 }
-
