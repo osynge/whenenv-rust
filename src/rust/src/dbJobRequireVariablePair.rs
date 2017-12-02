@@ -22,7 +22,10 @@ pub fn table_create_job_require_variable_pair(conn: &Connection) {
         &[],
     );
     if load_table.is_err() {
-        println!("table_create_job Failed {:?}", load_table);
+        println!(
+            "table_create_job_require_variable_pair Failed {:?}",
+            load_table
+        );
         return;
     }
     load_table.unwrap();
