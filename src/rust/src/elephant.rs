@@ -5,40 +5,39 @@ use dbSession;
 
 
 
-pub fn elephant_directory_type(conn: &Connection, text: &String) -> i32 {
+pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let mut pk_variable: i32 = 0;
     let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
     match rc {
         Ok(pk) => {
-            return pk;
+            return Ok(pk);
         }
         Err(_) => {
             let doink = db::insert_fs_dir_type(conn, &text);
             if doink.is_err() {
-                return 0;
+                return doink;
             }
             match doink {
                 Ok(pk) => {
                     let doin3k = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
                     match doin3k {
                         Ok(pk) => {
-                            return pk;
+                            return Ok(pk);
                         }
                         Err(_) => {
                             println!("Failed to select variable");
-                            return 0;
+                            return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert variable");
-                    return 0;
+                    println!("Failed to insert insert_fs_dir_type");
+                    return doink;
                 }
             }
 
         }
     }
-    return pk_variable;
 }
 
 
@@ -170,17 +169,21 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
     return pk_variable;
 }
 
-pub fn elephant_enviroment(conn: &Connection, pk_session: &i32, pk_variable: &i32) -> i32 {
+pub fn elephant_enviroment(
+    conn: &Connection,
+    pk_session: &i32,
+    pk_variable: &i32,
+) -> Result<i32, &'static str> {
     let mut pk_enviroment: i32 = 0;
     let rc = db::pk_enviroment_by_name(conn, &pk_session, &pk_variable, &mut pk_enviroment);
     match rc {
         Ok(pk) => {
-            return pk_enviroment;
+            return rc;
         }
         Err(_) => {
             let doink = db::insert_enviroment(conn, &pk_session, &pk_enviroment);
             if doink.is_err() {
-                return 0;
+                return doink;
             }
             match doink {
                 Ok(pk) => {
@@ -192,99 +195,98 @@ pub fn elephant_enviroment(conn: &Connection, pk_session: &i32, pk_variable: &i3
                     );
                     match doin3k {
                         Ok(pk) => {
-                            return pk_enviroment;
+                            return Ok(pk_enviroment);
                         }
                         Err(_) => {
                             println!("Failed to select job");
-                            return 0;
+                            return doin3k;
                         }
                     }
                 }
                 Err(_) => {
                     println!("Failed to insert job");
-                    return 0;
+                    return doink;
                 }
             }
 
         }
     }
-    return pk_enviroment;
 }
 
 
 
-
-
-pub fn elephant_variable_pk(conn: &Connection, text: &String) -> i32 {
+pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let rc = db::pk_variable_name_by_name(conn, &text);
     match rc {
         Ok(pk) => {
-            return pk;
+            return Ok(pk);
         }
         Err(_) => {
             let doink = db::insert_variable_name(conn, &text);
             if doink.is_err() {
-                return 0;
+                return Err("Failed to insert_variable_name");
             }
             match doink {
                 Ok(pk) => {
                     let doin3k = db::pk_variable_name_by_name(conn, &text);
                     match doin3k {
                         Ok(pk) => {
-                            return pk;
+                            return Ok(pk);
                         }
                         Err(_) => {
                             println!("Failed to select variable");
-                            return 0;
+                            return doin3k;
                         }
                     }
                 }
                 Err(_) => {
                     println!("Failed to insert variable");
-                    return 0;
+                    return doink;
                 }
             }
 
         }
     }
-    return 0;
 }
 
 
 
-pub fn elephant_variable_pair_pk(conn: &Connection, fk_variable: &i32, text: &String) -> i32 {
+pub fn elephant_variable_pair_pk(
+    conn: &Connection,
+    fk_variable: &i32,
+    text: &String,
+) -> Result<i32, &'static str> {
     let rc = db::pk_variable_pair_by_name(conn, &fk_variable, &text);
     match rc {
         Ok(pk) => {
-            return pk;
+            return Ok(pk);
         }
         Err(_) => {
             let doink = db::insert_variable_pair(conn, fk_variable, &text);
             if doink.is_err() {
-                return 0;
+                return doink;
             }
             match doink {
                 Ok(pk) => {
                     let doin3k = db::pk_variable_pair_by_name(conn, &fk_variable, &text);
                     match doin3k {
                         Ok(pk) => {
-                            return pk;
+                            return Ok(pk);
                         }
                         Err(_) => {
-                            println!("Failed to select variable");
-                            return 0;
+                            //println!("Failed to select variable");
+                            return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert variable");
-                    return 0;
+                    //println!("Failed to insert variable");
+                    return doink;
                 }
             }
 
         }
     }
-    return 0;
 }
 
 
@@ -462,7 +464,7 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
         Err(_) => {
             let doink = db::insert_job_depend(conn, &job, &provider, &sq_order);
             if doink.is_err() {
-                println!("Failed to insert");
+                println!("Failed to insert_job_depend");
                 return 0;
             }
             match doink {
@@ -539,9 +541,15 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
-        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
-        assert!(pk_dir_type == 1);
 
+        let result_directory_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        match result_directory_type {
+            Ok(pk_dir_type) => {
+                assert!(pk_dir_type == 1);
+            }
+            Err(_) => {}
+
+        }
     }
 
     #[test]
@@ -551,12 +559,19 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
-        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
-        assert!(pk_dir_type == 1);
-        let str_dir_one_list = String::from("dir_one");
-        let str_directory_path = String::from("directory_path");
-        let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
-        assert!(pk_dir == 1);
+        let result_directory_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        match result_directory_type {
+            Ok(pk_dir_type) => {
+                assert!(pk_dir_type == 1);
+                let str_dir_one_list = String::from("dir_one");
+                let str_directory_path = String::from("directory_path");
+                let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
+                assert!(pk_dir == 1);
+            }
+            Err(_) => {}
+
+        }
+
 
     }
     #[test]
@@ -594,12 +609,22 @@ mod tests {
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
         let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
-        assert!(pk_dir_type == 1);
-        let str_directory_path = String::from("directory_path");
-        let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
-        assert!(pk_dir == 1);
-        let str_file_path = String::from("file_path");
-        let pk_file = elephant::elephant_file(&conn, &pk_dir, &str_file_path);
-        assert!(pk_file == 1);
+        let result_directory_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        match result_directory_type {
+            Ok(pk_dir_type) => {
+                assert!(pk_dir_type == 1);
+                let str_dir_one_list = String::from("dir_one");
+                let str_directory_path = String::from("directory_path");
+                let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
+                assert!(pk_dir == 1);
+                let str_file_path = String::from("file_path");
+                let pk_file = elephant::elephant_file(&conn, &pk_dir, &str_file_path);
+                assert!(pk_file == 1);
+                assert!(true);
+            }
+            Err(_) => {
+                assert!(true);
+            }
+        }
     }
 }

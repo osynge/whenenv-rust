@@ -54,7 +54,7 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i3
             let path_string = path_result.to_str();
             match path_string {
                 Some(pk) => {
-                    let pk_file = elephant::elephant_file(&conn, pk_directory, pk);
+                    elephant::elephant_file(&conn, pk_directory, pk);
                 }
                 None => {}
             }
@@ -62,7 +62,6 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i3
     }
     return Ok(0);
 }
-
 
 
 pub fn job_files_list(direcory: &str) {
@@ -82,18 +81,23 @@ pub fn deligate(conn: &Connection, matches: &ArgMatches) {
     if actions.contains(&matcher) {
         if let Some(in_v) = matches.values_of("dir-jobs") {
             let str_job_files_list = String::from("job_files");
-            let pk_directory_type_jobs =
-                elephant::elephant_directory_type(&conn, &str_job_files_list);
-            for in_dir in in_v {
-                let dirname = in_dir.to_string();
-                let pk_directory =
-                    elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
-                listy(&conn, &pk_directory, &dirname);
+            let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+            match result_dir_type {
+                Ok(pk_directory_type_jobs) => {
+                    for in_dir in in_v {
+                        let dirname = in_dir.to_string();
+                        let pk_directory =
+                            elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
+                        listy(&conn, &pk_directory, &dirname);
+                    }
+                }
+                Err(_) => {}
             }
         }
     } else {
         let str_job_files_list = String::from(autoconf::jobdir());
-        let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        let pk_directory_type_jobs = result_dir_type.unwrap();
         let pk_directory =
             elephant::elephant_directory(&conn, &pk_directory_type_jobs, &str_job_files_list);
         listy(&conn, &pk_directory, &str_job_files_list);
@@ -101,18 +105,26 @@ pub fn deligate(conn: &Connection, matches: &ArgMatches) {
     let str_load_scripts = String::from("load-scripts");
     if actions.contains(&str_load_scripts) {
         let str_shell_files_list = String::from("shell_files");
-        let pk_directory_type_shell =
-            elephant::elephant_directory_type(&conn, &str_shell_files_list);
+        let result_dir_type = elephant::elephant_directory_type(&conn, &str_shell_files_list);
+        let pk_directory_type_shell = result_dir_type.unwrap();
         if let Some(in_v) = matches.values_of("dir-scripts") {
             let str_shell_files_list = String::from("shell_files");
-            let pk_directory_type_shell =
-                elephant::elephant_directory_type(&conn, &str_shell_files_list);
-            for in_dir in in_v {
-                let dirname = in_dir.to_string();
-                let pk_directory =
-                    elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-                listy(&conn, &pk_directory, &dirname);
+            let result_dir_type = elephant::elephant_directory_type(&conn, &str_shell_files_list);
+            match result_dir_type {
+                Ok(pk_directory_type_shell) => {
+                    for in_dir in in_v {
+                        let dirname = in_dir.to_string();
+                        let pk_directory =
+                            elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+                        listy(&conn, &pk_directory, &dirname);
+                    }
+                }
+
+                Err(_) => {}
             }
+
+
+
         } else {
             let dirname = String::from(autoconf::shelldir());
             let pk_directory =
@@ -121,7 +133,8 @@ pub fn deligate(conn: &Connection, matches: &ArgMatches) {
         }
         if let Some(in_v) = matches.values_of("dir-py") {
             let str_py_files_list = String::from("python_files");
-            let pk_directory_type_py = elephant::elephant_directory_type(&conn, &str_py_files_list);
+            let result_dir_type = elephant::elephant_directory_type(&conn, &str_py_files_list);
+            let pk_directory_type_py = result_dir_type.unwrap();
             for in_dir in in_v {
                 let dirname = in_dir.to_string();
                 let pk_directory =
@@ -135,11 +148,42 @@ pub fn deligate(conn: &Connection, matches: &ArgMatches) {
 
 pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
     if let Some(in_v) = matches.values_of("env") {
-        for in_file in in_v {
-            let filename = in_file.to_string();
-            let mut text = "".to_string();
-            let pk_variable_name = elephant::elephant_variable_pk(&conn, &filename);
-            let session = elephant::elephant_enviroment(&conn, &pk_session, &pk_variable_name);
+        for enviroment_variable in in_v {
+            let env_var = enviroment_variable.to_string();
+            let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
+            match result_elephant_variable {
+                Ok(pk_variable_name) => {
+                    let value = String::from("python_files");
+                    let result_elephant_variable_value =
+                        elephant::elephant_variable_pair_pk(&conn, &pk_variable_name, &value);
+                    match result_elephant_variable_value {
+                        Ok(pk_variable_pair) => {
+                            let result_elephant_variable_pair = elephant::elephant_enviroment(
+                                &conn,
+                                &pk_session,
+                                &pk_variable_pair,
+                            );
+                            match result_elephant_variable_pair {
+                                Ok(pk_variable_pair) => {
+                                    println!("yyyyyyy");
+                                }
+                                Err(_) => {
+                                    println!("ddddddddddddddddddddd");
+                                }
+                            }
+
+                        }
+                        Err(_) => {
+                            println!("bbbbbbbbbbbbfdfffffffffffffffffffffffff");
+                        }
+
+                    }
+                }
+                Err(_) => {
+                    println!("sssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+                }
+
+            }
         }
     }
 }

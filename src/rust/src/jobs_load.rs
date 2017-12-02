@@ -86,7 +86,11 @@ pub fn load(conn: &Connection) {
     }
     let mut scores = HashMap::new();
     let str_job_files_list = String::from("job_files");
-    let pk_directory_type_jobs = elephant::elephant_directory_type(&conn, &str_job_files_list);
+    let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+    if result_dir_type.is_err() {
+        return;
+    }
+    let pk_directory_type_jobs = result_dir_type.unwrap();
     for filename in db::list_fs_file_type(&conn, &pk_directory_type_jobs) {
         let mut name = String::from(filename.name);
         let name2 = name.clone();
