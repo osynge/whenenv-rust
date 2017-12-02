@@ -8,16 +8,21 @@ pub struct Session {
     pub uuid: String,
 }
 
-
-pub fn table_create_session(conn: &Connection) -> &Connection {
-    conn.execute(
-        "CREATE TABLE WHENENV_SESSION (
+pub fn table_create_session(conn: &Connection) -> Result<(), &'static str> {
+    let load_table = conn.execute_batch(
+        "
+        BEGIN;
+        CREATE TABLE WHENENV_SESSION (
                     id              INTEGER PRIMARY KEY ASC,
                     uuid            TEXT NOT NULL UNIQUE
-                  )",
-        &[],
-    ).unwrap();
-    return conn;
+                  );
+        COMMIT;",
+    );
+    if load_table.is_err() {
+        return Err("table_create_session Failed");
+    }
+    load_table.unwrap();
+    return Ok(());
 }
 
 
