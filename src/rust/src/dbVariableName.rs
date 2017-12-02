@@ -10,11 +10,14 @@ pub struct VariableName {
 
 
 
-pub fn table_create_variable_name(conn: &Connection)  -> &Connection  {
-    conn.execute("CREATE TABLE VARIABLE_NAME (
+pub fn table_create_variable_name(conn: &Connection) -> &Connection {
+    conn.execute(
+        "CREATE TABLE VARIABLE_NAME (
                   id            INTEGER PRIMARY KEY ASC,
                   name      TEXT NOT NULL UNIQUE
-                  )", &[]).unwrap();
+                  )",
+        &[],
+    ).unwrap();
     return conn;
 }
 
@@ -24,9 +27,11 @@ pub fn insert_variable_name(conn: &Connection, name: &String) -> Result<i32, &'s
         id: 0,
         name: name.clone(),
     };
-    let variable_name_instance = conn.execute("INSERT INTO VARIABLE_NAME (name)
+    let variable_name_instance = conn.execute(
+        "INSERT INTO VARIABLE_NAME (name)
                   VALUES (?1)",
-                 &[&me.name]);
+        &[&me.name],
+    );
     if variable_name_instance.is_err() {
         return Err("Insert failed");
     }
@@ -35,7 +40,7 @@ pub fn insert_variable_name(conn: &Connection, name: &String) -> Result<i32, &'s
 }
 
 
-pub fn list_variable_name(conn: &Connection)-> Vec<VariableName> {
+pub fn list_variable_name(conn: &Connection) -> Vec<VariableName> {
     let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME").unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         VariableName {
@@ -58,7 +63,8 @@ pub fn list_variable_name(conn: &Connection)-> Vec<VariableName> {
 
 
 pub fn variable_name_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME").unwrap();
+    let mut stmt = conn.prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME")
+        .unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         VariableName {
             id: row.get(0),
@@ -71,10 +77,11 @@ pub fn variable_name_list(conn: &Connection) {
     }
 }
 
-pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'static str>{
-	let mut output = 0;
-	let bill = String::from(name);
-    let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1").unwrap();
+pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'static str> {
+    let mut output = 0;
+    let bill = String::from(name);
+    let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1")
+        .unwrap();
     let variable_name_iter = stmt.query_map(&[&name], |row| {
         VariableName {
             id: row.get(0),
@@ -87,7 +94,7 @@ pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'
     let result = variable_name_iter.unwrap();
     let mut found = 0;
     for person in result {
-        let bill= person.unwrap();
+        let bill = person.unwrap();
         output = bill.id;
         found = 1;
     }
@@ -96,5 +103,3 @@ pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'
     }
     return Err("None found");
 }
-
-
