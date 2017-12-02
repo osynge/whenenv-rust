@@ -97,22 +97,67 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
         }
     }
     return connect();
+
+
+fn list_tables(conn: &Connection) -> HashSet<String> {
+    let mut output = HashSet::new();
+    let mut stmt = conn.prepare("SELECT name FROM sqlite_master WHERE type='table'")
+        .unwrap();
+    //let wraped_table_iter = stmt.query_map(&[], |row| row.get::<int>(0));
+    let wraped_table_iter = stmt.query_map(&[], |row| row.get::<_, String>(0));
+    if wraped_table_iter.is_err() {
+        return output;
+    }
+    let fs_file_iter = wraped_table_iter.unwrap();
+    for person in fs_file_iter {
+        let result = person.unwrap();
+        let s = String::from(result);
+        output.insert(s);
+    }
+    return output;
 }
 
 
 pub fn create_tables(conn: &Connection) -> &Connection {
-    dbSession::table_create_session(&conn);
-    table_create_fs_dir_type(&conn);
-    table_create_fs_dir(&conn);
-    table_create_fs_file(&conn);
-    let newcon = table_create_provider(&conn);
-    let newcon2 = table_create_job(&newcon);
-    table_create_job_depend(&conn);
-    table_create_job_provide(&conn);
-    table_create_variable_name(&conn);
-    table_create_variable_pair(&conn);
-    table_create_job_require_variable(&conn);
-    table_create_job_require_variable_pair(&conn);
-    dbEnviroment::table_create_enviroment(&conn);
-    return &newcon;
+    let tables_found = list_tables(&conn);
+    if !tables_found.contains("FS_DIR_TYPE") {
+        table_create_fs_dir_type(&conn);
+    }
+    if !tables_found.contains("FS_DIR") {
+        table_create_fs_dir(&conn);
+    }
+    if !tables_found.contains("FS_FILE") {
+        table_create_fs_file(&conn);
+    }
+    if !tables_found.contains("PROVIDER") {
+        table_create_provider(&conn);
+    }
+    if !tables_found.contains("WHENENV_SESSION") {
+        dbSession::table_create_session(&conn);
+    }
+    if !tables_found.contains("JOB") {
+        table_create_job(&conn);
+    }
+    if !tables_found.contains("JOBDEPEND") {
+        table_create_job_depend(&conn);
+    }
+    if !tables_found.contains("JOBPROVIDE") {
+        table_create_job_provide(&conn);
+    }
+    if !tables_found.contains("VARIABLE_NAME") {
+        table_create_variable_name(&conn);
+    }
+    if !tables_found.contains("VARIABLE_PAIR") {
+        table_create_variable_pair(&conn);
+    }
+    if !tables_found.contains("JOB_REQUIRE_VARIABLE") {
+        table_create_job_require_variable(&conn);
+    }
+    if !tables_found.contains("JOB_REQUIRE_VALUE") {
+        table_create_job_require_variable_pair(&conn);
+    }
+    if !tables_found.contains("WHENENV_ENVIROMENT") {
+        dbEnviroment::table_create_enviroment(&conn);
+    }
+    return &conn;
 }
