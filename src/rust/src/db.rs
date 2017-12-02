@@ -97,6 +97,7 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
         }
     }
     return connect();
+}
 
 
 fn list_tables(conn: &Connection) -> HashSet<String> {
