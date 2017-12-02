@@ -38,7 +38,6 @@ pub fn insert_variable_pair(
         variable_value: name.to_string(),
         fk_variable: *fk_variable,
     };
-    println!("me.fk_variable:{:?}", me.fk_variable);
     let variable_pair_instance = conn.execute(
         "INSERT INTO VARIABLE_PAIR (fk_variable, variable_value)
                  VALUES (?1, ?2)",
