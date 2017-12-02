@@ -174,22 +174,36 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
         println!("job_name::pk_job:{}", pk_job);
         for item in job_vaiable_provides {
             println!("job_vaiable_provides:{}", item);
-            let pk_variable_name = elephant::elephant_variable_pk(conn, &item);
-            let job_vaiable_provides_pk =
-                elephant::elephant_job_require_variables(conn, &pk_job, &pk_variable_name);
-            println!(
-                "job_vaiable_provides::job_vaiable_provides_pk={}",
-                pk_provider
-            );
+            let variable_name_result = elephant::elephant_variable_pk(conn, &item);
+            match variable_name_result {
+                Ok(pk_variable_name) => {
+                    let job_vaiable_provides_pk =
+                        elephant::elephant_job_provide_variables(conn, &pk_job, &pk_variable_name);
+                    //println!("job_vaiable_provides::job_vaiable_provides_pk={}", pk_provider);
+                }
+                Err(_) => {}
+
+            }
+
+
         }
         for item in job_vaiable_depends {
             println!("job_vaiable_depends:{}", item);
-            let variable_pair_pk =
-                elephant::elephant_variable_pair_pk(&conn, &pk_variable_name, &item);
-            println!("job_vaiable_depends::variable_pair_pk={}", variable_pair_pk);
-            let job_depend_pair_pk =
-                elephant::elephant_job_depend_pair_pk(&conn, &pk_job, &variable_pair_pk);
-            println!("job_vaiable_depends::job_depend_pair_pk={}", pk_provider);
+
+            let result_variable_pair = elephant::elephant_variable_pk(&conn, &item);
+            match result_variable_pair {
+
+                Ok(variable_pair_pk) => {
+                    println!("job_vaiable_depends::variable_pair_pk={}", variable_pair_pk);
+                    let job_depend_pair_pk =
+                        elephant::elephant_job_depend_pair_pk(&conn, &pk_job, &variable_pair_pk);
+                    println!(
+                        "job_vaiable_depends::job_depend_pair_pk={}",
+                        job_depend_pair_pk
+                    );
+                }
+                Err(_) => {}
+            }
         }
         for item in job_provides {
             println!("job_provides:{}", item);
@@ -198,6 +212,8 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             // let sq_order = 1;
             // pk_provider = elephant::elephant_job_depend_pk(conn, &pk_job, &pk_provider, &sq_order);
             println!("job_provides::pk_provider={}", pk_provider);
+
+            elephant::elephant_job_require_variables(&conn, &pk_job, &pk_provider);
         }
         let mut order_job_depend: i32 = 0;
         for item in job_depends {
@@ -209,25 +225,31 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             order_job_depend += 10;
         }
         for item in job_requires_vaiable_pair {
-            let pk_variable_name = elephant::elephant_variable_pk(conn, &item.key);
-            let pk_variable_pair =
-                elephant::elephant_variable_pair_pk(conn, &pk_variable_name, &item.value);
-            let pk_variable_pair_dep =
-                elephant::elephant_job_depend_pair_pk(conn, &pk_job, &pk_variable_pair);
-            println!("job_requires_vaiable_pair.key:{}", item.key);
-            println!("job_requires_vaiable_pair.value:{}", item.value);
-            println!(
-                "job_requires_vaiable_pair.pk_variable_name:{}",
-                pk_variable_name
-            );
-            println!(
-                "job_requires_vaiable_pair.pk_variable_pair:{}",
-                pk_variable_pair
-            );
-            println!(
-                "job_requires_vaiable_pair.pk_variable_pair_dep:{}",
-                pk_variable_pair_dep
-            );
+            let variable_name_result = elephant::elephant_variable_pk(conn, &item.key);
+            match variable_name_result {
+                Ok(pk_variable_name) => {
+
+                    let variable_name_result =
+                        elephant::elephant_variable_pair_pk(conn, &pk_variable_name, &item.value);
+                    match variable_name_result {
+                        Ok(pk_variable_pair) => {
+                            let pk_variable_pair_dep = elephant::elephant_job_depend_pair_pk(
+                                conn,
+                                &pk_job,
+                                &pk_variable_pair,
+                            );
+                        }
+                        Err(_) => {}
+                    }
+                    //println!("job_requires_vaiable_pair.key:{}", item.key);
+                    //println!("job_requires_vaiable_pair.value:{}", item.value);
+                    //println!("job_requires_vaiable_pair.pk_variable_name:{}",pk_variable_name);
+                    //println!("job_requires_vaiable_pair.pk_variable_pair:{}",pk_variable_pair);
+                    //println!("job_requires_vaiable_pair.pk_variable_pair_dep:{}",pk_variable_pair_dep);
+                }
+                Err(_) => {}
+            }
+
         }
     }
 }
