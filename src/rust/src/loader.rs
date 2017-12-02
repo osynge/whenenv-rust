@@ -12,6 +12,7 @@ use std::collections::HashMap;
 use std::result::Result;
 use rusqlite::Connection;
 use rusqlite::Error;
+use std::env;
 
 use dbFsFile;
 use std::result;
@@ -153,36 +154,38 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
             let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
             match result_elephant_variable {
                 Ok(pk_variable_name) => {
-                    let value = String::from("python_files");
+                    let mut value = String::from("");
+                    match env::var(env_var) {
+                        Ok(lang) => value = String::from(lang),
+                        Err(e) => {
+                            println!(
+                                "Couldn't read Enviroment variable: ({})",
+                                enviroment_variable.to_string()
+                            );
+                            continue;
+                        }
+                    };
                     let result_elephant_variable_value =
                         elephant::elephant_variable_pair_pk(&conn, &pk_variable_name, &value);
                     match result_elephant_variable_value {
                         Ok(pk_variable_pair) => {
-                            let result_elephant_variable_pair = elephant::elephant_enviroment(
+                            println!("pk_session:{:?}", pk_session);
+                            println!("pk_variable_pair:{:?}", pk_variable_pair);
+                            let result_elephant_enviroment = elephant::elephant_enviroment(
                                 &conn,
                                 &pk_session,
                                 &pk_variable_pair,
                             );
-                            match result_elephant_variable_pair {
-                                Ok(pk_variable_pair) => {
-                                    println!("yyyyyyy");
-                                }
-                                Err(_) => {
-                                    println!("ddddddddddddddddddddd");
-                                }
+                            match result_elephant_enviroment {
+                                Ok(pk_variable_pair) => {}
+                                Err(_) => {}
                             }
-
                         }
-                        Err(_) => {
-                            println!("bbbbbbbbbbbbfdfffffffffffffffffffffffff");
-                        }
+                        Err(_) => {}
 
                     }
                 }
-                Err(_) => {
-                    println!("sssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-                }
-
+                Err(_) => {}
             }
         }
     }
