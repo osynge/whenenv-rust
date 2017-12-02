@@ -40,8 +40,14 @@ pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
 
 
 
-pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) {
+pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i32, &'static str> {
     let path = Path::new(direcory);
+    if path.exists() == false {
+        return Err("File not found");
+    }
+    if path.is_dir() == false {
+        return Err("File not found");
+    }
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
             let path_result = entry.path();
@@ -54,7 +60,9 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) {
             }
         }
     }
+    return Ok(0);
 }
+
 
 
 pub fn job_files_list(direcory: &str) {
