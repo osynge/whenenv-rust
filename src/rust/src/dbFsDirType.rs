@@ -90,11 +90,10 @@ pub fn pk_fs_dir_type_by_name(
     }
     let result = variable_name_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
         *pk = bill.id;
-        found = 1;
+        found = bill.id;
     }
     if found != 0 {
         return Ok(found);
