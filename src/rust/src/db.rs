@@ -1,5 +1,7 @@
+use std::collections::HashSet;
 use rusqlite::Connection;
 use rusqlite::Error;
+use clap::ArgMatches;
 pub use dbSession::insert_session;
 pub use dbSession::pk_session_by_uuid;
 pub use dbEnviroment::pk_enviroment_by_name;
@@ -70,10 +72,31 @@ pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all as pk_job_
 use dbSession;
 use dbEnviroment;
 
+
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
     conn.execute("PRAGMA foreign_keys = ON;", &[]).unwrap();
     return conn;
+}
+
+
+pub fn connect_file(filename: &str) -> Connection {
+    let conn = Connection::open(filename).unwrap();
+    conn.execute("PRAGMA foreign_keys = ON;", &[]).unwrap();
+    return conn;
+}
+
+
+pub fn connect_deligate(matches: &ArgMatches) -> Connection {
+    if let Some(in_v) = matches.values_of("rdbms") {
+
+        for enviroment_variable in in_v {
+            println!("connect_deligate {:?}", enviroment_variable);
+            let env_var = enviroment_variable.to_string();
+            return connect_file(&env_var);
+        }
+    }
+    return connect();
 }
 
 

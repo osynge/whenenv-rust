@@ -30,13 +30,16 @@ mod autoconf;
 use uuid::Uuid;
 
 
+
 fn main() {
-    let session_uuid = Uuid::new_v4();
-    let session_uuid_string = session_uuid.simple().to_string();
-    let conn = db::connect();
-    db::create_tables(&conn);
     let some_value = 10;
     let clap_matches = cli_clap::cli_clap(&some_value);
+    let session_uuid = Uuid::new_v4();
+    let session_uuid_string = session_uuid.simple().to_string();
+    let conn = db::connect_deligate(&clap_matches);
+    db::create_tables(&conn);
+
+
     loader::deligate(&conn, &clap_matches);
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
     loader::enviroment(&conn, pk_session, &clap_matches);

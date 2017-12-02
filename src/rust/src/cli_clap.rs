@@ -2,7 +2,6 @@ use clap::Arg;
 use clap::App;
 use clap::ArgMatches;
 use autoconf;
-use rusqlite::Connection;
 
 pub fn cli_clap(number: &u32) -> ArgMatches {
 
@@ -24,6 +23,14 @@ pub fn cli_clap(number: &u32) -> ArgMatches {
                 .short("q")
                 .multiple(true)
                 .long("quiet"),
+        )
+        .arg(
+            Arg::with_name("rdbms")
+                .long("rdbms")
+                .value_name("FILE_RDBMS")
+                .help("sqlite rdbms file.")
+                .multiple(true)
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("env")
