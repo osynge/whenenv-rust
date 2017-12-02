@@ -54,7 +54,7 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i3
             let path_string = path_result.to_str();
             match path_string {
                 Some(pk) => {
-                    let pk_file = elephant::elephant_file(&conn, pk_directory, pk);
+                    elephant::elephant_file(&conn, pk_directory, pk);
                 }
                 None => {}
             }
@@ -62,7 +62,6 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i3
     }
     return Ok(0);
 }
-
 
 
 pub fn job_files_list(direcory: &str) {
