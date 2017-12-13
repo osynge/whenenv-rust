@@ -1,6 +1,4 @@
 use rusqlite::Connection;
-use std::result;
-use log;
 
 
 #[derive(Debug)]
