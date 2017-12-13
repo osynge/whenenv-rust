@@ -1,5 +1,7 @@
 use rusqlite::Connection;
 use std::result;
+use log;
+
 
 #[derive(Debug)]
 pub struct WhenenvEnviroment {
@@ -84,7 +86,7 @@ pub fn enviroment_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found enviroment {:?}", person.unwrap());
+        info!("Found enviroment {:?}", person.unwrap());
     }
 }
 
