@@ -1,8 +1,7 @@
 use rusqlite::Connection;
 use db;
 use dbSession;
-
-
+use log;
 
 
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
@@ -25,13 +24,13 @@ pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, 
                             return Ok(pk);
                         }
                         Err(_) => {
-                            println!("Failed to select variable");
+                            error!("Failed to select variable");
                             return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert insert_fs_dir_type");
+                    error!("Failed to insert insert_fs_dir_type");
                     return doink;
                 }
             }
@@ -55,7 +54,7 @@ pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &Str
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory_type, &text);
             if doink.is_err() {
-                println!("Failed to insert_fs_dir variable");
+                error!("Failed to insert_fs_dir variable");
                 return 0;
             }
             match doink {
@@ -69,13 +68,13 @@ pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &Str
                             return pk_variable;
                         }
                         Err(_) => {
-                            println!("Failed to select variable");
+                            error!("Failed to select variable");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert variable");
+                    error!("Failed to insert variable");
                     return 0;
                 }
             }
@@ -99,7 +98,7 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory, &text);
             if doink.is_err() {
-                println!("Failed to insert_fs_dir variable");
+                error!("Failed to insert_fs_dir variable");
                 return 0;
             }
             match doink {
@@ -113,13 +112,13 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                             }
                         }
                         Err(_) => {
-                            println!("Failed to select variable");
+                            error!("Failed to select variable");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert variable");
+                    error!("Failed to insert variable");
                     return 0;
                 }
             }
@@ -153,13 +152,13 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
                             return pk;
                         }
                         Err(_) => {
-                            println!("Failed to select session");
+                            error!("Failed to select session");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert session");
+                    error!("Failed to insert session");
                     return 0;
                 }
             }
@@ -194,16 +193,16 @@ pub fn elephant_enviroment(
                             return Ok(bill);
                         }
                         Err(_) => {
-                            println!("Failed to pk_enviroment_by_name");
+                            error!("Failed to pk_enviroment_by_name");
 
-                            println!("Found pk_session {:?}", pk_session);
-                            println!("Found pk_enviroment {:?}", pk_enviroment);
+                            info!("Found pk_session {:?}", pk_session);
+                            info!("Found pk_enviroment {:?}", pk_enviroment);
                             return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job");
+                    error!("Failed to insert job");
                     return doink;
                 }
             }
@@ -232,13 +231,13 @@ pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'s
                             return Ok(pk);
                         }
                         Err(_) => {
-                            println!("Failed to select variable");
+                            error!("Failed to select variable");
                             return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert variable");
+                    error!("Failed to insert variable");
                     return doink;
                 }
             }
@@ -262,7 +261,7 @@ pub fn elephant_variable_pair_pk(
         Err(_) => {
             let doink = db::insert_variable_pair(conn, fk_variable, &text);
             if doink.is_err() {
-                println!("Failed to pk_variable_pair_by_name");
+                error!("Failed to pk_variable_pair_by_name");
                 return doink;
             }
             match doink {
@@ -273,13 +272,13 @@ pub fn elephant_variable_pair_pk(
                             return Ok(pk);
                         }
                         Err(_) => {
-                            println!("Failed to pk_variable_pair_by_name");
+                            error!("Failed to pk_variable_pair_by_name");
                             return doin3k;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert_variable_pair");
+                    error!("Failed to insert_variable_pair");
                     return doink;
                 }
             }
@@ -319,13 +318,13 @@ pub fn elephant_job_require_variables(conn: &Connection, pk_job: &i32, pk_variab
                             return pk_job_require_variables;
                         }
                         Err(_) => {
-                            println!("Failed to select job");
+                            error!("Failed to select job");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job");
+                    error!("Failed to insert job");
                     return 0;
                 }
             }
@@ -357,13 +356,13 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
                             return pk_job;
                         }
                         Err(_) => {
-                            println!("Failed to select job");
+                            error!("Failed to select job");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job");
+                    error!("Failed to insert job");
                     return 0;
                 }
             }
@@ -386,7 +385,7 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
         Err(_) => {
             let doink = db::insert_provider(conn, &text);
             if doink.is_err() {
-                println!("Error Failed to insert elephant_provider");
+                error!("Error Failed to insert elephant_provider");
                 return 0;
             }
             match doink {
@@ -397,13 +396,13 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
                             return pk_provider;
                         }
                         Err(_) => {
-                            println!("Failed to select provider");
+                            error!("Failed to select provider");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert elephant_provider");
+                    error!("Failed to insert elephant_provider");
                     return 0;
                 }
             }
@@ -422,7 +421,7 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
         Err(_) => {
             let doink = db::insert_job_require_variable_pair(conn, &job, &variable_pair);
             if doink.is_err() {
-                println!("Failed to insert job_depend_pair:{}{}", variable_pair, job);
+                error!("Failed to insert job_depend_pair:{}{}", variable_pair, job);
 
                 return 0;
             }
@@ -435,13 +434,13 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
                             return pk;
                         }
                         Err(_) => {
-                            println!("Failed to select job_depend");
+                            error!("Failed to select job_depend");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job_depend");
+                    error!("Failed to insert job_depend");
                     return 0;
                 }
             }
@@ -461,7 +460,7 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
         Err(_) => {
             let doink = db::insert_job_depend(conn, &job, &provider, &sq_order);
             if doink.is_err() {
-                println!("Failed to insert_job_depend");
+                error!("Failed to insert_job_depend");
                 return 0;
             }
             match doink {
@@ -472,13 +471,13 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
                             return pk;
                         }
                         Err(_) => {
-                            println!("Failed to select job_depend");
+                            error!("Failed to select job_depend");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job_depend");
+                    error!("Failed to insert job_depend");
                     return 0;
                 }
             }
@@ -501,7 +500,7 @@ pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i
         Err(_) => {
             let doink = db::insert_job_provide(conn, &job, &provider);
             if doink.is_err() {
-                println!("Failed to insert");
+                error!("elephant_job_provide_variables:Failed to insert");
                 return 0;
             }
             match doink {
@@ -513,13 +512,13 @@ pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i
                             return pk_job_provide;
                         }
                         Err(_) => {
-                            println!("Failed to select job_provide");
+                            error!("Failed to select job_provide");
                             return 0;
                         }
                     }
                 }
                 Err(_) => {
-                    println!("Failed to insert job_provide");
+                    error!("Failed to insert job_provide");
                     return 0;
                 }
             }
