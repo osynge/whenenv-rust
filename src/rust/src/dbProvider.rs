@@ -1,4 +1,7 @@
 use rusqlite::Connection;
+use log;
+
+
 #[derive(Debug)]
 pub struct Provider {
     id: i32,
@@ -64,7 +67,7 @@ pub fn provider_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found provider {:?}", person.unwrap());
+        info!("Found provider {:?}", person.unwrap());
     }
 }
 
