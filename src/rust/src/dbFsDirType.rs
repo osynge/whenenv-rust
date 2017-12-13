@@ -1,4 +1,6 @@
 use rusqlite::Connection;
+use log;
+
 
 #[derive(Debug)]
 pub struct FsDirType {
@@ -67,7 +69,7 @@ pub fn fs_dir_type_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found fs_dir_type {:?}", person.unwrap());
+        info!("Found fs_dir_type {:?}", person.unwrap());
     }
 }
 
