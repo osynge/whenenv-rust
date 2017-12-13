@@ -1,5 +1,4 @@
 use rusqlite::Connection;
-use rusqlite::Error;
 
 
 #[derive(Debug)]
