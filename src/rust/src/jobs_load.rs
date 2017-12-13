@@ -1,13 +1,9 @@
-
 use rusqlite::Connection;
 use db;
 use std::path::Path;
 use std::fs::File;
 use std::io::Read;
-
 use std::collections::HashMap;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, Encoder};
 use rustc_serialize::json::Json;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
