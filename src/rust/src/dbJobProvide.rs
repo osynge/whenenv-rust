@@ -91,7 +91,6 @@ pub fn pk_job_provide_by_all(
     }
     let result = job_provide_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
         *pk = bill.id;
