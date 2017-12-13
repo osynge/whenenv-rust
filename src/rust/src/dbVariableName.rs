@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 use std::result;
+use log;
 
 
 #[derive(Debug)]
@@ -73,7 +74,7 @@ pub fn variable_name_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found variable_name {:?}", person.unwrap());
+        info!("Found variable_name {:?}", person.unwrap());
     }
 }
 

@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 use std::result;
+use log;
 
 
 #[derive(Debug)]
@@ -91,7 +92,7 @@ pub fn job_depend_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found job_depend {:?}", person.unwrap());
+        info!("Found job_depend {:?}", person.unwrap());
     }
 }
 

@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 use std::result;
+use log;
 
 
 #[derive(Debug)]
@@ -33,7 +34,7 @@ pub fn table_create_job(conn: &Connection) {
         &[],
     );
     if load_table.is_err() {
-        println!("table_create_job Failed {:?}", load_table);
+        error!("table_create_job Failed {:?}", load_table);
         return;
     }
     load_table.unwrap();

@@ -1,5 +1,6 @@
 use rusqlite::Connection;
 use std::result;
+use log;
 
 
 #[derive(Debug)]
@@ -22,7 +23,7 @@ pub fn table_create_job_require_variable_pair(conn: &Connection) {
         &[],
     );
     if load_table.is_err() {
-        println!(
+        error!(
             "table_create_job_require_variable_pair Failed {:?}",
             load_table
         );
@@ -92,7 +93,7 @@ pub fn job_require_variable_pair_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found variable_pair {:?}", person.unwrap());
+        info!("Found variable_pair {:?}", person.unwrap());
     }
 }
 

@@ -1,5 +1,7 @@
 use rusqlite::Connection;
 use std::result;
+use log;
+
 
 #[derive(Debug)]
 pub struct WhenenvEnviroment {
@@ -39,7 +41,7 @@ pub fn insert_enviroment(
         &[&me.fk_session, &me.fk_variable_pair],
     );
     if enviroment_instance.is_err() {
-        println!("failed insert_enviroment {:?}", me);
+        error!("failed insert_enviroment {:?}", me);
         return Err("insert_enviroment");
     }
     enviroment_instance.unwrap();
@@ -84,7 +86,7 @@ pub fn enviroment_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found enviroment {:?}", person.unwrap());
+        info!("Found enviroment {:?}", person.unwrap());
     }
 }
 
@@ -111,7 +113,7 @@ pub fn pk_enviroment_by_name(
         }
     });
     if enviroment_iter.is_err() {
-        println!("pk_enviroment_by_name cccccccccccccccccccc");
+        error!("pk_enviroment_by_name none found");
         return Err("Insert failed dfdf");
     }
     let result = enviroment_iter.unwrap();

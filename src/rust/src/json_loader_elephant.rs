@@ -65,7 +65,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 }
             }
             if movie.contains_key("depends") {
-                //println!("depends");
+                //debug!("depends");
                 let resulkt = movie.get("depends");
                 let sdf = resulkt.unwrap();
                 let mut itemfdsd = sdf.clone();
@@ -169,17 +169,17 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
         let mut pk_provider: i32 = 0;
         let mut pk_job_depend: i32 = 0;
         let mut pk_variable_name: i32 = 0;
-        println!("job_name:{}", job_name);
+        debug!("job_name:{}", job_name);
         pk_job = elephant::elephant_job_pk(conn, &pk_file, &job_name);
-        println!("job_name::pk_job:{}", pk_job);
+        debug!("job_name::pk_job:{}", pk_job);
         for item in job_vaiable_provides {
-            println!("job_vaiable_provides:{}", item);
+            debug!("job_vaiable_provides:{}", item);
             let variable_name_result = elephant::elephant_variable_pk(conn, &item);
             match variable_name_result {
                 Ok(pk_variable_name) => {
                     let job_vaiable_provides_pk =
                         elephant::elephant_job_provide_variables(conn, &pk_job, &pk_variable_name);
-                    //println!("job_vaiable_provides::job_vaiable_provides_pk={}", pk_provider);
+                    //debug!("job_vaiable_provides::job_vaiable_provides_pk={}", pk_provider);
                 }
                 Err(_) => {}
 
@@ -188,16 +188,16 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
 
         }
         for item in job_vaiable_depends {
-            println!("job_vaiable_depends:{}", item);
+            debug!("job_vaiable_depends:{}", item);
 
             let result_variable_pair = elephant::elephant_variable_pk(&conn, &item);
             match result_variable_pair {
 
                 Ok(variable_pair_pk) => {
-                    println!("job_vaiable_depends::variable_pair_pk={}", variable_pair_pk);
+                    debug!("job_vaiable_depends::variable_pair_pk={}", variable_pair_pk);
                     let job_depend_pair_pk =
                         elephant::elephant_job_depend_pair_pk(&conn, &pk_job, &variable_pair_pk);
-                    println!(
+                    debug!(
                         "job_vaiable_depends::job_depend_pair_pk={}",
                         job_depend_pair_pk
                     );
@@ -206,22 +206,22 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             }
         }
         for item in job_provides {
-            println!("job_provides:{}", item);
+            debug!("job_provides:{}", item);
             pk_provider = elephant::elephant_provider_pk(conn, &item);
             // println!("elephant_provider_pk={}", foo);
             // let sq_order = 1;
             // pk_provider = elephant::elephant_job_depend_pk(conn, &pk_job, &pk_provider, &sq_order);
-            println!("job_provides::pk_provider={}", pk_provider);
+            debug!("job_provides::pk_provider={}", pk_provider);
 
             elephant::elephant_job_require_variables(&conn, &pk_job, &pk_provider);
         }
         let mut order_job_depend: i32 = 0;
         for item in job_depends {
-            println!("job_depends:{}", item);
+            debug!("job_depends:{}", item);
             let item_pk = elephant::elephant_provider_pk(conn, &item);
             let pk_job_depend =
                 elephant::elephant_job_depend_pk(conn, &pk_job, &item_pk, &order_job_depend);
-            println!("job_depends::pk_job_depend:{}", pk_job_depend);
+            debug!("job_depends::pk_job_depend:{}", pk_job_depend);
             order_job_depend += 10;
         }
         for item in job_requires_vaiable_pair {

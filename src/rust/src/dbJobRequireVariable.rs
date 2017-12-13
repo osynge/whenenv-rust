@@ -1,5 +1,7 @@
 use rusqlite::Connection;
 use std::result;
+use log;
+
 
 #[derive(Debug)]
 pub struct JobRequireVariable {
@@ -82,7 +84,7 @@ pub fn job_require_variable_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found job_require_variable {:?}", person.unwrap());
+        info!("Found job_require_variable {:?}", person.unwrap());
     }
 }
 
