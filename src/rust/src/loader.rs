@@ -1,5 +1,6 @@
 use clap::ArgMatches;
 use std::path::Path;
+use log;
 use db;
 use std::fs::File;
 use std::io::Read;
@@ -169,8 +170,8 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
                         elephant::elephant_variable_pair_pk(&conn, &pk_variable_name, &value);
                     match result_elephant_variable_value {
                         Ok(pk_variable_pair) => {
-                            println!("pk_session:{:?}", pk_session);
-                            println!("pk_variable_pair:{:?}", pk_variable_pair);
+                            debug!("pk_session:{:?}", pk_session);
+                            debug!("pk_variable_pair:{:?}", pk_variable_pair);
                             let result_elephant_enviroment = elephant::elephant_enviroment(
                                 &conn,
                                 &pk_session,
