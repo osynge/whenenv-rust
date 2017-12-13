@@ -328,7 +328,6 @@ pub fn elephant_job_require_variables(conn: &Connection, pk_job: &i32, pk_variab
 
         }
     }
-    return pk_job_require_variables;
 }
 
 
@@ -366,7 +365,6 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
 
         }
     }
-    return pk_job;
 }
 
 
@@ -405,7 +403,6 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
             }
         }
     }
-    return pk_provider;
 }
 
 pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: &i32) -> i32 {
@@ -517,7 +514,6 @@ pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i
             }
         }
     }
-    return pk_job_provide;
 }
 
 
