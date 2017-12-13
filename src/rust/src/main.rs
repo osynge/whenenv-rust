@@ -30,6 +30,7 @@ mod dbSession;
 mod dbEnviroment;
 mod autoconf;
 mod clap_actions;
+mod actions_process;
 
 use uuid::Uuid;
 
@@ -48,4 +49,5 @@ fn main() {
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
     loader::enviroment(&conn, pk_session, &clap_matches);
     jobs_load::load(&conn);
+    actions_process::process(&conn, &actions)
 }
