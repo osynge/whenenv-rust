@@ -26,7 +26,6 @@ pub fn table_create_fs_dir(conn: &Connection) -> &Connection {
 
 
 pub fn insert_fs_dir(conn: &Connection, fk_type: &i32, name: &str) -> Result<i32, &'static str> {
-    let bill = name.clone();
     let fs_dir = FsDir {
         id: 0,
         name: name.to_string(),
@@ -114,7 +113,6 @@ pub fn list_fs_dir_by_all(
             name: row.get(2),
         }
     });
-    let mut items = Vec::<FsDir>::new();
     if fs_dir_iter.is_err() {
         return Err("SELECT failed");
     }
