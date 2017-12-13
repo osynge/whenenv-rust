@@ -31,7 +31,6 @@ pub fn insert_session(conn: &Connection, uuid: &str) -> Result<i32, &'static str
         id: 0,
         uuid: uuid.to_string(),
     };
-    let mut found = 0;
     let dir_instance = conn.execute(
         "INSERT INTO WHENENV_SESSION (uuid)
                  VALUES (?1)",
