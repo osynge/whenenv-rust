@@ -1,7 +1,6 @@
 use rusqlite::Connection;
 use db;
 use dbSession;
-use log;
 
 
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
