@@ -8,21 +8,6 @@ use std::collections::HashSet;
 use autoconf;
 
 
-pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
-    let mut vec_actions = HashSet::<String>::new();
-
-    if let Some(in_v) = matches.values_of("list-provides") {
-        let bill = String::from("load-jobs");
-        vec_actions.insert(bill);
-    }
-    if let Some(in_v) = matches.values_of("session") {
-        let bill = String::from("load-jobs");
-        vec_actions.insert(bill);
-        let str_load_scripts = String::from("load-scripts");
-        vec_actions.insert(str_load_scripts);
-    }
-    return vec_actions;
-}
 
 
 
@@ -63,8 +48,7 @@ pub fn job_files_list(direcory: &str) {
 
 
 
-pub fn deligate(conn: &Connection, matches: &ArgMatches) {
-    let actions = actions_get(matches);
+pub fn deligate(conn: &Connection,actions : &HashSet<String>, matches: &ArgMatches) {
     let matcher = String::from("load-jobs");
     if actions.contains(&matcher) {
         if let Some(in_v) = matches.values_of("dir-jobs") {
