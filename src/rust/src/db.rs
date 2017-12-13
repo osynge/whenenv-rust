@@ -1,7 +1,5 @@
 use std::collections::HashSet;
-use log;
 use rusqlite::Connection;
-use rusqlite::Error;
 use clap::ArgMatches;
 pub use dbSession::insert_session;
 pub use dbSession::pk_session_by_uuid;
