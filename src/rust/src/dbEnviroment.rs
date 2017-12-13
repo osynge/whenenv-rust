@@ -115,8 +115,6 @@ pub fn pk_enviroment_by_name(
         return Err("Insert failed dfdf");
     }
     let result = enviroment_iter.unwrap();
-    let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
         output = bill.id;
