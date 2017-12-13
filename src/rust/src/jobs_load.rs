@@ -52,9 +52,7 @@ pub fn loader(name: &str) -> String {
 
 
 pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str) {
-    let mut contents = String::new();
     let json = Json::from_str(&content);
-    let mut pk_job: i32 = 0;
     match json {
         Ok(json) => {
             json_loader_elephant(conn, &pk_file, &json);
