@@ -159,10 +159,8 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 }
             }
         }
-        let mut pk_job: i32 = 0;
-        let mut pk_provider: i32 = 0;
-        let mut pk_job_depend: i32 = 0;
-        let mut pk_variable_name: i32 = 0;
+        let pk_job: i32;
+        let mut pk_provider: i32;
         debug!("job_name:{}", job_name);
         pk_job = elephant::elephant_job_pk(conn, &pk_file, &job_name);
         debug!("job_name::pk_job:{}", pk_job);
