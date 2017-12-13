@@ -115,7 +115,6 @@ pub fn pk_job_require_variable_pair_by_all(
     }
     let result = variable_pair_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
         output = bill.id;
