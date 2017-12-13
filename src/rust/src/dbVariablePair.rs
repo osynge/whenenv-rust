@@ -1,5 +1,7 @@
 use rusqlite::Connection;
 use std::result::Result;
+use log;
+
 
 #[derive(Debug)]
 pub struct VariablePair {
@@ -20,7 +22,7 @@ pub fn table_create_variable_pair(conn: &Connection) {
         &[],
     );
     if load_table.is_err() {
-        println!("table_create_variable_pair Failed {:?}", load_table);
+        error!("table_create_variable_pair Failed {:?}", load_table);
         return;
     }
     load_table.unwrap();
@@ -44,7 +46,7 @@ pub fn insert_variable_pair(
         &[&me.fk_variable, &me.variable_value],
     );
     if variable_pair_instance.is_err() {
-        println!("Failed to insert:{:?}", me);
+        error!("Failed to insert:{:?}", me);
         return Err("INSERT INTO VARIABLE_PAIR failed");
     }
     variable_pair_instance.unwrap();
@@ -89,7 +91,7 @@ pub fn variable_pair_list(conn: &Connection) {
     }).unwrap();
 
     for person in person_iter {
-        println!("Found variable_pair {:?}", person.unwrap());
+        info!("Found variable_pair {:?}", person.unwrap());
     }
 }
 
