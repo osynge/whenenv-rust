@@ -70,7 +70,7 @@ pub fn job_files_list(direcory: &str) {
     let path = Path::new(direcory);
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
-            println!("job_files_list{:?}", entry.path());
+            debug!("job_files_list{:?}", entry.path());
         }
     }
 }
@@ -159,7 +159,7 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
                     match env::var(env_var) {
                         Ok(lang) => value = String::from(lang),
                         Err(e) => {
-                            println!(
+                            error!(
                                 "Couldn't read Enviroment variable: ({})",
                                 enviroment_variable.to_string()
                             );
@@ -202,7 +202,7 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         for filename in db::list_provider(&conn) {
-            println!("list_provider:{:?}", filename);
+            debug!("list_provider:{:?}", filename);
         }
     }
     #[test]
@@ -211,7 +211,7 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         for filename in db::list_job_depend(&conn) {
-            println!("list_job_depend:{:?}", filename);
+            debug!("list_job_depend:{:?}", filename);
         }
     }
     #[test]
@@ -220,7 +220,7 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         for filename in db::list_variable_name(&conn) {
-            println!("list_variable_name:{:?}", filename);
+            debug!("list_variable_name:{:?}", filename);
         }
     }
 
