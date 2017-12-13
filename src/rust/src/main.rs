@@ -44,7 +44,7 @@ fn main() {
     let session_uuid_string = session_uuid.simple().to_string();
     let conn = db::connect_deligate(&clap_matches);
     db::create_tables(&conn);
-    loader::deligate(&conn, &clap_matches);
+    loader::deligate(&conn, &actions, &clap_matches);
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
     loader::enviroment(&conn, pk_session, &clap_matches);
     jobs_load::load(&conn);
