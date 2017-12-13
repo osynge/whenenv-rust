@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use log;
 use rusqlite::Connection;
 use rusqlite::Error;
 use clap::ArgMatches;
@@ -91,8 +92,8 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
     if let Some(in_v) = matches.values_of("rdbms") {
 
         for enviroment_variable in in_v {
-            println!("connect_deligate {:?}", enviroment_variable);
             let env_var = enviroment_variable.to_string();
+            debug!("connect to sqllite:{:?}", env_var);
             return connect_file(&env_var);
         }
     }
