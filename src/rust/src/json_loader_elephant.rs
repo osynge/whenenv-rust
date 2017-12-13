@@ -1,9 +1,5 @@
 use rusqlite::Connection;
-use db;
 use rustc_serialize;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, Encoder};
-use rustc_serialize::json::Json;
 use elephant;
 use std::collections::HashSet;
 use std::vec::Vec;
