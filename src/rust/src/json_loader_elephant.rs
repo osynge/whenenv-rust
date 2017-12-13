@@ -169,11 +169,14 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             let variable_name_result = elephant::elephant_variable_pk(conn, &item);
             match variable_name_result {
                 Ok(pk_variable_name) => {
-                    let job_vaiable_provides_pk =
-                        elephant::elephant_job_provide_variables(conn, &pk_job, &pk_variable_name);
+                    debug!("elephant::elephant_job_provide_variables::pk_job:{}", pk_job);
+                    debug!("elephant::elephant_job_provide_variables::pk_variable_name:{}", pk_variable_name);
+                    let ejpv_rc = elephant::elephant_job_provide_variables(conn, &pk_job, &pk_variable_name);
                     //debug!("job_vaiable_provides::job_vaiable_provides_pk={}", pk_provider);
                 }
-                Err(_) => {}
+                Err(code) => {
+                    error!("sdsdsdsd:{}" , code);
+                }
 
             }
 
@@ -199,20 +202,43 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
         }
         for item in job_provides {
             debug!("job_provides:{}", item);
-            pk_provider = elephant::elephant_provider_pk(conn, &item);
+            let result_variable_pk = elephant::elephant_variable_pk(conn, &item);
+            let variable_pk;
+            match result_variable_pk {
+
+                Ok(pk) => {
+                    variable_pk = pk;
+                }
+                Err(code) => {
+                    error!("job_provides::elephant_variable_pk:{}", code);
+                    continue;
+                }
+            }
+
             // println!("elephant_provider_pk={}", foo);
             // let sq_order = 1;
             // pk_provider = elephant::elephant_job_depend_pk(conn, &pk_job, &pk_provider, &sq_order);
-            debug!("job_provides::pk_provider={}", pk_provider);
+            debug!("job_provides::pk_provider={}", variable_pk);
 
-            elephant::elephant_job_require_variables(&conn, &pk_job, &pk_provider);
+            elephant::elephant_job_require_variables(&conn, &pk_job, &variable_pk);
         }
         let mut order_job_depend: i32 = 0;
         for item in job_depends {
             debug!("job_depends:{}", item);
-            let item_pk = elephant::elephant_provider_pk(conn, &item);
+            let result_variable_pk = elephant::elephant_variable_pk(conn, &item);
+            let variable_pk;
+            match result_variable_pk {
+
+                Ok(pk) => {
+                    variable_pk = pk;
+                }
+                Err(code) => {
+                    error!("job_depends::elephant_variable_pk:{}", code);
+                    continue;
+                }
+            }
             let pk_job_depend =
-                elephant::elephant_job_depend_pk(conn, &pk_job, &item_pk, &order_job_depend);
+                elephant::elephant_job_depend_pk(conn, &pk_job, &variable_pk, &order_job_depend);
             debug!("job_depends::pk_job_depend:{}", pk_job_depend);
             order_job_depend += 10;
         }

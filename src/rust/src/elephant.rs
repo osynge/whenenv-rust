@@ -480,36 +480,38 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
 
 
 
-pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i32) -> i32 {
+pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i32) -> Result<i32, &'static str> {
     let mut pk_job_provide: i32 = 0;
     let rc = db::pk_job_provide_by_all(conn, &job, &provider, &mut pk_job_provide);
     match rc {
         Ok(pk) => {
-            return pk_job_provide;
+            return Ok(pk);
         }
         Err(_) => {
             let doink = db::insert_job_provide(conn, &job, &provider);
             if doink.is_err() {
                 error!("elephant_job_provide_variables:Failed to insert");
-                return 0;
+                debug!("elephant_job_provide_variables:job:{:?}", &job);
+                debug!("elephant_job_provide_variables:provider:{:?}", &provider);
+                return doink;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k =
                         db::pk_job_provide_by_all(conn, &job, &provider, &mut pk_job_provide);
                     match doin3k {
                         Ok(pk) => {
-                            return pk_job_provide;
+                            return Ok(pk);
                         }
                         Err(_) => {
                             error!("Failed to select job_provide");
-                            return 0;
+                            return doin3k;
                         }
                     }
                 }
                 Err(_) => {
                     error!("Failed to insert job_provide");
-                    return 0;
+                    return doink;
                 }
             }
         }

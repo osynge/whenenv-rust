@@ -5,7 +5,7 @@ use rusqlite::Connection;
 pub struct JobDepend {
     pub id: i32,
     pub fk_job: i32,
-    pub fk_provider: i32,
+    pub fk_variable: i32,
     pub sq_order: i32,
 }
 
@@ -15,11 +15,11 @@ pub fn table_create_job_depend(conn: &Connection) -> &Connection {
         "CREATE TABLE JOBDEPEND (
                   id                INTEGER PRIMARY KEY ASC,
                   fk_job            INTEGER NOT NULL,
-                  fk_provider       INTEGER NOT NULL,
+                  fk_variable       INTEGER NOT NULL,
                   sq_order          INTEGER NOT NULL,
-                  UNIQUE (fk_job, fk_provider) ON CONFLICT REPLACE
+                  UNIQUE (fk_job, fk_variable) ON CONFLICT REPLACE
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(fk_provider) REFERENCES PROVIDER(id) ON UPDATE CASCADE
+                  FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )",
         &[],
     ).unwrap();
@@ -36,13 +36,13 @@ pub fn insert_job_depend(
     let me = JobDepend {
         id: 0,
         fk_job: *job,
-        fk_provider: *provider,
+        fk_variable: *provider,
         sq_order: *sq_order,
     };
     let job_depend_instance = conn.execute(
-        "INSERT INTO JOBDEPEND (fk_job, fk_provider, sq_order)
+        "INSERT INTO JOBDEPEND (fk_job, fk_variable, sq_order)
                   VALUES (?1, ?2, ?3)",
-        &[&me.fk_job, &me.fk_provider, &me.sq_order],
+        &[&me.fk_job, &me.fk_variable, &me.sq_order],
     );
     if job_depend_instance.is_err() {
         return Err("Insert failed");
@@ -53,13 +53,13 @@ pub fn insert_job_depend(
 
 
 pub fn list_job_depend(conn: &Connection) -> Vec<JobDepend> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order  FROM JOBDEPEND")
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable, sq_order  FROM JOBDEPEND")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| {
         JobDepend {
             id: row.get(0),
             fk_job: row.get(1),
-            fk_provider: row.get(2),
+            fk_variable: row.get(2),
             sq_order: row.get(3),
         }
     });
@@ -78,13 +78,13 @@ pub fn list_job_depend(conn: &Connection) -> Vec<JobDepend> {
 
 
 pub fn job_depend_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_provider, sq_order FROM JOBDEPEND")
+    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable, sq_order FROM JOBDEPEND")
         .unwrap();
     let person_iter = stmt.query_map(&[], |row| {
         JobDepend {
             id: row.get(0),
             fk_job: row.get(1),
-            fk_provider: row.get(2),
+            fk_variable: row.get(2),
             sq_order: row.get(3),
         }
     }).unwrap();
@@ -101,12 +101,12 @@ pub fn pk_job_depend_by_all(
     sq_order: &i32,
 ) -> Result<i32, &'static str> {
     let mut output = 0;
-    let mut stmt = conn.prepare("SELECT JOBDEPEND.id, JOBDEPEND.fk_job, JOBDEPEND.fk_provider, JOBDEPEND.sq_order  FROM JOBDEPEND WHERE JOBDEPEND.fk_job = ?1 AND JOBDEPEND.fk_provider=?2 AND JOBDEPEND.sq_order=?3 ").unwrap();
+    let mut stmt = conn.prepare("SELECT JOBDEPEND.id, JOBDEPEND.fk_job, JOBDEPEND.fk_variable, JOBDEPEND.sq_order  FROM JOBDEPEND WHERE JOBDEPEND.fk_job = ?1 AND JOBDEPEND.fk_variable=?2 AND JOBDEPEND.sq_order=?3 ").unwrap();
     let job_depend_iter = stmt.query_map(&[fk_job, provider, sq_order], |row| {
         JobDepend {
             id: row.get(0),
             fk_job: row.get(1),
-            fk_provider: row.get(2),
+            fk_variable: row.get(2),
             sq_order: row.get(3),
         }
     });
