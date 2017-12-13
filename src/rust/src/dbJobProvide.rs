@@ -9,8 +9,8 @@ pub struct JobProvide {
 }
 
 
-pub fn table_create_job_provide(conn: &Connection) -> &Connection {
-    let load_table = conn.execute(
+pub fn table_create_job_provide(conn: &Connection) -> Result<(), &'static str> {
+    let load_table = conn.execute_batch(
         "CREATE TABLE JOBPROVIDE (
                   id            INTEGER PRIMARY KEY ASC,
                   fk_job           INTEGER,
@@ -18,15 +18,13 @@ pub fn table_create_job_provide(conn: &Connection) -> &Connection {
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
                   FOREIGN KEY(fk_provider) REFERENCES PROVIDER(id) ON UPDATE CASCADE
                   )",
-        &[],
-    ).unwrap();
-    return conn;
+    );
+    if load_table.is_err() {
+        return Err("table_create_session Failed");
+    }
+    load_table.unwrap();
+    return Ok(());
 }
-
-
-
-
-
 
 
 pub fn insert_job_provide(
@@ -93,7 +91,6 @@ pub fn pk_job_provide_by_all(
     }
     let result = job_provide_iter.unwrap();
     let mut found = 0;
-    let mut items = Vec::<i32>::new();
     for person in result {
         let bill = person.unwrap();
         *pk = bill.id;

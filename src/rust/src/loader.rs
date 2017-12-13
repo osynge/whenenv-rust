@@ -1,26 +1,12 @@
 use clap::ArgMatches;
 use std::path::Path;
-use log;
-use db;
-use std::fs::File;
-use std::io::Read;
-use rustc_serialize;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, Encoder};
-use rustc_serialize::json::Json;
-use std::collections::BTreeMap;
-use std::collections::HashMap;
 use std::result::Result;
 use rusqlite::Connection;
-use rusqlite::Error;
 use std::env;
-
-use dbFsFile;
-use std::result;
-use json_loader_elephant::json_loader_elephant;
 use elephant;
 use std::collections::HashSet;
 use autoconf;
+
 
 pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
     let mut vec_actions = HashSet::<String>::new();
@@ -155,11 +141,12 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
             let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
             match result_elephant_variable {
                 Ok(pk_variable_name) => {
-                    let mut value = String::from("");
+                    let value : String;
                     match env::var(env_var) {
                         Ok(lang) => value = String::from(lang),
-                        Err(e) => {
+                        Err(_) => {
                             error!(
+
                                 "Couldn't read Enviroment variable: ({})",
                                 enviroment_variable.to_string()
                             );

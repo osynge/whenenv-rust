@@ -1,6 +1,4 @@
 use rusqlite::Connection;
-use std::result;
-use log;
 
 
 #[derive(Debug)]
@@ -80,7 +78,6 @@ pub fn variable_name_list(conn: &Connection) {
 
 pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'static str> {
     let mut output = 0;
-    let bill = String::from(name);
     let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1")
         .unwrap();
     let variable_name_iter = stmt.query_map(&[&name], |row| {

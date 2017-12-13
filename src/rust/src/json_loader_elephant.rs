@@ -1,9 +1,5 @@
 use rusqlite::Connection;
-use db;
 use rustc_serialize;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, Encoder};
-use rustc_serialize::json::Json;
 use elephant;
 use std::collections::HashSet;
 use std::vec::Vec;
@@ -31,7 +27,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             if movie.contains_key("name") {
                 let resulkt = movie.get("name");
                 let sdf = resulkt.unwrap();
-                let mut itemfdsd = sdf.clone();
+                let itemfdsd = sdf.clone();
                 if itemfdsd.is_string() {
                     let str_item = itemfdsd.as_string();
                     let foo = str_item.unwrap();
@@ -43,7 +39,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             if movie.contains_key("provides") {
                 let resulkt = movie.get("provides");
                 let sdf = resulkt.unwrap();
-                let mut itemfdsd = sdf.clone();
+                let itemfdsd = sdf.clone();
                 if itemfdsd.is_array() {
                     let ssd = itemfdsd.as_array();
                     let sdf = ssd.unwrap();
@@ -68,11 +64,10 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 //debug!("depends");
                 let resulkt = movie.get("depends");
                 let sdf = resulkt.unwrap();
-                let mut itemfdsd = sdf.clone();
+                let itemfdsd = sdf.clone();
                 if itemfdsd.is_array() {
                     let ssd = itemfdsd.as_array();
                     let sdf = ssd.unwrap();
-                    let george = sdf.len();
                     let itemfdsd = sdf.iter();
                     for elem in itemfdsd {
 
@@ -88,18 +83,17 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             if movie.contains_key("variables") {
                 let resulkt = movie.get("variables");
                 let sdf = resulkt.unwrap();
-                let mut itemfdsd = sdf.clone();
+                let itemfdsd = sdf.clone();
                 if itemfdsd.is_object() {
                     let objVariables = itemfdsd.as_object();
                     for &iVariables in &objVariables {
                         if iVariables.contains_key("require_keys") {
                             let resulkdt = movie.get("require_keys");
                             let sdf = resulkt.unwrap();
-                            let mut itemfdsd = sdf.clone();
+                            let itemfdsd = sdf.clone();
                             if itemfdsd.is_array() {
                                 let ssd = itemfdsd.as_array();
                                 let sdf = ssd.unwrap();
-                                let george = sdf.len();
                                 let itemfdsd = sdf.iter();
                                 for elem in itemfdsd {
                                     if elem.is_string() {
@@ -165,10 +159,8 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 }
             }
         }
-        let mut pk_job: i32 = 0;
-        let mut pk_provider: i32 = 0;
-        let mut pk_job_depend: i32 = 0;
-        let mut pk_variable_name: i32 = 0;
+        let pk_job: i32;
+        let mut pk_provider: i32;
         debug!("job_name:{}", job_name);
         pk_job = elephant::elephant_job_pk(conn, &pk_file, &job_name);
         debug!("job_name::pk_job:{}", pk_job);

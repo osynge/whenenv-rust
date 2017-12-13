@@ -1,7 +1,6 @@
 use rusqlite::Connection;
 use db;
 use dbSession;
-use log;
 
 
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
@@ -133,7 +132,6 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
 
 
 pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
-    let mut pk_variable: i32 = 0;
     let rc = db::pk_session_by_uuid(conn, &text);
     match rc {
         Ok(pk) => {
@@ -165,7 +163,6 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
 
         }
     }
-    return pk_variable;
 }
 
 
@@ -331,7 +328,6 @@ pub fn elephant_job_require_variables(conn: &Connection, pk_job: &i32, pk_variab
 
         }
     }
-    return pk_job_require_variables;
 }
 
 
@@ -369,7 +365,6 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
 
         }
     }
-    return pk_job;
 }
 
 
@@ -408,11 +403,9 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
             }
         }
     }
-    return pk_provider;
 }
 
 pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: &i32) -> i32 {
-    let mut pk_job_depend: i32 = 0;
     let rc = db::pk_job_require_variable_pair_by_all(conn, &job, &variable_pair);
     match rc {
         Ok(pk) => {
@@ -446,12 +439,10 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
             }
         }
     }
-    return pk_job_depend;
 }
 
 
 pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_order: &i32) -> i32 {
-    let mut pk_job_depend: i32 = 0;
     let rc = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order);
     match rc {
         Ok(pk) => {
@@ -483,7 +474,6 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
             }
         }
     }
-    return pk_job_depend;
 }
 
 
@@ -524,7 +514,6 @@ pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i
             }
         }
     }
-    return pk_job_provide;
 }
 
 

@@ -77,7 +77,6 @@ pub fn pk_fs_file_by_name(conn: &Connection, name: String, pk: &mut i32) {
             name: row.get(2),
         }
     }).unwrap();
-    let mut items = Vec::<FsFile>::new();
     for person in fs_file_iter {
         let bill = person.unwrap();
         *pk = bill.id;

@@ -1,6 +1,4 @@
 use rusqlite::Connection;
-use std::result;
-use log;
 
 
 #[derive(Debug)]
@@ -102,7 +100,6 @@ pub fn pk_job_by_name(
         }
     }).unwrap();
     let mut found = 0;
-    let mut items = Vec::<Job>::new();
     for person in job_iter {
         let bill = person.unwrap();
         *pk = bill.id;

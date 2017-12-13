@@ -1,13 +1,9 @@
-
 use rusqlite::Connection;
 use db;
 use std::path::Path;
 use std::fs::File;
 use std::io::Read;
-
 use std::collections::HashMap;
-use rustc_serialize::Encodable;
-use rustc_serialize::json::{self, Encoder};
 use rustc_serialize::json::Json;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
@@ -56,9 +52,7 @@ pub fn loader(name: &str) -> String {
 
 
 pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str) {
-    let mut contents = String::new();
     let json = Json::from_str(&content);
-    let mut pk_job: i32 = 0;
     match json {
         Ok(json) => {
             json_loader_elephant(conn, &pk_file, &json);
@@ -92,7 +86,7 @@ pub fn load(conn: &Connection) {
     }
     let pk_directory_type_jobs = result_dir_type.unwrap();
     for filename in db::list_fs_file_type(&conn, &pk_directory_type_jobs) {
-        let mut name = String::from(filename.name);
+        let name = String::from(filename.name);
         let name2 = name.clone();
         let loader_rc = loader(name2.trim());
         scores.insert(name, loader_rc);
@@ -102,8 +96,8 @@ pub fn load(conn: &Connection) {
     // iterate over everything.
     for (filename, contents) in &scores {
         let mut pkfsfile: i32 = 0;
-        let filenameStr = filename.clone();
-        let doop = db::pk_fs_file_by_name(&conn, filenameStr, &mut pkfsfile);
+        let filename_str = filename.clone();
+        let doop = db::pk_fs_file_by_name(&conn, filename_str, &mut pkfsfile);
         let fred = json_loader_name(&conn, &pkfsfile, &contents);
     }
     db::variable_pair_list(&conn);
