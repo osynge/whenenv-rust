@@ -141,11 +141,12 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
             let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
             match result_elephant_variable {
                 Ok(pk_variable_name) => {
-                    let mut value = String::from("");
+                    let value : String;
                     match env::var(env_var) {
                         Ok(lang) => value = String::from(lang),
-                        Err(e) => {
+                        Err(_) => {
                             error!(
+
                                 "Couldn't read Enviroment variable: ({})",
                                 enviroment_variable.to_string()
                             );
