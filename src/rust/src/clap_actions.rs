@@ -11,6 +11,12 @@ pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
         let list_provides = String::from("list-provides");
         hs_actions.insert(list_provides);
     }
+    if let Some(_) = matches.values_of("list-target") {
+        let bill = String::from("load-jobs");
+        hs_actions.insert(bill);
+        let list_provides = String::from("list-target");
+        hs_actions.insert(list_provides);
+    }
     if let Some(_) = matches.values_of("session") {
         let bill = String::from("load-jobs");
         hs_actions.insert(bill);
