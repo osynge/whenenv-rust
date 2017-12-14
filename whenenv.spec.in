@@ -1,6 +1,6 @@
 Summary:  whenenv removes branching in shell scripts typical use might be running jenkins matrix builds.
 Name: @PACKAGE@
-Version: @VERSION@
+Version: @VERSION@@VERSION_DETAIL@
 Release: 1
 License:	LGPL-2.0
 Group: Build/Automation
