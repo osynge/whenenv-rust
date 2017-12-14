@@ -45,7 +45,7 @@ pub fn insert_job_depend(
         &[&me.fk_job, &me.fk_variable, &me.sq_order],
     );
     if job_depend_instance.is_err() {
-        return Err("Insert failed");
+        return Err("Failed trying to INSERT INTO JOBDEPEND");
     }
     job_depend_instance.unwrap();
     return Ok(0);
@@ -124,4 +124,25 @@ pub fn pk_job_depend_by_all(
         return Ok(output);
     }
     return Err("None found");
+}
+
+
+pub fn job_depend_count(conn: &Connection, fk_job: &i32) -> Result<i32, &'static str> {
+    let count_prep_rc = conn.prepare(
+        "SELECT JOBDEPEND.id FROM JOBDEPEND WHERE JOBDEPEND.fk_job = ?1",
+    );
+    match count_prep_rc {
+        Ok(mut result) => {
+            let result_row = result.query(&[fk_job]);
+            let mut rox = result_row.unwrap();
+            let mut counter = 0;
+            while let Some(_) = rox.next() {
+                counter += 1;
+            }
+            return Ok(counter);
+        }
+        Err(_) => {
+            return Err("Failed");
+        }
+    }
 }

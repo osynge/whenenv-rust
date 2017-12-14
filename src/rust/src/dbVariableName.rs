@@ -87,7 +87,7 @@ pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'
         }
     });
     if variable_name_iter.is_err() {
-        return Err("Insert failed dfdf");
+        return Err("pk_variable_name_by_name SQL error");
     }
     let result = variable_name_iter.unwrap();
     let mut found = 0;

@@ -16,7 +16,7 @@ pub fn table_create_job_require_variable(conn: &Connection) {
                   fk_job                INTEGER NOT NULL,
                   fk_variable           INTEGER NOT NULL,
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
-                  FOREIGN KEY(fk_variable) REFERENCES JOB_REQUIRE_VARIABLE(id) ON UPDATE CASCADE
+                  FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )",
         &[],
     ).unwrap();
@@ -39,7 +39,7 @@ pub fn insert_job_require_variable(
         &[&me.fk_job, &me.fk_variable],
     );
     if job_require_variable_instance.is_err() {
-        return Err("Insert failed");
+        return Err("INSERT INTO JOB_REQUIRE_VARIABLE failed");
     }
     job_require_variable_instance.unwrap();
     return Ok(0);
@@ -91,7 +91,6 @@ pub fn pk_job_require_variable_by_name(
     conn: &Connection,
     job: &i32,
     variable: &i32,
-    pk: &mut i32,
 ) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE WHERE fk_job = ?1 AND fk_variable = ?2").unwrap();
     let job_require_variable_iter = stmt.query_map(&[job, variable], |row| {
@@ -106,13 +105,15 @@ pub fn pk_job_require_variable_by_name(
     }
     let result = job_require_variable_iter.unwrap();
     let mut found = 0;
+    let mut output = 0;
     for person in result {
         let bill = person.unwrap();
-        *pk = bill.id;
+        output = bill.id;
         found = 1;
+        break;
     }
     if found != 0 {
-        return Ok(found);
+        return Ok(output);
     }
     return Err("None found");
 }
