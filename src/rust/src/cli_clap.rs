@@ -84,6 +84,9 @@ pub fn cli_clap(number: &u32) -> ArgMatches {
         .arg(Arg::with_name("list-provides").long("list-provides").help(
             "list-provides",
         ))
+        .arg(Arg::with_name("list-target").long("list-target").help(
+            "list all targets",
+        ))
         .arg(Arg::with_name("session").long("session").help("session"));
     let matches = application.get_matches();
     return matches;
