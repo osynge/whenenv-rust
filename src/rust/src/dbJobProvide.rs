@@ -15,6 +15,7 @@ pub fn table_create_job_provide(conn: &Connection) -> Result<(), &'static str> {
                   id            INTEGER PRIMARY KEY ASC,
                   fk_job           INTEGER,
                   fk_variable      INTEGER,
+                  UNIQUE (fk_job, fk_variable) ON CONFLICT REPLACE
                   FOREIGN KEY(fk_job) REFERENCES JOB(id) ON UPDATE CASCADE
                   FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )",
@@ -44,7 +45,7 @@ pub fn insert_job_provide(
         &[&me.fk_job, &me.fk_variable],
     );
     if load_instance.is_err() {
-        return Err("Insert failed");
+        return Err("failed trying to INSERT INTO JOBPROVIDE");
     }
     load_instance.unwrap();
     return Ok(0);
