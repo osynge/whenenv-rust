@@ -183,7 +183,8 @@ jobfiles = \
 
 job_DATA = $(jobfiles)
 shell_DATA = $(shellfiles)
-EXTRA_DIST = $(jobfiles_DATA) $(shellfiles_DATA)
+EXTRA_DIST = $(job_DATA) $(shell_DATA)
+
 
 
 
