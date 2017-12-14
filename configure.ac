@@ -50,6 +50,15 @@ fi
 AC_SUBST(GIT_HASH)
 
 
+GIT_TAG_HASH=`git rev-list --tags --max-count=1`
+if test "$GIT_TAG_HASH" = "$GIT_HASH" ; then
+VERSION_DETAIL=""
+else
+GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+VERSION_DETAIL=_rc_${GIT_BRANCH}_`date +%s`
+fi
+AC_SUBST(VERSION_DETAIL)
+
 
 dnl =============
 dnl Check RPM dir
