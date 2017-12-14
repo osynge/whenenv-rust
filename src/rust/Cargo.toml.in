@@ -1,6 +1,6 @@
 [package]
 name = "whenenv"
-version = "@VERSION@"
+version = "@VERSION_SAFE@"
 authors = ["Owen Synge <owen.synge@jaysnest.de>"]
 
 [dependencies]
