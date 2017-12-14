@@ -1,9 +1,9 @@
 # Cargo binding
 
 EXTRA_DIST = Cargo.toml \
-    src/actions_process_list_provides.rs
-    src/actions_process.rs
-    src/clap_actions.rs
+    src/actions_process_list_provides.rs \
+    src/actions_process.rs \
+    src/clap_actions.rs \
     src/cli_clap.rs \
     src/dbEnviroment.rs \
     src/dbFsDir.rs \
