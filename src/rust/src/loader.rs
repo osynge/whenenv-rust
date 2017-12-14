@@ -8,11 +8,6 @@ use std::collections::HashSet;
 use autoconf;
 
 
-
-
-
-
-
 pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i32, &'static str> {
     let path = Path::new(direcory);
     if path.exists() == false {
@@ -48,7 +43,7 @@ pub fn job_files_list(direcory: &str) {
 
 
 
-pub fn deligate(conn: &Connection,actions : &HashSet<String>, matches: &ArgMatches) {
+pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatches) {
     let matcher = String::from("load-jobs");
     if actions.contains(&matcher) {
         if let Some(in_v) = matches.values_of("dir-jobs") {
@@ -91,12 +86,8 @@ pub fn deligate(conn: &Connection,actions : &HashSet<String>, matches: &ArgMatch
                         listy(&conn, &pk_directory, &dirname);
                     }
                 }
-
                 Err(_) => {}
             }
-
-
-
         } else {
             let dirname = String::from(autoconf::shelldir());
             let pk_directory =
@@ -125,12 +116,11 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
             let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
             match result_elephant_variable {
                 Ok(pk_variable_name) => {
-                    let value : String;
+                    let value: String;
                     match env::var(env_var) {
                         Ok(lang) => value = String::from(lang),
                         Err(_) => {
                             error!(
-
                                 "Couldn't read Enviroment variable: ({})",
                                 enviroment_variable.to_string()
                             );
@@ -154,7 +144,6 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
                             }
                         }
                         Err(_) => {}
-
                     }
                 }
                 Err(_) => {}
@@ -194,5 +183,4 @@ mod tests {
             debug!("list_variable_name:{:?}", filename);
         }
     }
-
 }
