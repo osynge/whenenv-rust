@@ -1,27 +1,30 @@
 # Cargo binding
 
 EXTRA_DIST = Cargo.toml \
+    src/actions_process_list_provides.rs
+    src/actions_process.rs
+    src/clap_actions.rs
     src/cli_clap.rs \
-    src/dbFsDirType.rs \
-    src/dbJobProvide.rs \
-    src/dbJob.rs \
-    src/dbSession.rs \
-    src/elephant.rs \
-    src/mdlJobModule.rs \
     src/dbEnviroment.rs \
-    src/dbFsFile.rs \
-    src/dbJobRequireVariablePair.rs \
-    src/dbProvider.rs \
-    src/dbVariableName.rs \
-    src/jobs_load.rs \
-    src/loader.rs \
     src/dbFsDir.rs \
+    src/dbFsDirType.rs \
+    src/dbFsFile.rs \
     src/dbJobDepend.rs \
+    src/dbJobProvide.rs \
+    src/dbJobRequireVariablePair.rs \
     src/dbJobRequireVariable.rs \
+    src/dbJob.rs \
+    src/dbProvider.rs \
     src/db.rs \
+    src/dbSession.rs \
+    src/dbVariableName.rs \
     src/dbVariablePair.rs \
+    src/elephant.rs \
+    src/jobs_load.rs \
     src/json_loader_elephant.rs \
+    src/loader.rs \
     src/main.rs \
+    src/mdlJobModule.rs \
 	$(null)
 
 EXTRA_PROGRAMS = target/@CARGO_TARGET_DIR@/whenenv
