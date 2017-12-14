@@ -1,13 +1,14 @@
 extern crate clap;
 extern crate rusqlite;
 
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 
 
 extern crate env_logger;
 extern crate rustc_serialize;
 extern crate uuid;
-
+extern crate serde_yaml;
 
 mod loader;
 mod db;
@@ -31,6 +32,7 @@ mod dbEnviroment;
 mod autoconf;
 mod clap_actions;
 mod actions_process;
+mod actions_process_list_provides;
 
 use uuid::Uuid;
 
