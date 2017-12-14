@@ -59,6 +59,10 @@ VERSION_DETAIL=_rc_${GIT_BRANCH}_`date +%s`
 fi
 AC_SUBST(VERSION_DETAIL)
 
+GIT_TAG_LAST=`git describe --tags $GIT_TAG_HASH`
+VERSION_SAFE=`echo $GIT_TAG_LAST | tr -d 'a-z\-'`
+AC_SUBST(VERSION_SAFE)
+
 
 dnl =============
 dnl Check RPM dir
