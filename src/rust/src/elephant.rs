@@ -285,45 +285,37 @@ pub fn elephant_variable_pair_pk(
 }
 
 
-pub fn elephant_job_require_variables(conn: &Connection, pk_job: &i32, pk_variable: &i32) -> i32 {
-    let mut pk_job_require_variables: i32 = 0;
-    let rc = db::pk_job_require_variable_by_name(
-        conn,
-        &pk_job,
-        &pk_variable,
-        &mut pk_job_require_variables,
-    );
+pub fn elephant_job_require_variables(
+    conn: &Connection,
+    pk_job: &i32,
+    pk_variable: &i32,
+) -> Result<i32, &'static str> {
+    let rc = db::pk_job_require_variable_by_name(conn, &pk_job, &pk_variable);
     match rc {
         Ok(pk) => {
-            return pk_job_require_variables;
+            return Ok(pk);
         }
         Err(_) => {
             let doink = db::insert_job_require_variable(conn, &pk_job, &pk_variable);
-            if doink.is_err() {
-                return 0;
-            }
             match doink {
-                Ok(pk) => {
-                    let doin3k = db::pk_job_require_variable_by_name(
-                        conn,
-                        &pk_job,
-                        &pk_variable,
-                        &mut pk_job_require_variables,
-                    );
+                Err(_) => {
+                    error!("elephant_job_require_variables:Failed to insert_job_require_variable");
+                    return doink;
+                }
+
+                Ok(_) => {
+                    let doin3k = db::pk_job_require_variable_by_name(conn, &pk_job, &pk_variable);
                     match doin3k {
                         Ok(pk) => {
-                            return pk_job_require_variables;
+                            return Ok(pk);
                         }
                         Err(_) => {
-                            error!("Failed to select job");
-                            return 0;
+                            error!("elephant_job_require_variables:Failed to select job");
+                            return doin3k;
                         }
                     }
                 }
-                Err(_) => {
-                    error!("Failed to insert job");
-                    return 0;
-                }
+
             }
 
         }
@@ -480,7 +472,11 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
 
 
 
-pub fn elephant_job_provide_variables(conn: &Connection, job: &i32, provider: &i32) -> Result<i32, &'static str> {
+pub fn elephant_job_provide_variables(
+    conn: &Connection,
+    job: &i32,
+    provider: &i32,
+) -> Result<i32, &'static str> {
     let mut pk_job_provide: i32 = 0;
     let rc = db::pk_job_provide_by_all(conn, &job, &provider, &mut pk_job_provide);
     match rc {
