@@ -63,9 +63,6 @@ shellfiles = \
     shell/git_checkout_development.sh \
     shell/git_checkout_pkg_development.sh \
     shell/git_checkout_tag.sh \
-    shell/grid-virt-sort-debian-wheezy-prod-deb-build.sh \
-    shell/grid-virt-sort-debian-wheezy-prod-deb-dependencies.sh \
-    shell/grid-virt-sort-debian-wheezy-prod-deb-export.sh \
     shell/grid-virt-sort-debian-wheezy-prod-part-02.sh \
     shell/grid-virt-sort-debian-wheezy-prod-part-03.sh \
     shell/grid-virt-sort-scientific-6-prod.sh \
