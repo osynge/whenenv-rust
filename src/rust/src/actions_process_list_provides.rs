@@ -6,7 +6,6 @@ use dbFsFile;
 use serde_yaml;
 use std::collections::HashSet;
 
-
 fn job_provide_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
     let mut items = Vec::<dbVariableName::VariableName>::new();
     let provide_list_prep_rc = conn.prepare(
@@ -39,8 +38,6 @@ fn job_provide_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableNam
     return items;
 }
 
-
-
 fn job_depend_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
     let mut items = Vec::<dbVariableName::VariableName>::new();
     let provide_list_prep_rc = conn.prepare(
@@ -72,7 +69,6 @@ fn job_depend_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName
     }
     return items;
 }
-
 
 fn job_targets_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
     let mut items = Vec::<dbVariableName::VariableName>::new();
@@ -129,7 +125,6 @@ fn list_job(conn: &Connection, fk_variable_name: &i32) -> Vec<dbJob::Job> {
     return items;
 }
 
-
 fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<dbFsFile::FsFile> {
     let mut items = Vec::<dbFsFile::FsFile>::new();
     let provide_list_prep_rc = conn.prepare(
@@ -165,8 +160,6 @@ fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<dbFsFile::FsFile>
     return items;
 }
 
-
-
 fn shared_foo(conn: &Connection, variables: &Vec<dbVariableName::VariableName>) -> String {
     let mut map = BTreeMap::new();
     for var_name in variables {
@@ -190,7 +183,6 @@ pub fn process_list_provides(conn: &Connection) {
     let henry = job_provide_list_by_job(&conn);
     println!("{}", shared_foo(&conn, &henry));
 }
-
 
 pub fn process_list_targets(conn: &Connection) {
     let henry = job_targets_list_by_job(&conn);
