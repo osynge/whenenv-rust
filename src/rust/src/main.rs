@@ -3,7 +3,6 @@ extern crate rusqlite;
 #[macro_use]
 extern crate log;
 extern crate fern;
-
 extern crate chrono;
 extern crate rustc_serialize;
 extern crate serde_yaml;
