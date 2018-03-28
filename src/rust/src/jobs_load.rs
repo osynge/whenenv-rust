@@ -8,7 +8,6 @@ use rustc_serialize::json::Json;
 use json_loader_elephant::json_loader_elephant;
 use elephant;
 
-
 pub fn listy2(direcory: &str) -> Vec<String> {
     let mut items = Vec::<String>::new();
 
@@ -29,27 +28,20 @@ pub fn listy2(direcory: &str) -> Vec<String> {
             let as_path_buf = pb_2.as_os_str();
             let path = String::new() + as_path_buf.to_str().unwrap();
             items.push(path);
-
         }
     }
     return items;
 }
 
-
 pub fn loader(name: &str) -> String {
     let mut f = File::open(name).expect("file not found");
 
-
     let mut contents = String::new();
-    f.read_to_string(&mut contents).expect(
-        "something went wrong reading the file",
-    );
+    f.read_to_string(&mut contents)
+        .expect("something went wrong reading the file");
 
     return contents;
-
 }
-
-
 
 pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str) {
     let json = Json::from_str(&content);
@@ -62,9 +54,7 @@ pub fn json_loader_name(conn: &Connection, pk_file: &i32, content: &str) {
     }
 }
 
-
 pub fn load(conn: &Connection) {
-
     for directory in db::list_fs_dir(&conn) {
         let foo = directory.id;
         let foo_name = directory.name;
@@ -91,7 +81,6 @@ pub fn load(conn: &Connection) {
         let loader_rc = loader(name2.trim());
         scores.insert(name, loader_rc);
     }
-
 
     // iterate over everything.
     for (filename, contents) in &scores {
