@@ -1,13 +1,11 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct JobProvide {
     id: i32,
     fk_job: i32,
     fk_variable: i32,
 }
-
 
 pub fn table_create_job_provide(conn: &Connection) -> Result<(), &'static str> {
     let load_table = conn.execute_batch(
@@ -27,13 +25,11 @@ pub fn table_create_job_provide(conn: &Connection) -> Result<(), &'static str> {
     return Ok(());
 }
 
-
 pub fn insert_job_provide(
     conn: &Connection,
     job: &i32,
     provider: &i32,
 ) -> Result<i32, &'static str> {
-
     let me = JobProvide {
         id: 0,
         fk_job: *job,
@@ -51,16 +47,13 @@ pub fn insert_job_provide(
     return Ok(0);
 }
 
-
 pub fn list_job_provide(conn: &Connection) -> Vec<JobProvide> {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable FROM JOBPROVIDE")
         .unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        JobProvide {
-            id: row.get(0),
-            fk_job: row.get(1),
-            fk_variable: row.get(2),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| JobProvide {
+        id: row.get(0),
+        fk_job: row.get(1),
+        fk_variable: row.get(2),
     });
     let mut items = Vec::<JobProvide>::new();
     if wraped_fs_file_iter.is_err() {
@@ -80,12 +73,10 @@ pub fn pk_job_provide_by_all(
     pk: &mut i32,
 ) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT JOBPROVIDE.id, JOBPROVIDE.fk_job, JOBPROVIDE.fk_variable FROM JOBPROVIDE WHERE JOBPROVIDE.fk_job = ?1 AND JOBPROVIDE.fk_variable=?2").unwrap();
-    let job_provide_iter = stmt.query_map(&[fk_job, provider], |row| {
-        JobProvide {
-            id: row.get(0),
-            fk_job: row.get(1),
-            fk_variable: row.get(2),
-        }
+    let job_provide_iter = stmt.query_map(&[fk_job, provider], |row| JobProvide {
+        id: row.get(0),
+        fk_job: row.get(1),
+        fk_variable: row.get(2),
     });
     if job_provide_iter.is_err() {
         return Err("Insert failed");
