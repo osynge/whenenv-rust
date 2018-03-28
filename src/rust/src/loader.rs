@@ -7,7 +7,6 @@ use elephant;
 use std::collections::HashSet;
 use autoconf;
 
-
 pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i32, &'static str> {
     let path = Path::new(direcory);
     if path.exists() == false {
@@ -31,7 +30,6 @@ pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i3
     return Ok(0);
 }
 
-
 pub fn job_files_list(direcory: &str) {
     let path = Path::new(direcory);
     for entry in path.read_dir().expect("read_dir call failed") {
@@ -41,8 +39,6 @@ pub fn job_files_list(direcory: &str) {
     }
 }
 
-
-
 pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatches) {
     let matcher = String::from("load-jobs");
     if actions.contains(&matcher) {
@@ -50,14 +46,12 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
             let str_job_files_list = String::from("job_files");
             let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
             match result_dir_type {
-                Ok(pk_directory_type_jobs) => {
-                    for in_dir in in_v {
-                        let dirname = in_dir.to_string();
-                        let pk_directory =
-                            elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
-                        listy(&conn, &pk_directory, &dirname);
-                    }
-                }
+                Ok(pk_directory_type_jobs) => for in_dir in in_v {
+                    let dirname = in_dir.to_string();
+                    let pk_directory =
+                        elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
+                    listy(&conn, &pk_directory, &dirname);
+                },
                 Err(_) => {}
             }
         }
@@ -78,14 +72,12 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
             let str_shell_files_list = String::from("shell_files");
             let result_dir_type = elephant::elephant_directory_type(&conn, &str_shell_files_list);
             match result_dir_type {
-                Ok(pk_directory_type_shell) => {
-                    for in_dir in in_v {
-                        let dirname = in_dir.to_string();
-                        let pk_directory =
-                            elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-                        listy(&conn, &pk_directory, &dirname);
-                    }
-                }
+                Ok(pk_directory_type_shell) => for in_dir in in_v {
+                    let dirname = in_dir.to_string();
+                    let pk_directory =
+                        elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+                    listy(&conn, &pk_directory, &dirname);
+                },
                 Err(_) => {}
             }
         } else {
@@ -107,7 +99,6 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
         }
     }
 }
-
 
 pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
     if let Some(in_v) = matches.values_of("env") {
@@ -151,8 +142,6 @@ pub fn enviroment(conn: &Connection, pk_session: i32, matches: &ArgMatches) {
         }
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {
