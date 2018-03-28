@@ -1,14 +1,12 @@
 use rusqlite::Connection;
 use std::result::Result;
 
-
 #[derive(Debug)]
 pub struct VariablePair {
     id: i32,
     fk_variable: i32,
     variable_value: String,
 }
-
 
 pub fn table_create_variable_pair(conn: &Connection) {
     let load_table = conn.execute(
@@ -26,8 +24,6 @@ pub fn table_create_variable_pair(conn: &Connection) {
     }
     load_table.unwrap();
 }
-
-
 
 pub fn insert_variable_pair(
     conn: &Connection,
@@ -52,48 +48,38 @@ pub fn insert_variable_pair(
     return Ok(0);
 }
 
-
-
 pub fn list_variable_pair(conn: &Connection) -> Vec<VariablePair> {
     let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR")
         .unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        VariablePair {
-            id: row.get(0),
-            fk_variable: row.get(1),
-            variable_value: row.get(2),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| VariablePair {
+        id: row.get(0),
+        fk_variable: row.get(1),
+        variable_value: row.get(2),
     });
     let mut items = Vec::<VariablePair>::new();
     if wraped_fs_file_iter.is_err() {
         return items;
-
     }
     let fs_file_iter = wraped_fs_file_iter.unwrap();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
 
-
 pub fn variable_pair_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value FROM VARIABLE_PAIR")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        VariablePair {
-            id: row.get(0),
-            fk_variable: row.get(1),
-            variable_value: row.get(2),
-        }
+    let person_iter = stmt.query_map(&[], |row| VariablePair {
+        id: row.get(0),
+        fk_variable: row.get(1),
+        variable_value: row.get(2),
     }).unwrap();
 
     for person in person_iter {
         info!("Found variable_pair {:?}", person.unwrap());
     }
 }
-
 
 pub fn pk_variable_pair_by_name(
     conn: &Connection,
@@ -107,12 +93,10 @@ pub fn pk_variable_pair_by_name(
         FROM VARIABLE_PAIR
 		WHERE VARIABLE_PAIR.fk_variable = ?1 AND VARIABLE_PAIR.variable_value = ?2",
     ).unwrap();
-    let variable_pair_iter = stmt.query_map(&[fk_variable, &bill], |row| {
-        VariablePair {
-            id: row.get(0),
-            fk_variable: row.get(1),
-            variable_value: row.get(2),
-        }
+    let variable_pair_iter = stmt.query_map(&[fk_variable, &bill], |row| VariablePair {
+        id: row.get(0),
+        fk_variable: row.get(1),
+        variable_value: row.get(2),
     });
     if variable_pair_iter.is_err() {
         return Err("Select failed dfdf");
