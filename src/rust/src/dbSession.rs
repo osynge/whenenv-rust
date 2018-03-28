@@ -1,6 +1,5 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct Session {
     pub id: i32,
@@ -24,9 +23,7 @@ pub fn table_create_session(conn: &Connection) -> Result<(), &'static str> {
     return Ok(());
 }
 
-
 pub fn insert_session(conn: &Connection, uuid: &str) -> Result<i32, &'static str> {
-
     let session = Session {
         id: 0,
         uuid: uuid.to_string(),
@@ -37,25 +34,18 @@ pub fn insert_session(conn: &Connection, uuid: &str) -> Result<i32, &'static str
         &[&session.uuid],
     );
     if dir_instance.is_err() {
-
         return Err("ssss");
     }
     dir_instance.unwrap();
     return Ok(0);
 }
 
-
-
-
-
 pub fn list_session(conn: &Connection) -> Vec<Session> {
     let mut stmt = conn.prepare("SELECT id, uuid FROM WHENENV_SESSION")
         .unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        Session {
-            id: row.get(0),
-            uuid: row.get(1),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| Session {
+        id: row.get(0),
+        uuid: row.get(1),
     });
     let mut items = Vec::<Session>::new();
     if wraped_fs_file_iter.is_err() {
@@ -68,16 +58,12 @@ pub fn list_session(conn: &Connection) -> Vec<Session> {
     return items;
 }
 
-
-
 pub fn pk_session_by_uuid(conn: &Connection, uuid: &String) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT id, uuid  FROM WHENENV_SESSION WHERE uuid = ?1")
         .unwrap();
-    let insert_session_iter = stmt.query_map(&[uuid], |row| {
-        Session {
-            id: row.get(0),
-            uuid: row.get(1),
-        }
+    let insert_session_iter = stmt.query_map(&[uuid], |row| Session {
+        id: row.get(0),
+        uuid: row.get(1),
     });
     if insert_session_iter.is_err() {
         return Err("Insert failed dfdf");
@@ -95,9 +81,6 @@ pub fn pk_session_by_uuid(conn: &Connection, uuid: &String) -> Result<i32, &'sta
     }
     return Err("None found");
 }
-
-
-
 
 #[cfg(test)]
 mod tests {
