@@ -1,13 +1,11 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct JobRequireVariable {
     id: i32,
     fk_job: i32,
     fk_variable: i32,
 }
-
 
 pub fn table_create_job_require_variable(conn: &Connection) {
     conn.execute(
@@ -21,7 +19,6 @@ pub fn table_create_job_require_variable(conn: &Connection) {
         &[],
     ).unwrap();
 }
-
 
 pub fn insert_job_require_variable(
     conn: &Connection,
@@ -45,40 +42,32 @@ pub fn insert_job_require_variable(
     return Ok(0);
 }
 
-
 pub fn list_job_require_variable(conn: &Connection) -> Vec<JobRequireVariable> {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
         .unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        JobRequireVariable {
-            id: row.get(0),
-            fk_job: row.get(1),
-            fk_variable: row.get(2),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| JobRequireVariable {
+        id: row.get(0),
+        fk_job: row.get(1),
+        fk_variable: row.get(2),
     });
     let mut items = Vec::<JobRequireVariable>::new();
     if wraped_fs_file_iter.is_err() {
         return items;
-
     }
     let fs_file_iter = wraped_fs_file_iter.unwrap();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
 
-
 pub fn job_require_variable_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        JobRequireVariable {
-            id: row.get(0),
-            fk_job: row.get(1),
-            fk_variable: row.get(2),
-        }
+    let person_iter = stmt.query_map(&[], |row| JobRequireVariable {
+        id: row.get(0),
+        fk_job: row.get(1),
+        fk_variable: row.get(2),
     }).unwrap();
 
     for person in person_iter {
@@ -86,19 +75,16 @@ pub fn job_require_variable_list(conn: &Connection) {
     }
 }
 
-
 pub fn pk_job_require_variable_by_name(
     conn: &Connection,
     job: &i32,
     variable: &i32,
 ) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE WHERE fk_job = ?1 AND fk_variable = ?2").unwrap();
-    let job_require_variable_iter = stmt.query_map(&[job, variable], |row| {
-        JobRequireVariable {
-            id: row.get(0),
-            fk_job: row.get(1),
-            fk_variable: row.get(2),
-        }
+    let job_require_variable_iter = stmt.query_map(&[job, variable], |row| JobRequireVariable {
+        id: row.get(0),
+        fk_job: row.get(1),
+        fk_variable: row.get(2),
     });
     if job_require_variable_iter.is_err() {
         return Err("Insert failed dfdf");
