@@ -4,12 +4,10 @@ use elephant;
 use std::collections::HashSet;
 use std::vec::Vec;
 
-
 pub struct dependencyPair {
     key: String,
     value: String,
 }
-
 
 pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_serialize::json::Json) {
     let mut job_name = String::new();
@@ -19,11 +17,9 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
     let mut job_vaiable_provides: HashSet<String> = HashSet::new();
     let mut job_requires_vaiable_pair: Vec<dependencyPair> = Vec::new();
 
-
     if json.is_object() {
         let sssbill = json.as_object();
         for &movie in &sssbill {
-
             if movie.contains_key("name") {
                 let resulkt = movie.get("name");
                 let sdf = resulkt.unwrap();
@@ -70,7 +66,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                     let sdf = ssd.unwrap();
                     let itemfdsd = sdf.iter();
                     for elem in itemfdsd {
-
                         if elem.is_string() {
                             let sss = elem.as_string();
                             let foo = sss.unwrap();
@@ -149,7 +144,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                                             };
                                             //job_requires_vaiable_pair
                                             job_requires_vaiable_pair.push(dp);
-
                                         }
                                     }
                                 }
@@ -196,7 +190,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
 
             let result_variable_pair = elephant::elephant_variable_pk(&conn, &item);
             match result_variable_pair {
-
                 Ok(variable_pair_pk) => {
                     debug!("job_vaiable_depends::variable_pair_pk={}", variable_pair_pk);
                     let job_depend_pair_pk =
@@ -214,7 +207,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             let result_variable_pk = elephant::elephant_variable_pk(conn, &item);
             let variable_pk;
             match result_variable_pk {
-
                 Ok(pk) => {
                     variable_pk = pk;
                 }
@@ -238,7 +230,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             let result_variable_pk = elephant::elephant_variable_pk(conn, &item);
             let variable_pk;
             match result_variable_pk {
-
                 Ok(pk) => {
                     variable_pk = pk;
                 }
@@ -256,7 +247,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
             let variable_name_result = elephant::elephant_variable_pk(conn, &item.key);
             match variable_name_result {
                 Ok(pk_variable_name) => {
-
                     let variable_name_result =
                         elephant::elephant_variable_pair_pk(conn, &pk_variable_name, &item.value);
                     match variable_name_result {
@@ -277,7 +267,6 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                 }
                 Err(_) => {}
             }
-
         }
     }
 }
