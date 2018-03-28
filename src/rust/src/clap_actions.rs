@@ -1,7 +1,6 @@
 use clap::ArgMatches;
 use std::collections::HashSet;
 
-
 pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
     let mut hs_actions = HashSet::<String>::new();
 
