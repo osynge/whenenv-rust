@@ -1,12 +1,10 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct FsDirType {
     pub id: i32,
     pub name: String,
 }
-
 
 pub fn table_create_fs_dir_type(conn: &Connection) -> &Connection {
     conn.execute(
@@ -18,7 +16,6 @@ pub fn table_create_fs_dir_type(conn: &Connection) -> &Connection {
     ).unwrap();
     return conn;
 }
-
 
 pub fn insert_fs_dir_type(conn: &Connection, name: &String) -> Result<i32, &'static str> {
     let bill = name.clone();
@@ -35,15 +32,11 @@ pub fn insert_fs_dir_type(conn: &Connection, name: &String) -> Result<i32, &'sta
     return Ok(0);
 }
 
-
-
 pub fn list_fs_dir_type(conn: &Connection) -> Vec<FsDirType> {
     let mut stmt = conn.prepare("SELECT id, name FROM FS_DIR_TYPE").unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        FsDirType {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| FsDirType {
+        id: row.get(0),
+        name: row.get(1),
     });
     let mut items = Vec::<FsDirType>::new();
     if wraped_fs_file_iter.is_err() {
@@ -56,22 +49,17 @@ pub fn list_fs_dir_type(conn: &Connection) -> Vec<FsDirType> {
     return items;
 }
 
-
-
 pub fn fs_dir_type_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, name  FROM FS_DIR_TYPE").unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        FsDirType {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let person_iter = stmt.query_map(&[], |row| FsDirType {
+        id: row.get(0),
+        name: row.get(1),
     }).unwrap();
 
     for person in person_iter {
         info!("Found fs_dir_type {:?}", person.unwrap());
     }
 }
-
 
 pub fn pk_fs_dir_type_by_name(
     conn: &Connection,
@@ -80,11 +68,9 @@ pub fn pk_fs_dir_type_by_name(
 ) -> Result<i32, &'static str> {
     let mut stmt = conn.prepare("SELECT id, name  FROM FS_DIR_TYPE WHERE name = ?1")
         .unwrap();
-    let variable_name_iter = stmt.query_map(&[name], |row| {
-        FsDirType {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let variable_name_iter = stmt.query_map(&[name], |row| FsDirType {
+        id: row.get(0),
+        name: row.get(1),
     });
     if variable_name_iter.is_err() {
         return Err("Insert failed dfdf");
@@ -101,10 +87,6 @@ pub fn pk_fs_dir_type_by_name(
     }
     return Err("None found");
 }
-
-
-
-
 
 #[cfg(test)]
 mod tests {
