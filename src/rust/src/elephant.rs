@@ -2,7 +2,6 @@ use rusqlite::Connection;
 use db;
 use dbSession;
 
-
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let mut pk_variable: i32 = 0;
     let rc = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
@@ -33,23 +32,17 @@ pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, 
                     return doink;
                 }
             }
-
         }
     }
 }
-
-
-
 
 pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &String) -> i32 {
     let mut pk_variable: i32 = 0;
     let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory_type, &text);
     match list_fs_dir_by_all_result {
-        Ok(pk) => {
-            for item in pk {
-                pk_variable = item.id;
-            }
-        }
+        Ok(pk) => for item in pk {
+            pk_variable = item.id;
+        },
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory_type, &text);
             if doink.is_err() {
@@ -77,23 +70,18 @@ pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &Str
                     return 0;
                 }
             }
-
         }
     }
     return pk_variable;
 }
 
-
-
 pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
     let mut pk_variable: i32 = 0;
     let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory, &text);
     match list_fs_dir_by_all_result {
-        Ok(pk) => {
-            for item in pk {
-                pk_variable = item.id;
-            }
-        }
+        Ok(pk) => for item in pk {
+            pk_variable = item.id;
+        },
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory, &text);
             if doink.is_err() {
@@ -104,12 +92,10 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                 Ok(pk) => {
                     let doin3k = db::list_fs_dir_by_all(conn, &fk_directory, &text);
                     match doin3k {
-                        Ok(pk) => {
-                            for item in pk {
-                                pk_variable = item.id;
-                                return pk_variable;
-                            }
-                        }
+                        Ok(pk) => for item in pk {
+                            pk_variable = item.id;
+                            return pk_variable;
+                        },
                         Err(_) => {
                             error!("Failed to select variable");
                             return 0;
@@ -121,15 +107,10 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                     return 0;
                 }
             }
-
         }
     }
     return pk_variable;
 }
-
-
-
-
 
 pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
     let rc = db::pk_session_by_uuid(conn, &text);
@@ -160,11 +141,9 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
                     return 0;
                 }
             }
-
         }
     }
 }
-
 
 pub fn elephant_enviroment(
     conn: &Connection,
@@ -203,11 +182,9 @@ pub fn elephant_enviroment(
                     return doink;
                 }
             }
-
         }
     }
 }
-
 
 pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let rc = db::pk_variable_name_by_name(conn, &text);
@@ -238,12 +215,9 @@ pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'s
                     return doink;
                 }
             }
-
         }
     }
 }
-
-
 
 pub fn elephant_variable_pair_pk(
     conn: &Connection,
@@ -279,11 +253,9 @@ pub fn elephant_variable_pair_pk(
                     return doink;
                 }
             }
-
         }
     }
 }
-
 
 pub fn elephant_job_require_variables(
     conn: &Connection,
@@ -315,13 +287,10 @@ pub fn elephant_job_require_variables(
                         }
                     }
                 }
-
             }
-
         }
     }
 }
-
 
 pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
     let text = String::from(in_text);
@@ -354,11 +323,9 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
                     return 0;
                 }
             }
-
         }
     }
 }
-
 
 pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
     let text = String::from(in_text);
@@ -433,7 +400,6 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
     }
 }
 
-
 pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_order: &i32) -> i32 {
     let rc = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order);
     match rc {
@@ -467,10 +433,6 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
         }
     }
 }
-
-
-
-
 
 pub fn elephant_job_provide_variables(
     conn: &Connection,
@@ -514,7 +476,6 @@ pub fn elephant_job_provide_variables(
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     #[test]
@@ -531,7 +492,6 @@ mod tests {
                 assert!(pk_dir_type == 1);
             }
             Err(_) => {}
-
         }
     }
 
@@ -552,10 +512,7 @@ mod tests {
                 assert!(pk_dir == 1);
             }
             Err(_) => {}
-
         }
-
-
     }
     #[test]
     fn elephant_session() {
@@ -581,8 +538,6 @@ mod tests {
         let pk_provider = elephant::elephant_provider_pk(&conn, &str_dir_one_list);
         let bill = elephant::elephant_enviroment(&conn, &pk_session, &pk_provider);
     }
-
-
 
     #[test]
     fn elephant_file() {
