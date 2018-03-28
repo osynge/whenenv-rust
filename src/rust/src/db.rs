@@ -17,7 +17,6 @@ pub use dbFsDir::table_create_fs_dir;
 pub use dbFsDir::list_fs_dir_by_all;
 pub use dbFsFile::list_fs_file_type;
 
-
 pub use dbFsFile::insert_fs_file as dbFsFile;
 pub use dbFsFile::insert_fs_file;
 pub use dbFsFile::list_fs_file;
@@ -50,7 +49,7 @@ pub use dbVariableName::list_variable_name;
 pub use dbVariableName::variable_name_list;
 pub use dbVariableName::pk_variable_name_by_name;
 pub use dbJobRequireVariable::JobRequireVariable;
-pub use dbJobRequireVariable::table_create_job_require_variable as table_create_job_require_variable;
+pub use dbJobRequireVariable::table_create_job_require_variable;
 pub use dbJobRequireVariable::insert_job_require_variable;
 pub use dbJobRequireVariable::list_job_require_variable;
 pub use dbJobRequireVariable::job_require_variable_list;
@@ -61,16 +60,14 @@ pub use dbVariablePair::insert_variable_pair;
 pub use dbVariablePair::pk_variable_pair_by_name;
 pub use dbVariablePair::variable_pair_list;
 
-pub use dbJobRequireVariablePair::table_create_job_require_variable_pair as table_create_job_require_variable_pair;
-pub use dbJobRequireVariablePair::insert_job_require_variable_pair as insert_job_require_variable_pair;
+pub use dbJobRequireVariablePair::table_create_job_require_variable_pair;
+pub use dbJobRequireVariablePair::insert_job_require_variable_pair;
 pub use dbJobRequireVariablePair::list_job_require_variable_pair;
 pub use dbJobRequireVariablePair::job_require_variable_pair_list;
-pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all as pk_job_require_variable_pair_by_all;
-
+pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all;
 
 use dbSession;
 use dbEnviroment;
-
 
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
@@ -78,17 +75,14 @@ pub fn connect() -> Connection {
     return conn;
 }
 
-
 pub fn connect_file(filename: &str) -> Connection {
     let conn = Connection::open(filename).unwrap();
     conn.execute("PRAGMA foreign_keys = ON;", &[]).unwrap();
     return conn;
 }
 
-
 pub fn connect_deligate(matches: &ArgMatches) -> Connection {
     if let Some(in_v) = matches.values_of("rdbms") {
-
         for enviroment_variable in in_v {
             let env_var = enviroment_variable.to_string();
             debug!("connect to sqllite:{:?}", env_var);
@@ -97,7 +91,6 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
     }
     return connect();
 }
-
 
 fn list_tables(conn: &Connection) -> HashSet<String> {
     let mut output = HashSet::new();
@@ -116,7 +109,6 @@ fn list_tables(conn: &Connection) -> HashSet<String> {
     }
     return output;
 }
-
 
 pub fn create_tables(conn: &Connection) -> &Connection {
     let tables_found = list_tables(&conn);
