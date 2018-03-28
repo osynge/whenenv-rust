@@ -1,13 +1,11 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct WhenenvEnviroment {
     id: i32,
     fk_session: i32,
     fk_variable_pair: i32,
 }
-
 
 pub fn table_create_enviroment(conn: &Connection) {
     conn.execute(
@@ -21,7 +19,6 @@ pub fn table_create_enviroment(conn: &Connection) {
         &[],
     ).unwrap();
 }
-
 
 pub fn insert_enviroment(
     conn: &Connection,
@@ -47,47 +44,37 @@ pub fn insert_enviroment(
 }
 
 pub fn list_enviroment(conn: &Connection) -> Vec<WhenenvEnviroment> {
-    let mut stmt = conn.prepare(
-        "SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT",
-    ).unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        WhenenvEnviroment {
-            id: row.get(0),
-            fk_session: row.get(1),
-            fk_variable_pair: row.get(2),
-        }
+    let mut stmt = conn.prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
+        .unwrap();
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| WhenenvEnviroment {
+        id: row.get(0),
+        fk_session: row.get(1),
+        fk_variable_pair: row.get(2),
     });
     let mut items = Vec::<WhenenvEnviroment>::new();
     if wraped_fs_file_iter.is_err() {
         return items;
-
     }
     let fs_file_iter = wraped_fs_file_iter.unwrap();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
 
-
 pub fn enviroment_list(conn: &Connection) {
-    let mut stmt = conn.prepare(
-        "SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT",
-    ).unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        WhenenvEnviroment {
-            id: row.get(0),
-            fk_session: row.get(1),
-            fk_variable_pair: row.get(2),
-        }
+    let mut stmt = conn.prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
+        .unwrap();
+    let person_iter = stmt.query_map(&[], |row| WhenenvEnviroment {
+        id: row.get(0),
+        fk_session: row.get(1),
+        fk_variable_pair: row.get(2),
     }).unwrap();
 
     for person in person_iter {
         info!("Found enviroment {:?}", person.unwrap());
     }
 }
-
 
 pub fn pk_enviroment_by_name(
     conn: &Connection,
@@ -103,12 +90,10 @@ pub fn pk_enviroment_by_name(
         FROM WHENENV_ENVIROMENT
         WHERE WHENENV_ENVIROMENT.fk_session = ?1 AND WHENENV_ENVIROMENT.fk_variable_pair = ?2",
     ).unwrap();
-    let enviroment_iter = stmt.query_map(&[session, variable_pair], |row| {
-        WhenenvEnviroment {
-            id: row.get(0),
-            fk_session: row.get(1),
-            fk_variable_pair: row.get(2),
-        }
+    let enviroment_iter = stmt.query_map(&[session, variable_pair], |row| WhenenvEnviroment {
+        id: row.get(0),
+        fk_session: row.get(1),
+        fk_variable_pair: row.get(2),
     });
     if enviroment_iter.is_err() {
         error!("pk_enviroment_by_name none found");
