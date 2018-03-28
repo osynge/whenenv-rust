@@ -1,13 +1,11 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct FsFile {
     pub id: i32,
     pub fk_fs_dir: i32,
     pub name: String,
 }
-
 
 pub fn table_create_fs_file(conn: &Connection) -> &Connection {
     conn.execute(
@@ -20,9 +18,6 @@ pub fn table_create_fs_file(conn: &Connection) -> &Connection {
     ).unwrap();
     return conn;
 }
-
-
-
 
 pub fn insert_fs_file(
     conn: &Connection,
@@ -46,36 +41,28 @@ pub fn insert_fs_file(
     return Ok(0);
 }
 
-
-
 pub fn list_fs_file(conn: &Connection) -> Vec<FsFile> {
     let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE")
         .unwrap();
-    let fs_file_iter = stmt.query_map(&[], |row| {
-        FsFile {
-            id: row.get(0),
-            fk_fs_dir: row.get(1),
-            name: row.get(2),
-        }
+    let fs_file_iter = stmt.query_map(&[], |row| FsFile {
+        id: row.get(0),
+        fk_fs_dir: row.get(1),
+        name: row.get(2),
     }).unwrap();
     let mut items = Vec::<FsFile>::new();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
 
-
 pub fn pk_fs_file_by_name(conn: &Connection, name: String, pk: &mut i32) {
     let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE WHERE name =?1")
         .unwrap();
-    let fs_file_iter = stmt.query_map(&[&name], |row| {
-        FsFile {
-            id: row.get(0),
-            fk_fs_dir: row.get(1),
-            name: row.get(2),
-        }
+    let fs_file_iter = stmt.query_map(&[&name], |row| FsFile {
+        id: row.get(0),
+        fk_fs_dir: row.get(1),
+        name: row.get(2),
     }).unwrap();
     for person in fs_file_iter {
         let bill = person.unwrap();
@@ -94,22 +81,17 @@ pub fn list_fs_file_type(conn: &Connection, fk_fs_type: &i32) -> Vec<FsFile> {
         WHERE FS_DIR_TYPE.id =?1
         ",
     ).unwrap();
-    let fs_file_iter = stmt.query_map(&[fk_fs_type], |row| {
-        FsFile {
-            id: row.get(0),
-            fk_fs_dir: row.get(2),
-            name: row.get(1),
-        }
+    let fs_file_iter = stmt.query_map(&[fk_fs_type], |row| FsFile {
+        id: row.get(0),
+        fk_fs_dir: row.get(2),
+        name: row.get(1),
     }).unwrap();
     let mut items = Vec::<FsFile>::new();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
-
-
 
 #[cfg(test)]
 mod tests {
