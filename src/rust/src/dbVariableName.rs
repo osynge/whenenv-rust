@@ -1,13 +1,10 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub struct VariableName {
     pub id: i32,
     pub name: String,
 }
-
-
 
 pub fn table_create_variable_name(conn: &Connection) -> &Connection {
     conn.execute(
@@ -19,7 +16,6 @@ pub fn table_create_variable_name(conn: &Connection) -> &Connection {
     ).unwrap();
     return conn;
 }
-
 
 pub fn insert_variable_name(conn: &Connection, name: &String) -> Result<i32, &'static str> {
     let me = VariableName {
@@ -38,37 +34,29 @@ pub fn insert_variable_name(conn: &Connection, name: &String) -> Result<i32, &'s
     return Ok(0);
 }
 
-
 pub fn list_variable_name(conn: &Connection) -> Vec<VariableName> {
     let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME").unwrap();
-    let wraped_fs_file_iter = stmt.query_map(&[], |row| {
-        VariableName {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let wraped_fs_file_iter = stmt.query_map(&[], |row| VariableName {
+        id: row.get(0),
+        name: row.get(1),
     });
     let mut items = Vec::<VariableName>::new();
     if wraped_fs_file_iter.is_err() {
         return items;
-
     }
     let fs_file_iter = wraped_fs_file_iter.unwrap();
     for person in fs_file_iter {
-
         items.push(person.unwrap());
     }
     return items;
 }
 
-
 pub fn variable_name_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| {
-        VariableName {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let person_iter = stmt.query_map(&[], |row| VariableName {
+        id: row.get(0),
+        name: row.get(1),
     }).unwrap();
 
     for person in person_iter {
@@ -80,11 +68,9 @@ pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'
     let mut output = 0;
     let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1")
         .unwrap();
-    let variable_name_iter = stmt.query_map(&[&name], |row| {
-        VariableName {
-            id: row.get(0),
-            name: row.get(1),
-        }
+    let variable_name_iter = stmt.query_map(&[&name], |row| VariableName {
+        id: row.get(0),
+        name: row.get(1),
     });
     if variable_name_iter.is_err() {
         return Err("pk_variable_name_by_name SQL error");
