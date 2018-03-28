@@ -1,6 +1,5 @@
 use rusqlite::Connection;
 
-
 #[derive(Debug)]
 pub enum Version {
     Version1,
@@ -38,14 +37,11 @@ pub fn table_create_job(conn: &Connection) {
     load_table.unwrap();
 }
 
-
-
 pub fn insert_job(
     conn: &Connection,
     fk_file: &i32,
     name: &String,
 ) -> Result<Version, &'static str> {
-
     let me = Job {
         id: 0,
         fk_file: fk_file.clone(),
@@ -65,12 +61,10 @@ pub fn insert_job(
 
 pub fn list_job(conn: &Connection) -> Vec<Job> {
     let mut stmt = conn.prepare("SELECT id, fk_file, name FROM JOB").unwrap();
-    let wraped_job_iter = stmt.query_map(&[], |row| {
-        Job {
-            id: row.get(0),
-            fk_file: row.get(1),
-            name: row.get(2),
-        }
+    let wraped_job_iter = stmt.query_map(&[], |row| Job {
+        id: row.get(0),
+        fk_file: row.get(1),
+        name: row.get(2),
     });
     let mut items = Vec::<Job>::new();
     if wraped_job_iter.is_err() {
@@ -83,7 +77,6 @@ pub fn list_job(conn: &Connection) -> Vec<Job> {
     return items;
 }
 
-
 pub fn pk_job_by_name(
     conn: &Connection,
     name: &String,
@@ -92,12 +85,10 @@ pub fn pk_job_by_name(
     let bill = name.clone();
     let mut stmt = conn.prepare("SELECT id, fk_file, name  FROM JOB WHERE name = ?1")
         .unwrap();
-    let job_iter = stmt.query_map(&[&bill], |row| {
-        Job {
-            id: row.get(0),
-            fk_file: row.get(1),
-            name: row.get(2),
-        }
+    let job_iter = stmt.query_map(&[&bill], |row| Job {
+        id: row.get(0),
+        fk_file: row.get(1),
+        name: row.get(2),
     }).unwrap();
     let mut found = 0;
     for person in job_iter {
