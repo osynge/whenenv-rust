@@ -2,10 +2,7 @@ use rusqlite::Connection;
 use std::collections::HashSet;
 use actions_process_list_provides;
 
-
 fn process_session(conn: &Connection) {}
-
-
 
 pub fn process(conn: &Connection, actions: &HashSet<String>) {
     let matcher_session = String::from("session");
