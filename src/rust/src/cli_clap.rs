@@ -4,8 +4,6 @@ use clap::ArgMatches;
 use autoconf;
 
 pub fn cli_clap(number: &u32) -> ArgMatches {
-
-
     let application = App::new(autoconf::package())
         .about("Parses an input file to do awesome things")
         .version(autoconf::version_cli())
@@ -81,12 +79,16 @@ pub fn cli_clap(number: &u32) -> ArgMatches {
                 .help("Sets the provider to be selected.")
                 .takes_value(true),
         )
-        .arg(Arg::with_name("list-provides").long("list-provides").help(
-            "list-provides",
-        ))
-        .arg(Arg::with_name("list-target").long("list-target").help(
-            "list all targets",
-        ))
+        .arg(
+            Arg::with_name("list-provides")
+                .long("list-provides")
+                .help("list-provides"),
+        )
+        .arg(
+            Arg::with_name("list-target")
+                .long("list-target")
+                .help("list all targets"),
+        )
         .arg(Arg::with_name("session").long("session").help("session"));
     let matches = application.get_matches();
     return matches;
