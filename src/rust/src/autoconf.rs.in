@@ -1,7 +1,5 @@
 // Note this file is tempated using autotools
 
-use std::result;
-
 pub fn githash() -> &'static str {
     "@GIT_HASH@"
 }
