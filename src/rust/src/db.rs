@@ -54,11 +54,11 @@ pub use dbJobRequireVariable::insert_job_require_variable;
 pub use dbJobRequireVariable::list_job_require_variable;
 pub use dbJobRequireVariable::job_require_variable_list;
 pub use dbJobRequireVariable::pk_job_require_variable_by_name;
-pub use dbVariablePair::table_create_variable_pair;
-pub use dbVariablePair::insert_variable_pair;
 
-pub use dbVariablePair::pk_variable_pair_by_name;
-pub use dbVariablePair::variable_pair_list;
+pub use db_variable_pair::table_create_variable_pair;
+pub use db_variable_pair::insert_variable_pair;
+pub use db_variable_pair::pk_variable_pair_by_name;
+pub use db_variable_pair::variable_pair_list;
 
 pub use db_job_require_variable_pair::table_create_job_require_variable_pair;
 pub use db_job_require_variable_pair::insert_job_require_variable_pair;

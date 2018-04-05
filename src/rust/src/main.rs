@@ -19,7 +19,7 @@ mod dbJobProvide;
 mod dbJobDepend;
 mod dbVariableName;
 mod dbJobRequireVariable;
-mod dbVariablePair;
+mod db_variable_pair;
 mod db_job_require_variable_pair;
 mod json_loader_elephant;
 mod cli_clap;
