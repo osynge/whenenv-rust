@@ -125,7 +125,7 @@ pub fn create_tables(conn: &Connection) -> &Connection {
         table_create_provider(&conn);
     }
     if !tables_found.contains("WHENENV_SESSION") {
-        dbSession::table_create_session(&conn);
+        let _ = dbSession::table_create_session(&conn);
     }
     if !tables_found.contains("JOB") {
         table_create_job(&conn);
@@ -134,7 +134,7 @@ pub fn create_tables(conn: &Connection) -> &Connection {
         table_create_job_depend(&conn);
     }
     if !tables_found.contains("JOBPROVIDE") {
-        table_create_job_provide(&conn);
+        let _ = table_create_job_provide(&conn);
     }
     if !tables_found.contains("VARIABLE_NAME") {
         table_create_variable_name(&conn);
