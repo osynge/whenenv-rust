@@ -62,7 +62,7 @@ pub fn load(conn: &Connection) {
         for fnccc in file_list {
             //println!("An input file: {}", fnccc);
             let s1 = fnccc.clone();
-            db::insert_fs_file(&conn, foo, fnccc);
+            let _ = db::insert_fs_file(&conn, foo, fnccc);
             let mut pk = 10;
             db::pk_fs_file_by_name(&conn, s1, &mut pk);
             //println!("ssss: {}", pk);
@@ -86,8 +86,8 @@ pub fn load(conn: &Connection) {
     for (filename, contents) in &scores {
         let mut pkfsfile: i32 = 0;
         let filename_str = filename.clone();
-        let doop = db::pk_fs_file_by_name(&conn, filename_str, &mut pkfsfile);
-        let fred = json_loader_name(&conn, &pkfsfile, &contents);
+        let _ = db::pk_fs_file_by_name(&conn, filename_str, &mut pkfsfile);
+        let _ = json_loader_name(&conn, &pkfsfile, &contents);
     }
     db::variable_pair_list(&conn);
 }
