@@ -3,29 +3,32 @@
 EXTRA_DIST = Cargo.toml \
     src/actions_process_list_provides.rs \
     src/actions_process.rs \
+    src/autoconf.rs.in \
     src/clap_actions.rs \
     src/clap_fern.rs \
     src/cli_clap.rs \
-    src/dbEnviroment.rs \
-    src/dbFsDir.rs \
-    src/dbFsDirType.rs \
-    src/dbFsFile.rs \
-    src/dbJobDepend.rs \
-    src/dbJobProvide.rs \
-    src/dbJobRequireVariablePair.rs \
-    src/dbJobRequireVariable.rs \
-    src/dbJob.rs \
-    src/dbProvider.rs \
+    src/db_enviroment.rs \
+    src/db_fs_dir.rs \
+    src/db_fs_dir_type.rs \
+    src/db_fs_file.rs \
+    src/db_job_depend.rs \
+    src/db_job_provide.rs \
+    src/db_job_require_variable_pair.rs \
+    src/db_job_require_variable.rs \
+    src/db_job.rs \
+    src/db_provider.rs \
     src/db.rs \
-    src/dbSession.rs \
-    src/dbVariableName.rs \
-    src/dbVariablePair.rs \
+    src/db_session.rs \
+    src/db_variable_name.rs \
+    src/db_variable_pair.rs \
     src/elephant.rs \
     src/jobs_load.rs \
     src/json_loader_elephant.rs \
     src/loader.rs \
     src/main.rs \
     src/mdlJobModule.rs \
+    src/runner.rs \
+    src/thread_comunication.rs \
     $(null)
 
 EXTRA_PROGRAMS = target/@CARGO_TARGET_DIR@/whenenv
