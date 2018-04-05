@@ -4,6 +4,7 @@ EXTRA_DIST = Cargo.toml \
     src/actions_process_list_provides.rs \
     src/actions_process.rs \
     src/clap_actions.rs \
+    src/clap_fern.rs \
     src/cli_clap.rs \
     src/dbEnviroment.rs \
     src/dbFsDir.rs \
@@ -25,7 +26,7 @@ EXTRA_DIST = Cargo.toml \
     src/loader.rs \
     src/main.rs \
     src/mdlJobModule.rs \
-	$(null)
+    $(null)
 
 EXTRA_PROGRAMS = target/@CARGO_TARGET_DIR@/whenenv
 
@@ -43,10 +44,9 @@ install-exec-local:
 	$(MKDIR_P) $(DESTDIR)$(bindir)
 	$(INSTALL) -c -m 755 target/@CARGO_TARGET_DIR@/whenenv $(DESTDIR)$(bindir)
 
-DISTCLEANFILES =                                \
-	$(desktop_files)                        \
+DISTCLEANFILES = \
+	$(desktop_files) \
 	$(null)
-
 
 check:
 	cargo check
