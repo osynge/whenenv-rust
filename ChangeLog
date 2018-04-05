@@ -1,3 +1,7 @@
+0.0.7
+~~~~~
+  - remove non existent module
+
 0.0.6
 ~~~~~
   - rustfmt every thing
