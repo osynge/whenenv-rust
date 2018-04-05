@@ -60,11 +60,11 @@ pub use dbVariablePair::insert_variable_pair;
 pub use dbVariablePair::pk_variable_pair_by_name;
 pub use dbVariablePair::variable_pair_list;
 
-pub use dbJobRequireVariablePair::table_create_job_require_variable_pair;
-pub use dbJobRequireVariablePair::insert_job_require_variable_pair;
-pub use dbJobRequireVariablePair::list_job_require_variable_pair;
-pub use dbJobRequireVariablePair::job_require_variable_pair_list;
-pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all;
+pub use db_job_require_variable_pair::table_create_job_require_variable_pair;
+pub use db_job_require_variable_pair::insert_job_require_variable_pair;
+pub use db_job_require_variable_pair::list_job_require_variable_pair;
+pub use db_job_require_variable_pair::job_require_variable_pair_list;
+pub use db_job_require_variable_pair::pk_job_require_variable_pair_by_all;
 
 use db_session;
 use db_enviroment;
