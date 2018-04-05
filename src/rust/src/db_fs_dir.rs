@@ -116,9 +116,8 @@ mod tests {
     #[test]
     fn insert_fs_dir() {
         use db;
-        use elephant;
         use dbFsDirType;
-        use dbFsDir;
+        use db_fs_dir;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
@@ -133,12 +132,13 @@ mod tests {
         assert!(counter == 1);
         assert!(pk_dir_type == 1);
         let str_directory_path = String::from("directory_path");
-        let insert_fs_dir_result = dbFsDir::insert_fs_dir(&conn, &pk_dir_type, &str_directory_path);
+        let insert_fs_dir_result =
+            db_fs_dir::insert_fs_dir(&conn, &pk_dir_type, &str_directory_path);
         let fs_dir_result = insert_fs_dir_result.unwrap();
         assert!(fs_dir_result == 0);
         let freed = 1;
         let list_fs_dir_result =
-            dbFsDir::list_fs_dir_by_all(&conn, &pk_dir_type, &str_directory_path);
+            db_fs_dir::list_fs_dir_by_all(&conn, &pk_dir_type, &str_directory_path);
         let vec_dir = list_fs_dir_result.unwrap();
         let mut counter2 = 0;
         let mut pk_dir = 0;

@@ -10,11 +10,11 @@ pub use dbFsDirType::table_create_fs_dir_type;
 pub use dbFsDirType::insert_fs_dir_type;
 pub use dbFsDirType::list_fs_dir_type;
 pub use dbFsDirType::pk_fs_dir_type_by_name;
-pub use dbFsDir::insert_fs_dir;
-pub use dbFsDir::FsDir;
-pub use dbFsDir::list_fs_dir;
-pub use dbFsDir::table_create_fs_dir;
-pub use dbFsDir::list_fs_dir_by_all;
+pub use db_fs_dir::insert_fs_dir;
+pub use db_fs_dir::FsDir;
+pub use db_fs_dir::list_fs_dir;
+pub use db_fs_dir::table_create_fs_dir;
+pub use db_fs_dir::list_fs_dir_by_all;
 pub use dbFsFile::list_fs_file_type;
 
 pub use dbFsFile::insert_fs_file as dbFsFile;

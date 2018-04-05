@@ -11,7 +11,7 @@ extern crate uuid;
 mod loader;
 mod db;
 mod dbFsDirType;
-mod dbFsDir;
+mod db_fs_dir;
 mod dbFsFile;
 mod dbProvider;
 mod dbJob;
