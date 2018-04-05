@@ -32,11 +32,12 @@ pub use dbJob::table_create_job;
 pub use dbJob::insert_job;
 pub use dbJob::list_job;
 pub use dbJob::pk_job_by_name;
-pub use dbJobProvide::JobProvide;
-pub use dbJobProvide::table_create_job_provide;
-pub use dbJobProvide::insert_job_provide;
-pub use dbJobProvide::list_job_provide as list_job_type;
-pub use dbJobProvide::pk_job_provide_by_all;
+
+pub use db_job_provide::JobProvide;
+pub use db_job_provide::table_create_job_provide;
+pub use db_job_provide::insert_job_provide;
+pub use db_job_provide::list_job_provide as list_job_type;
+pub use db_job_provide::pk_job_provide_by_all;
 
 pub use db_job_depend::JobDepend;
 pub use db_job_depend::table_create_job_depend;
