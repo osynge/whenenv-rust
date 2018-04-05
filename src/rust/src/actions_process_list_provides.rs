@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use rusqlite::Connection;
 use db_variable_name;
 use db_job;
-use dbFsFile;
+use db_fs_file;
 use serde_yaml;
 use std::collections::HashSet;
 
@@ -125,8 +125,8 @@ fn list_job(conn: &Connection, fk_variable_name: &i32) -> Vec<db_job::Job> {
     return items;
 }
 
-fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<dbFsFile::FsFile> {
-    let mut items = Vec::<dbFsFile::FsFile>::new();
+fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<db_fs_file::FsFile> {
+    let mut items = Vec::<db_fs_file::FsFile>::new();
     let provide_list_prep_rc = conn.prepare(
         "SELECT DISTINCT
             FS_FILE.id,
@@ -149,7 +149,7 @@ fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<dbFsFile::FsFile>
 
     while let Some(row_query) = rox.next() {
         let row = row_query.unwrap();
-        let bill = dbFsFile::FsFile {
+        let bill = db_fs_file::FsFile {
             id: row.get(0),
             fk_fs_dir: row.get(1),
             name: row.get(2),

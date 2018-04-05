@@ -12,7 +12,7 @@ mod loader;
 mod db;
 mod dbFsDirType;
 mod db_fs_dir;
-mod dbFsFile;
+mod db_fs_file;
 mod db_provider;
 mod db_job;
 mod db_job_provide;

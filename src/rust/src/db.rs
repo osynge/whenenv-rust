@@ -15,13 +15,13 @@ pub use db_fs_dir::FsDir;
 pub use db_fs_dir::list_fs_dir;
 pub use db_fs_dir::table_create_fs_dir;
 pub use db_fs_dir::list_fs_dir_by_all;
-pub use dbFsFile::list_fs_file_type;
 
-pub use dbFsFile::insert_fs_file as dbFsFile;
-pub use dbFsFile::insert_fs_file;
-pub use dbFsFile::list_fs_file;
-pub use dbFsFile::pk_fs_file_by_name;
-pub use dbFsFile::table_create_fs_file;
+pub use db_fs_file::list_fs_file_type;
+pub use db_fs_file::insert_fs_file as dbFsFile;
+pub use db_fs_file::insert_fs_file;
+pub use db_fs_file::list_fs_file;
+pub use db_fs_file::pk_fs_file_by_name;
+pub use db_fs_file::table_create_fs_file;
 
 pub use db_provider::Provider;
 pub use db_provider::table_create_provider;
