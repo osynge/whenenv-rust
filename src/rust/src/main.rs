@@ -16,7 +16,7 @@ mod dbFsFile;
 mod dbProvider;
 mod dbJob;
 mod dbJobProvide;
-mod dbJobDepend;
+mod db_job_depend;
 mod db_variable_name;
 mod db_job_require_variable;
 mod db_variable_pair;
