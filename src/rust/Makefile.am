@@ -27,7 +27,6 @@ EXTRA_DIST = Cargo.toml \
     src/loader.rs \
     src/main.rs \
     src/mdlJobModule.rs \
-    src/runner.rs \
     $(null)
 
 EXTRA_PROGRAMS = target/@CARGO_TARGET_DIR@/whenenv
