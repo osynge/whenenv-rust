@@ -22,11 +22,12 @@ pub use dbFsFile::insert_fs_file;
 pub use dbFsFile::list_fs_file;
 pub use dbFsFile::pk_fs_file_by_name;
 pub use dbFsFile::table_create_fs_file;
-pub use dbProvider::Provider;
-pub use dbProvider::table_create_provider;
-pub use dbProvider::insert_provider;
-pub use dbProvider::list_provider;
-pub use dbProvider::pk_provider_by_name;
+
+pub use db_provider::Provider;
+pub use db_provider::table_create_provider;
+pub use db_provider::insert_provider;
+pub use db_provider::list_provider;
+pub use db_provider::pk_provider_by_name;
 
 pub use db_job::Job;
 pub use db_job::table_create_job;

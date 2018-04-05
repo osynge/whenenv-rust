@@ -13,7 +13,7 @@ mod db;
 mod dbFsDirType;
 mod db_fs_dir;
 mod dbFsFile;
-mod dbProvider;
+mod db_provider;
 mod db_job;
 mod db_job_provide;
 mod db_job_depend;
