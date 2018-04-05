@@ -26,7 +26,7 @@ mod cli_clap;
 mod jobs_load;
 mod elephant;
 mod db_session;
-mod dbEnviroment;
+mod db_enviroment;
 mod autoconf;
 mod clap_actions;
 mod actions_process;

@@ -3,8 +3,8 @@ use rusqlite::Connection;
 use clap::ArgMatches;
 pub use db_session::insert_session;
 pub use db_session::pk_session_by_uuid;
-pub use dbEnviroment::pk_enviroment_by_name;
-pub use dbEnviroment::insert_enviroment;
+pub use db_enviroment::pk_enviroment_by_name;
+pub use db_enviroment::insert_enviroment;
 pub use dbFsDirType::FsDirType;
 pub use dbFsDirType::table_create_fs_dir_type;
 pub use dbFsDirType::insert_fs_dir_type;
@@ -67,7 +67,7 @@ pub use dbJobRequireVariablePair::job_require_variable_pair_list;
 pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all;
 
 use db_session;
-use dbEnviroment;
+use db_enviroment;
 
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();
@@ -149,7 +149,7 @@ pub fn create_tables(conn: &Connection) -> &Connection {
         table_create_job_require_variable_pair(&conn);
     }
     if !tables_found.contains("WHENENV_ENVIROMENT") {
-        dbEnviroment::table_create_enviroment(&conn);
+        db_enviroment::table_create_enviroment(&conn);
     }
     return &conn;
 }
