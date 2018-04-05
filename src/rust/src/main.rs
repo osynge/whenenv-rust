@@ -7,11 +7,18 @@ extern crate fern;
 extern crate mio;
 extern crate nix;
 extern crate rustc_serialize;
+extern crate serde_json;
 extern crate serde_yaml;
 extern crate uuid;
+
 #[cfg(test)]
 #[macro_use]
 extern crate proptest;
+
+#[macro_use]
+extern crate serde_derive;
+extern crate futures;
+extern crate tokio_threadpool;
 
 mod actions_process;
 mod actions_process_list_provides;
@@ -20,6 +27,13 @@ mod cfg;
 mod clap_actions;
 mod clap_fern;
 mod cli_clap;
+mod loader;
+
+mod actions_process;
+mod actions_process_list_provides;
+mod autoconf;
+mod clap_actions;
+mod clap_fern;
 mod db;
 use db::db_enviroment;
 use db::db_fs_dir;
@@ -41,6 +55,7 @@ mod listener;
 mod loader;
 use std::sync::Arc;
 use std::sync::Mutex;
+mod thread_comunication;
 use uuid::Uuid;
 
 fn main() {
