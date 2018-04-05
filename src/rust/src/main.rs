@@ -1,14 +1,13 @@
 extern crate clap;
 extern crate rusqlite;
-
 #[macro_use]
 extern crate log;
+extern crate fern;
 
-
-extern crate env_logger;
+extern crate chrono;
 extern crate rustc_serialize;
-extern crate uuid;
 extern crate serde_yaml;
+extern crate uuid;
 
 mod loader;
 mod db;
@@ -33,18 +32,18 @@ mod autoconf;
 mod clap_actions;
 mod actions_process;
 mod actions_process_list_provides;
+mod clap_fern;
 
 use uuid::Uuid;
 
-
-
 fn main() {
-    env_logger::init().unwrap();
     let some_value = 10;
     let clap_matches = cli_clap::cli_clap(&some_value);
     let actions = clap_actions::actions_get(&clap_matches);
+    clap_fern::log_setup(&clap_matches);
     let session_uuid = Uuid::new_v4();
-    let session_uuid_string = session_uuid.simple().to_string();
+    let session_uuid_string = session_uuid.hyphenated().to_string();
+    trace!("session_uuid_string:{}", session_uuid_string);
     let conn = db::connect_deligate(&clap_matches);
     db::create_tables(&conn);
     loader::deligate(&conn, &actions, &clap_matches);
