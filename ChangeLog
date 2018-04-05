@@ -1,3 +1,7 @@
+0.0.6
+~~~~~
+  - rustfmt every thing
+
 0.0.5
 ~~~~~
   - Bugfix include all rust files
