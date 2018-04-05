@@ -4,7 +4,7 @@ use elephant;
 use std::collections::HashSet;
 use std::vec::Vec;
 
-pub struct dependencyPair {
+pub struct DependencyPair {
     key: String,
     value: String,
 }
@@ -15,7 +15,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
     let mut job_depends: HashSet<String> = HashSet::new();
     let mut job_vaiable_depends: HashSet<String> = HashSet::new();
     let mut job_vaiable_provides: HashSet<String> = HashSet::new();
-    let mut job_requires_vaiable_pair: Vec<dependencyPair> = Vec::new();
+    let mut job_requires_vaiable_pair: Vec<DependencyPair> = Vec::new();
 
     if json.is_object() {
         let sssbill = json.as_object();
@@ -138,7 +138,7 @@ pub fn json_loader_elephant(conn: &Connection, pk_file: &i32, json: &rustc_seria
                                             let foo = sss.unwrap();
                                             let name = String::from(foo);
 
-                                            let dp = dependencyPair {
+                                            let dp = DependencyPair {
                                                 key: variable_name_clone,
                                                 value: name,
                                             };
