@@ -25,6 +25,7 @@ EXTRA_DIST = Cargo.toml \
     src/elephant.rs \
     src/jobs_load.rs \
     src/json_loader_elephant.rs \
+    src/listener.rs \
     src/loader.rs \
     src/main.rs \
     src/mdlJobModule.rs \
