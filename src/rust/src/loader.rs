@@ -50,7 +50,7 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
                     let dirname = in_dir.to_string();
                     let pk_directory =
                         elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
-                    listy(&conn, &pk_directory, &dirname);
+                    let _ = listy(&conn, &pk_directory, &dirname);
                 },
                 Err(_) => {}
             }
@@ -61,7 +61,7 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
         let pk_directory_type_jobs = result_dir_type.unwrap();
         let pk_directory =
             elephant::elephant_directory(&conn, &pk_directory_type_jobs, &str_job_files_list);
-        listy(&conn, &pk_directory, &str_job_files_list);
+        let _ = listy(&conn, &pk_directory, &str_job_files_list);
     }
     let str_load_scripts = String::from("load-scripts");
     if actions.contains(&str_load_scripts) {
@@ -76,7 +76,7 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
                     let dirname = in_dir.to_string();
                     let pk_directory =
                         elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-                    listy(&conn, &pk_directory, &dirname);
+                    let _ = listy(&conn, &pk_directory, &dirname);
                 },
                 Err(_) => {}
             }
@@ -84,7 +84,7 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
             let dirname = String::from(autoconf::shelldir());
             let pk_directory =
                 elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-            listy(&conn, &pk_directory, &dirname);
+            let _ = listy(&conn, &pk_directory, &dirname);
         }
         if let Some(in_v) = matches.values_of("dir-py") {
             let str_py_files_list = String::from("python_files");
@@ -94,7 +94,7 @@ pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatch
                 let dirname = in_dir.to_string();
                 let pk_directory =
                     elephant::elephant_directory(&conn, &pk_directory_type_py, &dirname);
-                listy(&conn, &pk_directory, &dirname);
+                let _ = listy(&conn, &pk_directory, &dirname);
             }
         }
     }
