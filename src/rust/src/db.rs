@@ -27,11 +27,12 @@ pub use dbProvider::table_create_provider;
 pub use dbProvider::insert_provider;
 pub use dbProvider::list_provider;
 pub use dbProvider::pk_provider_by_name;
-pub use dbJob::Job;
-pub use dbJob::table_create_job;
-pub use dbJob::insert_job;
-pub use dbJob::list_job;
-pub use dbJob::pk_job_by_name;
+
+pub use db_job::Job;
+pub use db_job::table_create_job;
+pub use db_job::insert_job;
+pub use db_job::list_job;
+pub use db_job::pk_job_by_name;
 
 pub use db_job_provide::JobProvide;
 pub use db_job_provide::table_create_job_provide;

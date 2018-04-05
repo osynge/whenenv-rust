@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use rusqlite::Connection;
 use db_variable_name;
-use dbJob;
+use db_job;
 use dbFsFile;
 use serde_yaml;
 use std::collections::HashSet;
@@ -87,8 +87,8 @@ fn job_targets_list_by_job(conn: &Connection) -> Vec<db_variable_name::VariableN
     return items;
 }
 
-fn list_job(conn: &Connection, fk_variable_name: &i32) -> Vec<dbJob::Job> {
-    let mut items = Vec::<dbJob::Job>::new();
+fn list_job(conn: &Connection, fk_variable_name: &i32) -> Vec<db_job::Job> {
+    let mut items = Vec::<db_job::Job>::new();
     let provide_list_prep_rc = conn.prepare(
         "SELECT DISTINCT
             JOB.id,
@@ -114,7 +114,7 @@ fn list_job(conn: &Connection, fk_variable_name: &i32) -> Vec<dbJob::Job> {
 
     while let Some(row_query) = rox.next() {
         let row = row_query.unwrap();
-        let bill = dbJob::Job {
+        let bill = db_job::Job {
             id: row.get(0),
             name: row.get(1),
             fk_file: row.get(2),
