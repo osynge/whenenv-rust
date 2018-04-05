@@ -17,7 +17,7 @@ mod dbProvider;
 mod dbJob;
 mod dbJobProvide;
 mod dbJobDepend;
-mod dbVariableName;
+mod db_variable_name;
 mod db_job_require_variable;
 mod db_variable_pair;
 mod db_job_require_variable_pair;

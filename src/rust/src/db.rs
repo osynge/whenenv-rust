@@ -42,12 +42,12 @@ pub use dbJobDepend::table_create_job_depend;
 pub use dbJobDepend::insert_job_depend;
 pub use dbJobDepend::pk_job_depend_by_all;
 pub use dbJobDepend::list_job_depend;
-pub use dbVariableName::VariableName;
-pub use dbVariableName::table_create_variable_name;
-pub use dbVariableName::insert_variable_name;
-pub use dbVariableName::list_variable_name;
-pub use dbVariableName::variable_name_list;
-pub use dbVariableName::pk_variable_name_by_name;
+pub use db_variable_name::VariableName;
+pub use db_variable_name::table_create_variable_name;
+pub use db_variable_name::insert_variable_name;
+pub use db_variable_name::list_variable_name;
+pub use db_variable_name::variable_name_list;
+pub use db_variable_name::pk_variable_name_by_name;
 
 pub use db_job_require_variable::JobRequireVariable;
 pub use db_job_require_variable::table_create_job_require_variable;

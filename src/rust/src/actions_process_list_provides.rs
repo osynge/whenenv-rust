@@ -1,13 +1,13 @@
 use std::collections::BTreeMap;
 use rusqlite::Connection;
-use dbVariableName;
+use db_variable_name;
 use dbJob;
 use dbFsFile;
 use serde_yaml;
 use std::collections::HashSet;
 
-fn job_provide_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
-    let mut items = Vec::<dbVariableName::VariableName>::new();
+fn job_provide_list_by_job(conn: &Connection) -> Vec<db_variable_name::VariableName> {
+    let mut items = Vec::<db_variable_name::VariableName>::new();
     let provide_list_prep_rc = conn.prepare(
         "SELECT DISTINCT
             VARIABLE_NAME.id,
@@ -28,7 +28,7 @@ fn job_provide_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableNam
 
     while let Some(row_query) = rox.next() {
         let row = row_query.unwrap();
-        let bill = dbVariableName::VariableName {
+        let bill = db_variable_name::VariableName {
             id: row.get(0),
             name: row.get(1),
         };
@@ -38,8 +38,8 @@ fn job_provide_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableNam
     return items;
 }
 
-fn job_depend_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
-    let mut items = Vec::<dbVariableName::VariableName>::new();
+fn job_depend_list_by_job(conn: &Connection) -> Vec<db_variable_name::VariableName> {
+    let mut items = Vec::<db_variable_name::VariableName>::new();
     let provide_list_prep_rc = conn.prepare(
         "SELECT DISTINCT
             VARIABLE_NAME.id,
@@ -60,7 +60,7 @@ fn job_depend_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName
 
     while let Some(row_query) = rox.next() {
         let row = row_query.unwrap();
-        let bill = dbVariableName::VariableName {
+        let bill = db_variable_name::VariableName {
             id: row.get(0),
             name: row.get(1),
         };
@@ -70,8 +70,8 @@ fn job_depend_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName
     return items;
 }
 
-fn job_targets_list_by_job(conn: &Connection) -> Vec<dbVariableName::VariableName> {
-    let mut items = Vec::<dbVariableName::VariableName>::new();
+fn job_targets_list_by_job(conn: &Connection) -> Vec<db_variable_name::VariableName> {
+    let mut items = Vec::<db_variable_name::VariableName>::new();
 
     let mut hs_depend: HashSet<i32> = HashSet::new();
     let list_dep = job_depend_list_by_job(&conn);
@@ -160,7 +160,7 @@ fn list_file(conn: &Connection, fk_variable_name: &i32) -> Vec<dbFsFile::FsFile>
     return items;
 }
 
-fn shared_foo(conn: &Connection, variables: &Vec<dbVariableName::VariableName>) -> String {
+fn shared_foo(conn: &Connection, variables: &Vec<db_variable_name::VariableName>) -> String {
     let mut map = BTreeMap::new();
     for var_name in variables {
         let mut v_new = Vec::<BTreeMap<&str, String>>::new();
