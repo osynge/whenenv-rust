@@ -15,7 +15,7 @@ pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, 
                 return doink;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_fs_dir_type_by_name(conn, &text, &mut pk_variable);
                     match doin3k {
                         Ok(pk) => {
@@ -50,7 +50,7 @@ pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &Str
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::list_fs_dir_by_all(conn, &fk_directory_type, &text);
                     match doin3k {
                         Ok(pk) => {
@@ -89,7 +89,7 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::list_fs_dir_by_all(conn, &fk_directory, &text);
                     match doin3k {
                         Ok(pk) => for item in pk {
@@ -124,7 +124,7 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = dbSession::pk_session_by_uuid(conn, &text);
                     match doin3k {
                         Ok(pk) => {
@@ -152,7 +152,7 @@ pub fn elephant_enviroment(
 ) -> Result<i32, &'static str> {
     let rc = db::pk_enviroment_by_name(conn, &pk_session, &pk_enviroment);
     match rc {
-        Ok(pk) => {
+        Ok(_) => {
             return rc;
         }
         Err(_) => {
@@ -161,10 +161,10 @@ pub fn elephant_enviroment(
                 return doink;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_enviroment_by_name(conn, &pk_session, &pk_enviroment);
                     match doin3k {
-                        Ok(pk) => {
+                        Ok(_) => {
                             let bill = *pk_enviroment;
                             return Ok(bill);
                         }
@@ -198,7 +198,7 @@ pub fn elephant_variable_pk(conn: &Connection, text: &String) -> Result<i32, &'s
                 return Err("Failed to insert_variable_name");
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_variable_name_by_name(conn, &text);
                     match doin3k {
                         Ok(pk) => {
@@ -236,7 +236,7 @@ pub fn elephant_variable_pair_pk(
                 return doink;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_variable_pair_by_name(conn, &fk_variable, &text);
                     match doin3k {
                         Ok(pk) => {
@@ -297,7 +297,7 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
     let mut pk_job: i32 = 0;
     let rc = db::pk_job_by_name(conn, &text, &mut pk_job);
     match rc {
-        Ok(pk) => {
+        Ok(_) => {
             return pk_job;
         }
         Err(_) => {
@@ -306,10 +306,10 @@ pub fn elephant_job_pk(conn: &Connection, pk_file: &i32, in_text: &str) -> i32 {
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_job_by_name(conn, &text, &mut pk_job);
                     match doin3k {
-                        Ok(pk) => {
+                        Ok(_) => {
                             return pk_job;
                         }
                         Err(_) => {
@@ -333,7 +333,7 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
     let mut pk_provider: i32 = 0;
     let rc = db::pk_provider_by_name(conn, &text, &mut pk_provider);
     match rc {
-        Ok(pk) => {
+        Ok(_) => {
             return pk_provider;
         }
         Err(_) => {
@@ -343,10 +343,10 @@ pub fn elephant_provider_pk(conn: &Connection, in_text: &str) -> i32 {
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_provider_by_name(conn, &text, &mut pk_provider);
                     match doin3k {
-                        Ok(pk) => {
+                        Ok(_) => {
                             return pk_provider;
                         }
                         Err(_) => {
@@ -378,7 +378,7 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k =
                         db::pk_job_require_variable_pair_by_all(conn, &job, &variable_pair);
                     match doin3k {
@@ -413,7 +413,7 @@ pub fn elephant_job_depend_pk(conn: &Connection, job: &i32, provider: &i32, sq_o
                 return 0;
             }
             match doink {
-                Ok(pk) => {
+                Ok(_) => {
                     let doin3k = db::pk_job_depend_by_all(conn, &job, &provider, &sq_order);
                     match doin3k {
                         Ok(pk) => {
@@ -506,7 +506,7 @@ mod tests {
         match result_directory_type {
             Ok(pk_dir_type) => {
                 assert!(pk_dir_type == 1);
-                let str_dir_one_list = String::from("dir_one");
+                let _ = String::from("dir_one");
                 let str_directory_path = String::from("directory_path");
                 let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
                 assert!(pk_dir == 1);
@@ -536,7 +536,7 @@ mod tests {
         assert!(pk_session == 1);
         let str_dir_one_list = String::from("dir_one");
         let pk_provider = elephant::elephant_provider_pk(&conn, &str_dir_one_list);
-        let bill = elephant::elephant_enviroment(&conn, &pk_session, &pk_provider);
+        let _ = elephant::elephant_enviroment(&conn, &pk_session, &pk_provider);
     }
 
     #[test]
@@ -546,12 +546,12 @@ mod tests {
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
-        let pk_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
+        let _ = elephant::elephant_directory_type(&conn, &str_job_files_list);
         let result_directory_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
         match result_directory_type {
             Ok(pk_dir_type) => {
                 assert!(pk_dir_type == 1);
-                let str_dir_one_list = String::from("dir_one");
+                let _ = String::from("dir_one");
                 let str_directory_path = String::from("directory_path");
                 let pk_dir = elephant::elephant_directory(&conn, &pk_dir_type, &str_directory_path);
                 assert!(pk_dir == 1);
