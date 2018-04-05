@@ -87,15 +87,14 @@ mod tests {
     #[test]
     fn insert_session() {
         use db;
-        use elephant;
-        use dbSession;
+        use db_session;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_session_insert = String::from("job_files");
-        let pk_directory_type_jobs = dbSession::insert_session(&conn, &str_session_insert);
-        let vec_dir_type = dbSession::list_session(&conn);
+        let _ = db_session::insert_session(&conn, &str_session_insert);
+        let vec_dir_type = db_session::list_session(&conn);
         let mut counter = 0;
-        for dir_type in vec_dir_type {
+        for _ in vec_dir_type {
             counter += 1;
         }
         assert!(counter == 1);

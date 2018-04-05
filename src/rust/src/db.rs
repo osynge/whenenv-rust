@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 use rusqlite::Connection;
 use clap::ArgMatches;
-pub use dbSession::insert_session;
-pub use dbSession::pk_session_by_uuid;
+pub use db_session::insert_session;
+pub use db_session::pk_session_by_uuid;
 pub use dbEnviroment::pk_enviroment_by_name;
 pub use dbEnviroment::insert_enviroment;
 pub use dbFsDirType::FsDirType;
@@ -66,7 +66,7 @@ pub use dbJobRequireVariablePair::list_job_require_variable_pair;
 pub use dbJobRequireVariablePair::job_require_variable_pair_list;
 pub use dbJobRequireVariablePair::pk_job_require_variable_pair_by_all;
 
-use dbSession;
+use db_session;
 use dbEnviroment;
 
 pub fn connect() -> Connection {
@@ -125,7 +125,7 @@ pub fn create_tables(conn: &Connection) -> &Connection {
         table_create_provider(&conn);
     }
     if !tables_found.contains("WHENENV_SESSION") {
-        let _ = dbSession::table_create_session(&conn);
+        let _ = db_session::table_create_session(&conn);
     }
     if !tables_found.contains("JOB") {
         table_create_job(&conn);

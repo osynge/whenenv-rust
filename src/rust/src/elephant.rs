@@ -1,6 +1,6 @@
 use rusqlite::Connection;
 use db;
-use dbSession;
+use db_session;
 
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let mut pk_variable: i32 = 0;
@@ -125,7 +125,7 @@ pub fn elephant_session(conn: &Connection, text: &String) -> i32 {
             }
             match doink {
                 Ok(_) => {
-                    let doin3k = dbSession::pk_session_by_uuid(conn, &text);
+                    let doin3k = db_session::pk_session_by_uuid(conn, &text);
                     match doin3k {
                         Ok(pk) => {
                             return pk;

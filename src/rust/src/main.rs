@@ -2,8 +2,8 @@ extern crate clap;
 extern crate rusqlite;
 #[macro_use]
 extern crate log;
-extern crate fern;
 extern crate chrono;
+extern crate fern;
 extern crate rustc_serialize;
 extern crate serde_yaml;
 extern crate uuid;
@@ -25,7 +25,7 @@ mod json_loader_elephant;
 mod cli_clap;
 mod jobs_load;
 mod elephant;
-mod dbSession;
+mod db_session;
 mod dbEnviroment;
 mod autoconf;
 mod clap_actions;
