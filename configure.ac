@@ -55,7 +55,8 @@ if test "$GIT_TAG_HASH" = "$GIT_HASH" ; then
 VERSION_DETAIL=""
 else
 GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-VERSION_DETAIL=_rc_${GIT_BRANCH}_`date +%s`
+GIT_BRANCH_SAFE=`echo ${GIT_BRANCH} | tr -c '[[:alnum:]]._\n' '_'`
+VERSION_DETAIL=_rc_${GIT_BRANCH_SAFE}_`date +%s`
 fi
 AC_SUBST(VERSION_DETAIL)
 
