@@ -5,11 +5,13 @@ pub use db_session::insert_session;
 pub use db_session::pk_session_by_uuid;
 pub use db_enviroment::pk_enviroment_by_name;
 pub use db_enviroment::insert_enviroment;
-pub use dbFsDirType::FsDirType;
-pub use dbFsDirType::table_create_fs_dir_type;
-pub use dbFsDirType::insert_fs_dir_type;
-pub use dbFsDirType::list_fs_dir_type;
-pub use dbFsDirType::pk_fs_dir_type_by_name;
+
+pub use db_fs_dir_type::FsDirType;
+pub use db_fs_dir_type::table_create_fs_dir_type;
+pub use db_fs_dir_type::insert_fs_dir_type;
+pub use db_fs_dir_type::list_fs_dir_type;
+pub use db_fs_dir_type::pk_fs_dir_type_by_name;
+
 pub use db_fs_dir::insert_fs_dir;
 pub use db_fs_dir::FsDir;
 pub use db_fs_dir::list_fs_dir;

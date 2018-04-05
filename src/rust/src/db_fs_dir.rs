@@ -116,13 +116,13 @@ mod tests {
     #[test]
     fn insert_fs_dir() {
         use db;
-        use dbFsDirType;
+        use db_fs_dir_type;
         use db_fs_dir;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
-        let pk_directory_type_jobs = dbFsDirType::insert_fs_dir_type(&conn, &str_job_files_list);
-        let vec_dir_type = dbFsDirType::list_fs_dir_type(&conn);
+        let pk_directory_type_jobs = db_fs_dir_type::insert_fs_dir_type(&conn, &str_job_files_list);
+        let vec_dir_type = db_fs_dir_type::list_fs_dir_type(&conn);
         let mut pk_dir_type = 0;
         let mut counter = 0;
         for dir_type in vec_dir_type {
