@@ -21,6 +21,7 @@ When launching whenenv, always specify the PRODUCT environment variable. The
 components of the build are isolated and reusable.
 
 
+%global debug_package %{nil}
 
 #
 # Prep
