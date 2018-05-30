@@ -1,7 +1,7 @@
-use clap::Arg;
-use clap::App;
-use clap::ArgMatches;
 use autoconf;
+use clap::App;
+use clap::Arg;
+use clap::ArgMatches;
 
 pub fn cli_clap(number: &u32) -> ArgMatches {
     let application = App::new(autoconf::package())
@@ -76,18 +76,18 @@ pub fn cli_clap(number: &u32) -> ArgMatches {
                 .short("t")
                 .long("target")
                 .value_name("TARGET")
-                .help("Sets the provider to be selected.")
+                .help("Sets the target to be selected, so jobs can be matched to provides. Defaults to 'execution'.")
                 .takes_value(true),
         )
         .arg(
             Arg::with_name("list-provides")
                 .long("list-provides")
-                .help("list-provides"),
+                .help("List all jobs sorted by the functions they provide."),
         )
         .arg(
             Arg::with_name("list-target")
                 .long("list-target")
-                .help("list all targets"),
+                .help("List jobs by the target they provide. Not all jobs have a target."),
         )
         .arg(Arg::with_name("session").long("session").help("session"));
     let matches = application.get_matches();
