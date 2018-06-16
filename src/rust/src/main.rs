@@ -7,6 +7,9 @@ extern crate fern;
 extern crate rustc_serialize;
 extern crate serde_yaml;
 extern crate uuid;
+#[cfg(test)]
+#[macro_use]
+extern crate proptest;
 
 mod actions_process;
 mod actions_process_list_provides;
