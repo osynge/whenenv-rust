@@ -90,19 +90,24 @@ pub fn pk_fs_dir_type_by_name(
 
 #[cfg(test)]
 mod tests {
+
+    use db;
+    use db_fs_dir_type;
+
+    proptest! {
     #[test]
-    fn insert_fs_dir_type() {
-        use db;
-        use db_fs_dir_type;
+    fn insert_fs_dir_type_once(ref s in "\\PC*") {
         let conn = db::connect();
         db::create_tables(&conn);
-        let str_job_files_list = String::from("job_files");
-        let pk_directory_type_jobs = db_fs_dir_type::insert_fs_dir_type(&conn, &str_job_files_list);
+        let pk_directory_type_jobs = db_fs_dir_type::insert_fs_dir_type(&conn, &s);
         let vec_dir_type = db_fs_dir_type::list_fs_dir_type(&conn);
         let mut counter = 0;
         for dir_type in vec_dir_type {
             counter += 1;
         }
         assert!(counter == 1);
+
+        }
     }
+
 }
