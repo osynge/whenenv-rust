@@ -13,3 +13,6 @@ serde = "1.0"
 serde_yaml = "0.7"
 fern = "*"
 chrono = "*"
+
+[dev-dependencies]
+proptest = "*"
