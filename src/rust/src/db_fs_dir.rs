@@ -39,7 +39,8 @@ pub fn insert_fs_dir(conn: &Connection, fk_type: &i32, name: &str) -> Result<i32
 }
 
 pub fn list_fs_dir(conn: &Connection) -> Vec<FsDir> {
-    let mut stmt = conn.prepare("SELECT id, fk_type, name FROM FS_DIR")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_type, name FROM FS_DIR")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| FsDir {
         id: row.get(0),
@@ -59,7 +60,8 @@ pub fn list_fs_dir(conn: &Connection) -> Vec<FsDir> {
 
 pub fn list_fs_dir_filter(conn: &Connection) -> Vec<FsDir> {
     let filter = "elephant".to_string();
-    let mut stmt = conn.prepare("SELECT id, fk_type, name FROM FS_DIR WHERE name = elephant")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_type, name FROM FS_DIR WHERE name = elephant")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[&filter], |row| FsDir {
         id: row.get(0),
@@ -82,13 +84,14 @@ pub fn list_fs_dir_by_all(
     fk_fs_type: &i32,
     name: &str,
 ) -> Result<Vec<FsDir>, &'static str> {
-    let mut stmt = conn.prepare(
-        "SELECT FS_DIR.id, FS_DIR.fk_type, FS_DIR.name  FROM FS_DIR
+    let mut stmt =
+        conn.prepare(
+            "SELECT FS_DIR.id, FS_DIR.fk_type, FS_DIR.name  FROM FS_DIR
         INNER JOIN FS_DIR_TYPE
         on FS_DIR.fk_type = FS_DIR_TYPE.id
         WHERE
         FS_DIR.fk_type = ?1",
-    ).unwrap();
+        ).unwrap();
     let fs_dir_iter = stmt.query_map(&[fk_fs_type], |row| FsDir {
         id: row.get(0),
         fk_type: row.get(1),
@@ -116,8 +119,8 @@ mod tests {
     #[test]
     fn insert_fs_dir() {
         use db;
-        use db_fs_dir_type;
         use db_fs_dir;
+        use db_fs_dir_type;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
