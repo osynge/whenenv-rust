@@ -1,6 +1,6 @@
+use actions_process_list_provides;
 use rusqlite::Connection;
 use std::collections::HashSet;
-use actions_process_list_provides;
 
 fn process_session(conn: &Connection) {}
 
