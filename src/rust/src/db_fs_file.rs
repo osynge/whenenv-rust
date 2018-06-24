@@ -104,8 +104,8 @@ mod tests {
     #[test]
     fn insert_fs_file() {
         use db;
-        use db_fs_dir;
         use db::fs_dir_type;
+        use db_fs_dir;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
