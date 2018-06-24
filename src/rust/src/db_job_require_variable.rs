@@ -43,7 +43,8 @@ pub fn insert_job_require_variable(
 }
 
 pub fn list_job_require_variable(conn: &Connection) -> Vec<JobRequireVariable> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| JobRequireVariable {
         id: row.get(0),
@@ -62,13 +63,15 @@ pub fn list_job_require_variable(conn: &Connection) -> Vec<JobRequireVariable> {
 }
 
 pub fn job_require_variable_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| JobRequireVariable {
-        id: row.get(0),
-        fk_job: row.get(1),
-        fk_variable: row.get(2),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| JobRequireVariable {
+            id: row.get(0),
+            fk_job: row.get(1),
+            fk_variable: row.get(2),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found job_require_variable {:?}", person.unwrap());
