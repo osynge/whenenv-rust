@@ -48,7 +48,8 @@ pub fn insert_job_provide(
 }
 
 pub fn list_job_provide(conn: &Connection) -> Vec<JobProvide> {
-    let mut stmt = conn.prepare("SELECT id, fk_job, fk_variable FROM JOBPROVIDE")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_job, fk_variable FROM JOBPROVIDE")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| JobProvide {
         id: row.get(0),
