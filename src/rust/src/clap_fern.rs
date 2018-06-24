@@ -1,8 +1,8 @@
+use chrono;
 use clap::ArgMatches;
+use fern;
 use log;
 use std;
-use chrono;
-use fern;
 
 pub fn log_setup(matches: &ArgMatches) -> () {
     let mut verbosity: u64 = 0;
