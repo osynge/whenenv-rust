@@ -51,10 +51,11 @@ pub fn list_fs_dir_type(conn: &Connection) -> Vec<FsDirType> {
 
 pub fn fs_dir_type_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, name  FROM FS_DIR_TYPE").unwrap();
-    let person_iter = stmt.query_map(&[], |row| FsDirType {
-        id: row.get(0),
-        name: row.get(1),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| FsDirType {
+            id: row.get(0),
+            name: row.get(1),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found fs_dir_type {:?}", person.unwrap());
@@ -66,7 +67,8 @@ pub fn pk_fs_dir_type_by_name(
     name: &String,
     pk: &mut i32,
 ) -> Result<i32, &'static str> {
-    let mut stmt = conn.prepare("SELECT id, name  FROM FS_DIR_TYPE WHERE name = ?1")
+    let mut stmt = conn
+        .prepare("SELECT id, name  FROM FS_DIR_TYPE WHERE name = ?1")
         .unwrap();
     let variable_name_iter = stmt.query_map(&[name], |row| FsDirType {
         id: row.get(0),
