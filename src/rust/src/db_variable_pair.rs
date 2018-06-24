@@ -49,7 +49,8 @@ pub fn insert_variable_pair(
 }
 
 pub fn list_variable_pair(conn: &Connection) -> Vec<VariablePair> {
-    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_variable, variable_value  FROM VARIABLE_PAIR")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| VariablePair {
         id: row.get(0),
@@ -68,13 +69,15 @@ pub fn list_variable_pair(conn: &Connection) -> Vec<VariablePair> {
 }
 
 pub fn variable_pair_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_variable, variable_value FROM VARIABLE_PAIR")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_variable, variable_value FROM VARIABLE_PAIR")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| VariablePair {
-        id: row.get(0),
-        fk_variable: row.get(1),
-        variable_value: row.get(2),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| VariablePair {
+            id: row.get(0),
+            fk_variable: row.get(1),
+            variable_value: row.get(2),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found variable_pair {:?}", person.unwrap());
@@ -88,11 +91,12 @@ pub fn pk_variable_pair_by_name(
 ) -> Result<i32, &'static str> {
     let mut output = 0;
     let bill = String::from(name);
-    let mut stmt = conn.prepare(
-        "SELECT VARIABLE_PAIR.id, VARIABLE_PAIR.fk_variable, VARIABLE_PAIR.variable_value
+    let mut stmt =
+        conn.prepare(
+            "SELECT VARIABLE_PAIR.id, VARIABLE_PAIR.fk_variable, VARIABLE_PAIR.variable_value
         FROM VARIABLE_PAIR
 		WHERE VARIABLE_PAIR.fk_variable = ?1 AND VARIABLE_PAIR.variable_value = ?2",
-    ).unwrap();
+        ).unwrap();
     let variable_pair_iter = stmt.query_map(&[fk_variable, &bill], |row| VariablePair {
         id: row.get(0),
         fk_variable: row.get(1),
