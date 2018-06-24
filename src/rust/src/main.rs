@@ -45,7 +45,7 @@ fn main() {
     let session_uuid = Uuid::new_v4();
     let session_uuid_string = session_uuid.hyphenated().to_string();
     trace!("session_uuid_string:{}", session_uuid_string);
-    let conn = db::connect_deligate(&clap_matches);
+    let conn = loader::connect_deligate(&clap_matches);
     db::create_tables(&conn);
     loader::deligate(&conn, &actions, &clap_matches);
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
