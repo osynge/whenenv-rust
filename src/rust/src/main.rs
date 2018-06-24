@@ -28,7 +28,7 @@ mod db_job_provide;
 mod db_job_require_variable;
 mod db_job_require_variable_pair;
 mod db_provider;
-mod db_session;
+use db::db_session;
 mod db_variable_name;
 mod db_variable_pair;
 mod elephant;
