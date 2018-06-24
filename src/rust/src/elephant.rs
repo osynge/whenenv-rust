@@ -1,6 +1,6 @@
-use rusqlite::Connection;
 use db;
 use db_session;
+use rusqlite::Connection;
 
 pub fn elephant_directory_type(conn: &Connection, text: &String) -> Result<i32, &'static str> {
     let mut pk_variable: i32 = 0;
