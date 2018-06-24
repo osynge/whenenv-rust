@@ -51,10 +51,11 @@ pub fn list_provider(conn: &Connection) -> Vec<Provider> {
 
 pub fn provider_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, name FROM PROVIDER").unwrap();
-    let person_iter = stmt.query_map(&[], |row| Provider {
-        id: row.get(0),
-        name: row.get(1),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| Provider {
+            id: row.get(0),
+            name: row.get(1),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found provider {:?}", person.unwrap());
@@ -67,12 +68,14 @@ pub fn pk_provider_by_name(
     pk: &mut i32,
 ) -> Result<i32, &'static str> {
     let bill = name.clone();
-    let mut stmt = conn.prepare("SELECT id, name  FROM PROVIDER WHERE name = ?1")
+    let mut stmt = conn
+        .prepare("SELECT id, name  FROM PROVIDER WHERE name = ?1")
         .unwrap();
-    let provider_iter = stmt.query_map(&[&bill], |row| Provider {
-        id: row.get(0),
-        name: row.get(1),
-    }).unwrap();
+    let provider_iter =
+        stmt.query_map(&[&bill], |row| Provider {
+            id: row.get(0),
+            name: row.get(1),
+        }).unwrap();
     let mut found = 0;
     for person in provider_iter {
         let bill = person.unwrap();
