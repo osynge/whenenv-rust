@@ -44,7 +44,8 @@ pub fn insert_enviroment(
 }
 
 pub fn list_enviroment(conn: &Connection) -> Vec<WhenenvEnviroment> {
-    let mut stmt = conn.prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| WhenenvEnviroment {
         id: row.get(0),
@@ -63,13 +64,15 @@ pub fn list_enviroment(conn: &Connection) -> Vec<WhenenvEnviroment> {
 }
 
 pub fn enviroment_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_session, fk_variable_pair  FROM WHENENV_ENVIROMENT")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| WhenenvEnviroment {
-        id: row.get(0),
-        fk_session: row.get(1),
-        fk_variable_pair: row.get(2),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| WhenenvEnviroment {
+            id: row.get(0),
+            fk_session: row.get(1),
+            fk_variable_pair: row.get(2),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found enviroment {:?}", person.unwrap());
@@ -82,14 +85,15 @@ pub fn pk_enviroment_by_name(
     variable_pair: &i32,
 ) -> Result<i32, &'static str> {
     let mut output = 0;
-    let mut stmt = conn.prepare(
-        "SELECT
+    let mut stmt =
+        conn.prepare(
+            "SELECT
         WHENENV_ENVIROMENT.id,
         WHENENV_ENVIROMENT.fk_session,
         WHENENV_ENVIROMENT.fk_variable_pair
         FROM WHENENV_ENVIROMENT
         WHERE WHENENV_ENVIROMENT.fk_session = ?1 AND WHENENV_ENVIROMENT.fk_variable_pair = ?2",
-    ).unwrap();
+        ).unwrap();
     let enviroment_iter = stmt.query_map(&[session, variable_pair], |row| WhenenvEnviroment {
         id: row.get(0),
         fk_session: row.get(1),
