@@ -1,12 +1,12 @@
-use rusqlite::Connection;
 use db;
-use std::path::Path;
+use elephant;
+use json_loader_elephant::json_loader_elephant;
+use rusqlite::Connection;
+use rustc_serialize::json::Json;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
-use std::collections::HashMap;
-use rustc_serialize::json::Json;
-use json_loader_elephant::json_loader_elephant;
-use elephant;
+use std::path::Path;
 
 pub fn listy2(direcory: &str) -> Vec<String> {
     let mut items = Vec::<String>::new();
