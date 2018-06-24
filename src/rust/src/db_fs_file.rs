@@ -42,13 +42,15 @@ pub fn insert_fs_file(
 }
 
 pub fn list_fs_file(conn: &Connection) -> Vec<FsFile> {
-    let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE")
         .unwrap();
-    let fs_file_iter = stmt.query_map(&[], |row| FsFile {
-        id: row.get(0),
-        fk_fs_dir: row.get(1),
-        name: row.get(2),
-    }).unwrap();
+    let fs_file_iter =
+        stmt.query_map(&[], |row| FsFile {
+            id: row.get(0),
+            fk_fs_dir: row.get(1),
+            name: row.get(2),
+        }).unwrap();
     let mut items = Vec::<FsFile>::new();
     for person in fs_file_iter {
         items.push(person.unwrap());
@@ -57,13 +59,15 @@ pub fn list_fs_file(conn: &Connection) -> Vec<FsFile> {
 }
 
 pub fn pk_fs_file_by_name(conn: &Connection, name: String, pk: &mut i32) {
-    let mut stmt = conn.prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE WHERE name =?1")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_fs_dir,name  FROM FS_FILE WHERE name =?1")
         .unwrap();
-    let fs_file_iter = stmt.query_map(&[&name], |row| FsFile {
-        id: row.get(0),
-        fk_fs_dir: row.get(1),
-        name: row.get(2),
-    }).unwrap();
+    let fs_file_iter =
+        stmt.query_map(&[&name], |row| FsFile {
+            id: row.get(0),
+            fk_fs_dir: row.get(1),
+            name: row.get(2),
+        }).unwrap();
     for person in fs_file_iter {
         let bill = person.unwrap();
         *pk = bill.id;
@@ -72,20 +76,22 @@ pub fn pk_fs_file_by_name(conn: &Connection, name: String, pk: &mut i32) {
 }
 
 pub fn list_fs_file_type(conn: &Connection, fk_fs_type: &i32) -> Vec<FsFile> {
-    let mut stmt = conn.prepare(
-        "SELECT FS_FILE.id, FS_FILE.name, FS_FILE.fk_fs_dir FROM FS_FILE
+    let mut stmt =
+        conn.prepare(
+            "SELECT FS_FILE.id, FS_FILE.name, FS_FILE.fk_fs_dir FROM FS_FILE
         INNER JOIN FS_DIR
         on FS_FILE.fk_fs_dir = FS_DIR.id
         INNER JOIN FS_DIR_TYPE
         on FS_DIR.fk_type = FS_DIR_TYPE.id
         WHERE FS_DIR_TYPE.id =?1
         ",
-    ).unwrap();
-    let fs_file_iter = stmt.query_map(&[fk_fs_type], |row| FsFile {
-        id: row.get(0),
-        fk_fs_dir: row.get(2),
-        name: row.get(1),
-    }).unwrap();
+        ).unwrap();
+    let fs_file_iter =
+        stmt.query_map(&[fk_fs_type], |row| FsFile {
+            id: row.get(0),
+            fk_fs_dir: row.get(2),
+            name: row.get(1),
+        }).unwrap();
     let mut items = Vec::<FsFile>::new();
     for person in fs_file_iter {
         items.push(person.unwrap());
@@ -98,8 +104,8 @@ mod tests {
     #[test]
     fn insert_fs_file() {
         use db;
-        use db_fs_dir_type;
         use db_fs_dir;
+        use db_fs_dir_type;
         let conn = db::connect();
         db::create_tables(&conn);
         let str_job_files_list = String::from("job_files");
