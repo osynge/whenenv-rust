@@ -1,3 +1,4 @@
+pub mod db_job;
 pub mod db_session;
 
 use clap::ArgMatches;
