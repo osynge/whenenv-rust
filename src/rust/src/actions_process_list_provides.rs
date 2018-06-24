@@ -1,9 +1,9 @@
-use std::collections::BTreeMap;
-use rusqlite::Connection;
-use db_variable_name;
-use db_job;
 use db_fs_file;
+use db_job;
+use db_variable_name;
+use rusqlite::Connection;
 use serde_yaml;
+use std::collections::BTreeMap;
 use std::collections::HashSet;
 
 fn job_provide_list_by_job(conn: &Connection) -> Vec<db_variable_name::VariableName> {
