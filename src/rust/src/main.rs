@@ -20,7 +20,7 @@ mod cli_clap;
 mod db;
 mod db_enviroment;
 mod db_fs_dir;
-mod db_fs_dir_type;
+use db::fs_dir_type;
 mod db_fs_file;
 use db::db_job;
 mod db_job_depend;
