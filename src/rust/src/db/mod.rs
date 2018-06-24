@@ -1,6 +1,6 @@
 pub mod db_job;
-pub mod db_session;
 pub mod db_provider;
+pub mod db_session;
 
 use clap::ArgMatches;
 pub use db_enviroment::insert_enviroment;
