@@ -16,7 +16,7 @@ pub fn shelldir() -> &'static str {
 
 
 pub fn version() -> &'static str {
-    "@VERSION@"
+    "@VERSION_SAFE@"
 }
 
 
@@ -26,5 +26,5 @@ pub fn package() -> &'static str {
 
 
 pub fn version_cli() -> &'static str {
-    "@VERSION@-@GIT_HASH@"
+    "@VERSION_SAFE@@VERSION_DETAIL@"
 }
