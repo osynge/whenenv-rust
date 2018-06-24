@@ -28,12 +28,6 @@ mod clap_actions;
 mod clap_fern;
 mod cli_clap;
 mod loader;
-
-mod actions_process;
-mod actions_process_list_provides;
-mod autoconf;
-mod clap_actions;
-mod clap_fern;
 mod db;
 use db::db_enviroment;
 use db::db_fs_dir;
