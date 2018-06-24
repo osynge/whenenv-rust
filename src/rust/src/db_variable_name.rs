@@ -52,12 +52,14 @@ pub fn list_variable_name(conn: &Connection) -> Vec<VariableName> {
 }
 
 pub fn variable_name_list(conn: &Connection) {
-    let mut stmt = conn.prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME")
+    let mut stmt = conn
+        .prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME")
         .unwrap();
-    let person_iter = stmt.query_map(&[], |row| VariableName {
-        id: row.get(0),
-        name: row.get(1),
-    }).unwrap();
+    let person_iter =
+        stmt.query_map(&[], |row| VariableName {
+            id: row.get(0),
+            name: row.get(1),
+        }).unwrap();
 
     for person in person_iter {
         info!("Found variable_name {:?}", person.unwrap());
@@ -66,7 +68,8 @@ pub fn variable_name_list(conn: &Connection) {
 
 pub fn pk_variable_name_by_name(conn: &Connection, name: &str) -> Result<i32, &'static str> {
     let mut output = 0;
-    let mut stmt = conn.prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1")
+    let mut stmt = conn
+        .prepare("SELECT id, name  FROM VARIABLE_NAME WHERE name = ?1")
         .unwrap();
     let variable_name_iter = stmt.query_map(&[&name], |row| VariableName {
         id: row.get(0),
