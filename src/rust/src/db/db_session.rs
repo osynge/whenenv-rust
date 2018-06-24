@@ -41,7 +41,8 @@ pub fn insert_session(conn: &Connection, uuid: &str) -> Result<i32, &'static str
 }
 
 pub fn list_session(conn: &Connection) -> Vec<Session> {
-    let mut stmt = conn.prepare("SELECT id, uuid FROM WHENENV_SESSION")
+    let mut stmt = conn
+        .prepare("SELECT id, uuid FROM WHENENV_SESSION")
         .unwrap();
     let wraped_fs_file_iter = stmt.query_map(&[], |row| Session {
         id: row.get(0),
@@ -59,7 +60,8 @@ pub fn list_session(conn: &Connection) -> Vec<Session> {
 }
 
 pub fn pk_session_by_uuid(conn: &Connection, uuid: &String) -> Result<i32, &'static str> {
-    let mut stmt = conn.prepare("SELECT id, uuid  FROM WHENENV_SESSION WHERE uuid = ?1")
+    let mut stmt = conn
+        .prepare("SELECT id, uuid  FROM WHENENV_SESSION WHERE uuid = ?1")
         .unwrap();
     let insert_session_iter = stmt.query_map(&[uuid], |row| Session {
         id: row.get(0),
