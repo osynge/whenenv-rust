@@ -3,7 +3,6 @@ pub mod db_provider;
 pub mod db_session;
 pub mod fs_dir_type;
 
-use clap::ArgMatches;
 pub use db_enviroment::insert_enviroment;
 pub use db_enviroment::pk_enviroment_by_name;
 pub use db_session::insert_session;
@@ -91,17 +90,6 @@ pub fn connect_file(filename: &str) -> Connection {
     let conn = Connection::open(filename).unwrap();
     conn.execute("PRAGMA foreign_keys = ON;", &[]).unwrap();
     return conn;
-}
-
-pub fn connect_deligate(matches: &ArgMatches) -> Connection {
-    if let Some(in_v) = matches.values_of("rdbms") {
-        for enviroment_variable in in_v {
-            let env_var = enviroment_variable.to_string();
-            debug!("connect to sqllite:{:?}", env_var);
-            return connect_file(&env_var);
-        }
-    }
-    return connect();
 }
 
 fn list_tables(conn: &Connection) -> HashSet<String> {
