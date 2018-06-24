@@ -1,80 +1,81 @@
-use std::collections::HashSet;
-use rusqlite::Connection;
+pub mod db_session;
+
 use clap::ArgMatches;
+pub use db_enviroment::insert_enviroment;
+pub use db_enviroment::pk_enviroment_by_name;
 pub use db_session::insert_session;
 pub use db_session::pk_session_by_uuid;
-pub use db_enviroment::pk_enviroment_by_name;
-pub use db_enviroment::insert_enviroment;
+use rusqlite::Connection;
+use std::collections::HashSet;
 
-pub use db_fs_dir_type::FsDirType;
-pub use db_fs_dir_type::table_create_fs_dir_type;
 pub use db_fs_dir_type::insert_fs_dir_type;
 pub use db_fs_dir_type::list_fs_dir_type;
 pub use db_fs_dir_type::pk_fs_dir_type_by_name;
+pub use db_fs_dir_type::table_create_fs_dir_type;
+pub use db_fs_dir_type::FsDirType;
 
 pub use db_fs_dir::insert_fs_dir;
-pub use db_fs_dir::FsDir;
 pub use db_fs_dir::list_fs_dir;
-pub use db_fs_dir::table_create_fs_dir;
 pub use db_fs_dir::list_fs_dir_by_all;
+pub use db_fs_dir::table_create_fs_dir;
+pub use db_fs_dir::FsDir;
 
-pub use db_fs_file::list_fs_file_type;
 pub use db_fs_file::insert_fs_file as dbFsFile;
 pub use db_fs_file::insert_fs_file;
 pub use db_fs_file::list_fs_file;
+pub use db_fs_file::list_fs_file_type;
 pub use db_fs_file::pk_fs_file_by_name;
 pub use db_fs_file::table_create_fs_file;
 
-pub use db_provider::Provider;
-pub use db_provider::table_create_provider;
 pub use db_provider::insert_provider;
 pub use db_provider::list_provider;
 pub use db_provider::pk_provider_by_name;
+pub use db_provider::table_create_provider;
+pub use db_provider::Provider;
 
-pub use db_job::Job;
-pub use db_job::table_create_job;
 pub use db_job::insert_job;
 pub use db_job::list_job;
 pub use db_job::pk_job_by_name;
+pub use db_job::table_create_job;
+pub use db_job::Job;
 
-pub use db_job_provide::JobProvide;
-pub use db_job_provide::table_create_job_provide;
 pub use db_job_provide::insert_job_provide;
 pub use db_job_provide::list_job_provide as list_job_type;
 pub use db_job_provide::pk_job_provide_by_all;
+pub use db_job_provide::table_create_job_provide;
+pub use db_job_provide::JobProvide;
 
-pub use db_job_depend::JobDepend;
-pub use db_job_depend::table_create_job_depend;
 pub use db_job_depend::insert_job_depend;
-pub use db_job_depend::pk_job_depend_by_all;
 pub use db_job_depend::list_job_depend;
+pub use db_job_depend::pk_job_depend_by_all;
+pub use db_job_depend::table_create_job_depend;
+pub use db_job_depend::JobDepend;
 
-pub use db_variable_name::VariableName;
-pub use db_variable_name::table_create_variable_name;
 pub use db_variable_name::insert_variable_name;
 pub use db_variable_name::list_variable_name;
-pub use db_variable_name::variable_name_list;
 pub use db_variable_name::pk_variable_name_by_name;
+pub use db_variable_name::table_create_variable_name;
+pub use db_variable_name::variable_name_list;
+pub use db_variable_name::VariableName;
 
-pub use db_job_require_variable::JobRequireVariable;
-pub use db_job_require_variable::table_create_job_require_variable;
 pub use db_job_require_variable::insert_job_require_variable;
-pub use db_job_require_variable::list_job_require_variable;
 pub use db_job_require_variable::job_require_variable_list;
+pub use db_job_require_variable::list_job_require_variable;
 pub use db_job_require_variable::pk_job_require_variable_by_name;
+pub use db_job_require_variable::table_create_job_require_variable;
+pub use db_job_require_variable::JobRequireVariable;
 
-pub use db_variable_pair::table_create_variable_pair;
 pub use db_variable_pair::insert_variable_pair;
 pub use db_variable_pair::pk_variable_pair_by_name;
+pub use db_variable_pair::table_create_variable_pair;
 pub use db_variable_pair::variable_pair_list;
 
-pub use db_job_require_variable_pair::table_create_job_require_variable_pair;
 pub use db_job_require_variable_pair::insert_job_require_variable_pair;
-pub use db_job_require_variable_pair::list_job_require_variable_pair;
 pub use db_job_require_variable_pair::job_require_variable_pair_list;
+pub use db_job_require_variable_pair::list_job_require_variable_pair;
 pub use db_job_require_variable_pair::pk_job_require_variable_pair_by_all;
+pub use db_job_require_variable_pair::table_create_job_require_variable_pair;
 
-use db_session;
 use db_enviroment;
 
 pub fn connect() -> Connection {
@@ -102,7 +103,8 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
 
 fn list_tables(conn: &Connection) -> HashSet<String> {
     let mut output = HashSet::new();
-    let mut stmt = conn.prepare("SELECT name FROM sqlite_master WHERE type='table'")
+    let mut stmt = conn
+        .prepare("SELECT name FROM sqlite_master WHERE type='table'")
         .unwrap();
     //let wraped_table_iter = stmt.query_map(&[], |row| row.get::<int>(0));
     let wraped_table_iter = stmt.query_map(&[], |row| row.get::<_, String>(0));
