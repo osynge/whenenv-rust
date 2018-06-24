@@ -1,11 +1,11 @@
+use autoconf;
 use clap::ArgMatches;
+use elephant;
+use rusqlite::Connection;
+use std::collections::HashSet;
+use std::env;
 use std::path::Path;
 use std::result::Result;
-use rusqlite::Connection;
-use std::env;
-use elephant;
-use std::collections::HashSet;
-use autoconf;
 
 pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i32, &'static str> {
     let path = Path::new(direcory);
