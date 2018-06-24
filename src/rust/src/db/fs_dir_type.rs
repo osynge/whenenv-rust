@@ -94,15 +94,15 @@ pub fn pk_fs_dir_type_by_name(
 mod tests {
 
     use db;
-    use db_fs_dir_type;
+    use db::fs_dir_type;
 
     proptest! {
     #[test]
     fn insert_fs_dir_type_once(ref s in "\\PC*") {
         let conn = db::connect();
         db::create_tables(&conn);
-        let pk_directory_type_jobs = db_fs_dir_type::insert_fs_dir_type(&conn, &s);
-        let vec_dir_type = db_fs_dir_type::list_fs_dir_type(&conn);
+        let pk_directory_type_jobs = fs_dir_type::insert_fs_dir_type(&conn, &s);
+        let vec_dir_type = fs_dir_type::list_fs_dir_type(&conn);
         let mut counter = 0;
         for dir_type in vec_dir_type {
             counter += 1;
