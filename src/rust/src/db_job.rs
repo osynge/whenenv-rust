@@ -83,13 +83,15 @@ pub fn pk_job_by_name(
     pk: &mut i32,
 ) -> Result<Version, &'static str> {
     let bill = name.clone();
-    let mut stmt = conn.prepare("SELECT id, fk_file, name  FROM JOB WHERE name = ?1")
+    let mut stmt = conn
+        .prepare("SELECT id, fk_file, name  FROM JOB WHERE name = ?1")
         .unwrap();
-    let job_iter = stmt.query_map(&[&bill], |row| Job {
-        id: row.get(0),
-        fk_file: row.get(1),
-        name: row.get(2),
-    }).unwrap();
+    let job_iter =
+        stmt.query_map(&[&bill], |row| Job {
+            id: row.get(0),
+            fk_file: row.get(1),
+            name: row.get(2),
+        }).unwrap();
     let mut found = 0;
     for person in job_iter {
         let bill = person.unwrap();
