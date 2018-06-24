@@ -1,11 +1,11 @@
-use std::sync::mpsc::{Receiver, Sender};
-use std::sync::mpsc;
-use std::thread;
 use std::collections::HashMap;
-use uuid;
 use std::collections::HashSet;
-use std::sync::Arc;
 use std::ops::Deref;
+use std::sync::Arc;
+use std::sync::mpsc;
+use std::sync::mpsc::{Receiver, Sender};
+use std::thread;
+use uuid;
 
 use tokio_threadpool;
 extern crate serde;
