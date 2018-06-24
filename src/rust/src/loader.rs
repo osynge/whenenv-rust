@@ -1,5 +1,6 @@
 use autoconf;
 use clap::ArgMatches;
+use db;
 use elephant;
 use rusqlite::Connection;
 use std::collections::HashSet;
@@ -37,6 +38,17 @@ pub fn job_files_list(direcory: &str) {
             debug!("job_files_list{:?}", entry.path());
         }
     }
+}
+
+pub fn connect_deligate(matches: &ArgMatches) -> Connection {
+    if let Some(in_v) = matches.values_of("rdbms") {
+        for enviroment_variable in in_v {
+            let env_var = enviroment_variable.to_string();
+            debug!("connect to sqllite:{:?}", env_var);
+            return db::connect_file(&env_var);
+        }
+    }
+    return db::connect();
 }
 
 pub fn deligate(conn: &Connection, actions: &HashSet<String>, matches: &ArgMatches) {
