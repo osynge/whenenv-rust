@@ -1,6 +1,6 @@
+use elephant;
 use rusqlite::Connection;
 use rustc_serialize;
-use elephant;
 use std::collections::HashSet;
 use std::vec::Vec;
 
