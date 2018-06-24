@@ -15,7 +15,7 @@ EXTRA_DIST = Cargo.toml \
     src/db_job_provide.rs \
     src/db_job_require_variable_pair.rs \
     src/db_job_require_variable.rs \
-    src/db_job.rs \
+    src/db/db_job.rs \
     src/db_provider.rs \
     src/db/mod.rs \
     src/db_session.rs \
