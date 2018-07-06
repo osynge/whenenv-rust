@@ -14,6 +14,7 @@ extern crate proptest;
 mod actions_process;
 mod actions_process_list_provides;
 mod autoconf;
+mod cfg;
 mod clap_actions;
 mod clap_fern;
 mod cli_clap;
@@ -38,18 +39,19 @@ mod loader;
 use uuid::Uuid;
 
 fn main() {
-    let some_value = 10;
-    let clap_matches = cli_clap::cli_clap(&some_value);
-    let actions = clap_actions::actions_get(&clap_matches);
+    let mut runtime_cfg = cfg::Config::new().unwrap();
+    let pointless_value = 10; // pointless variable due to not knowing about lifetimes
+    let clap_matches = cli_clap::cli_clap(&pointless_value);
     clap_fern::log_setup(&clap_matches);
+    clap_actions::cfg_actions_update_clap(&mut runtime_cfg, &clap_matches);
     let session_uuid = Uuid::new_v4();
     let session_uuid_string = session_uuid.hyphenated().to_string();
     trace!("session_uuid_string:{}", session_uuid_string);
-    let conn = loader::connect_deligate(&clap_matches);
+    let conn = actions_process::cfg_process_action_db_connect(&mut runtime_cfg);
     db::create_tables(&conn);
-    loader::deligate(&conn, &actions, &clap_matches);
+    loader::deligate(&conn, &mut runtime_cfg);
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
-    loader::enviroment(&conn, pk_session, &clap_matches);
+    loader::enviroment(&conn, &mut runtime_cfg, pk_session);
     jobs_load::load(&conn);
-    actions_process::process(&conn, &actions)
+    actions_process::process(&conn, &runtime_cfg)
 }
