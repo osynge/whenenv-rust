@@ -40,8 +40,7 @@ use uuid::Uuid;
 
 fn main() {
     let mut runtime_cfg = cfg::Config::new().unwrap();
-    let pointless_value = 10; // pointless variable due to not knowing about lifetimes
-    let clap_matches = cli_clap::cli_clap(&pointless_value);
+    let clap_matches = cli_clap::cli_clap();
     clap_fern::log_setup(&clap_matches);
     clap_actions::cfg_actions_update_clap(&mut runtime_cfg, &clap_matches);
     let session_uuid = Uuid::new_v4();
