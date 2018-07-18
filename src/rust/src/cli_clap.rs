@@ -3,7 +3,7 @@ use clap::App;
 use clap::Arg;
 use clap::ArgMatches;
 
-pub fn cli_clap(number: &u32) -> ArgMatches {
+pub fn cli_clap<'a>() -> ArgMatches<'a> {
     let application = App::new(autoconf::package())
         .about("Parses an input file to do awesome things")
         .version(autoconf::version_cli())
