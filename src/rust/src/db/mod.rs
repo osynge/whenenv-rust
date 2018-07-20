@@ -2,6 +2,7 @@ pub mod db_enviroment;
 pub mod db_fs_dir;
 pub mod db_fs_file;
 pub mod db_job;
+pub mod db_job_depend;
 pub mod db_provider;
 pub mod db_session;
 pub mod fs_dir_type;
