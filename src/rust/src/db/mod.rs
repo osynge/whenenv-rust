@@ -1,3 +1,4 @@
+pub mod db_enviroment;
 pub mod db_fs_dir;
 pub mod db_job;
 pub mod db_provider;
@@ -78,8 +79,6 @@ pub use db_job_require_variable_pair::job_require_variable_pair_list;
 pub use db_job_require_variable_pair::list_job_require_variable_pair;
 pub use db_job_require_variable_pair::pk_job_require_variable_pair_by_all;
 pub use db_job_require_variable_pair::table_create_job_require_variable_pair;
-
-use db_enviroment;
 
 pub fn connect() -> Connection {
     let conn = Connection::open_in_memory().unwrap();

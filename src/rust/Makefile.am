@@ -8,11 +8,11 @@ EXTRA_DIST = Cargo.toml \
     src/clap_actions.rs \
     src/clap_fern.rs \
     src/cli_clap.rs \
+    src/db/db_enviroment.rs \
     src/db/db_fs_dir.rs \
     src/db/db_job.rs \
     src/db/db_provider.rs \
     src/db/db_session.rs \
-    src/db_enviroment.rs \
     src/db/fs_dir_type.rs \
     src/db_fs_file.rs \
     src/db_job_depend.rs \
