@@ -1,3 +1,8 @@
+0.0.9
+~~~~~
+  - Move db code into submodule.
+  - Code refactoring
+
 0.0.8
 ~~~~~
   - Fix rpm building on fedora 27 and 28
