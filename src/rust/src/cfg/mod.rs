@@ -10,6 +10,7 @@ pub enum Action {
     ListTarget,
     LoadScripts,
     SessionStart,
+    RequestRun,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug)]
