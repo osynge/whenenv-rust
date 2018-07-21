@@ -91,7 +91,7 @@ pub fn cli_clap<'a>() -> ArgMatches<'a> {
         )
         .arg(
             Arg::with_name("request-run")
-                .long("list-run")
+                .long("request-run")
                 .help("List jobs by the target they provide. Not all jobs have a target."),
         )
         .arg(Arg::with_name("session").long("session").help("session"));
