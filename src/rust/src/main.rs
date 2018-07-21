@@ -27,7 +27,6 @@ mod cfg;
 mod clap_actions;
 mod clap_fern;
 mod cli_clap;
-mod loader;
 mod db;
 use db::db_enviroment;
 use db::db_fs_dir;
