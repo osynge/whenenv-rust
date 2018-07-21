@@ -48,6 +48,13 @@ pub fn cfg_actions_update_clap(freds: &Arc<Mutex<cfg::Config>>, matches: &ArgMat
         fred.actions.insert(cfg::Action::LoadScripts);
         fred.actions.insert(cfg::Action::SessionStart);
     }
+    if let Some(_) = matches.values_of("request-run") {
+        fred.actions.insert(cfg::Action::DbConnect);
+        fred.actions.insert(cfg::Action::LoadJobs);
+        fred.actions.insert(cfg::Action::LoadScripts);
+        fred.actions.insert(cfg::Action::SessionStart);
+        fred.actions.insert(cfg::Action::RequestRun);
+    }
     if let Some(jobs_dir_it) = matches.values_of("dir-jobs") {
         for jobs_dir in jobs_dir_it {
             fred.path_jobs.push(jobs_dir.to_string());
