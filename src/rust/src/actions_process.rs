@@ -1,6 +1,7 @@
 use actions_process_list_provides;
 use cfg;
 use db;
+use listener;
 use rusqlite::Connection;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -17,6 +18,9 @@ pub fn process(conn: &Connection, rt_cfg_arc_mu: &Arc<Mutex<cfg::Config>>) {
     }
     if rt_cfg.actions.contains(&cfg::Action::ListTarget) {
         actions_process_list_provides::process_list_targets(conn);
+    }
+    if rt_cfg.actions.contains(&cfg::Action::RequestRun) {
+        let _ = listener::henry();
     }
 }
 
