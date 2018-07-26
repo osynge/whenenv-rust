@@ -8,6 +8,8 @@ use std::collections::HashSet;
 use std::env;
 use std::path::Path;
 use std::result::Result;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 pub fn listy(conn: &Connection, pk_directory: &i32, direcory: &str) -> Result<i32, &'static str> {
     let path = Path::new(direcory);
@@ -52,7 +54,8 @@ pub fn connect_deligate(matches: &ArgMatches) -> Connection {
     return db::connect();
 }
 
-pub fn deligate(conn: &Connection, cfg_rt: &mut cfg::Config) {
+pub fn deligate(conn: &Connection, cfg_rt_arc_mu: &Arc<Mutex<cfg::Config>>) {
+    let cfg_rt = cfg_rt_arc_mu.lock().unwrap();
     if cfg_rt.actions.contains(&cfg::Action::LoadJobs) {
         let str_job_files_list = String::from("job_files");
         let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
@@ -91,7 +94,8 @@ pub fn deligate(conn: &Connection, cfg_rt: &mut cfg::Config) {
     }
 }
 
-pub fn enviroment(conn: &Connection, cfg_rt: &mut cfg::Config, pk_session: i32) {
+pub fn enviroment(conn: &Connection, cfg_rt_arc_mu: &Arc<Mutex<cfg::Config>>, pk_session: i32) {
+    let cfg_rt = cfg_rt_arc_mu.lock().unwrap();
     for enviroment_variable in cfg_rt.enviroment.iter() {
         let env_var = enviroment_variable.to_string();
         let result_elephant_variable = elephant::elephant_variable_pk(&conn, &env_var);
