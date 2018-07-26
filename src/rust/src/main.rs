@@ -10,11 +10,9 @@ extern crate rustc_serialize;
 extern crate serde_json;
 extern crate serde_yaml;
 extern crate uuid;
-
 #[cfg(test)]
 #[macro_use]
 extern crate proptest;
-
 #[macro_use]
 extern crate serde_derive;
 extern crate futures;
@@ -68,5 +66,6 @@ fn main() {
     let pk_session = elephant::elephant_session(&conn, &session_uuid_string);
     loader::enviroment(&conn, &data, pk_session);
     jobs_load::load(&conn);
-    actions_process::process(&conn, &runtime_cfg);
+
+    actions_process::process(&conn, &data);
 }
