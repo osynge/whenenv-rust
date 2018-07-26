@@ -1,6 +1,8 @@
 use cfg;
 use clap::ArgMatches;
 use std::collections::HashSet;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
     let mut hs_actions = HashSet::<String>::new();
@@ -28,7 +30,8 @@ pub fn actions_get(matches: &ArgMatches) -> HashSet<String> {
     return hs_actions;
 }
 
-pub fn cfg_actions_update_clap(fred: &mut cfg::Config, matches: &ArgMatches) {
+pub fn cfg_actions_update_clap(freds: &Arc<Mutex<cfg::Config>>, matches: &ArgMatches) {
+    let mut fred = freds.lock().unwrap();
     if let Some(_) = matches.values_of("list-provides") {
         fred.actions.insert(cfg::Action::DbConnect);
         fred.actions.insert(cfg::Action::LoadJobs);
