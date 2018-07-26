@@ -14,6 +14,7 @@ extern crate serde_json;
 #[macro_use]
 use serde_derive;
 
+use listener;
 use serde_json::Error;
 use std::time::Duration;
 
@@ -101,6 +102,7 @@ pub struct thread_init {
 }
 
 fn worker_thread(input: &mut thread_init) -> Result<(), ()> {
+    listener::henry();
     drop(input);
 
     Ok(())
