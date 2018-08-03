@@ -26,7 +26,6 @@ impl threadInit {
         Ok(bill)
     }
     pub fn desiredStateSet(&mut self, new_state: &HashMap<ThreadTask, u32>) -> () {
-        
         for (key, val) in new_state.iter() {
             self.desired_state.insert(key.clone(), val.clone());
         }
