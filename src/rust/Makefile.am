@@ -29,6 +29,7 @@ EXTRA_DIST = Cargo.toml \
     src/loader.rs \
     src/main.rs \
     src/mdlJobModule.rs \
+    src/thread_common/mod.rs \
     src/thread_comunication.rs \
 	$(null)
 
