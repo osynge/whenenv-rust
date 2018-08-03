@@ -17,6 +17,7 @@ use serde_derive;
 use listener;
 use serde_json::Error;
 use std::time::Duration;
+use thread_common;
 
 static NTHREADS: i32 = 3;
 
@@ -101,8 +102,16 @@ pub struct thread_init {
     wake: Receiver<ThreadComunication>,
 }
 
-fn worker_thread(input: &mut thread_init) -> Result<(), ()> {
-    listener::henry();
+fn worker_thread(input: &mut thread_init, task: thread_common::ThreadTask) -> Result<(), ()> {
+    match task {
+        thread_common::ThreadTask::Run => {
+            let _ = listener::henry();
+        }
+        thread_common::ThreadTask::Db => {
+            let _ = listener::henry();
+        }
+    }
+
     drop(input);
 
     Ok(())
@@ -110,7 +119,7 @@ fn worker_thread(input: &mut thread_init) -> Result<(), ()> {
 
 pub(crate) fn wibble(size: u32) -> u32 {
     //let mut books = HashSet::new();
-    let mut data = Arc::new(start_mpsc_usize(4));
+    let data_inc = Arc::new(start_mpsc_usize(4));
 
     use futures::future::{lazy, Future};
 
@@ -125,12 +134,13 @@ pub(crate) fn wibble(size: u32) -> u32 {
 
     thread_pool.spawn(lazy(move || {
         let data = Arc::clone(&data);
+        let job_db = thread_common::ThreadTask::Db;
         let mut bill = thread_init {
             uuid: data.deref().clone(),
             wake: rx,
         };
         println!("called from a worker thread");
-        worker_thread(&mut bill)
+        worker_thread(&mut bill, job_db)
     }));
 
     // Gracefully shutdown the threadpool
