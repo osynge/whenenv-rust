@@ -4,10 +4,10 @@ use std::ops::Deref;
 use std::sync::mpsc;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Arc;
+use std::sync::Mutex;
 use std::thread;
-use uuid;
-
 use tokio_threadpool;
+use uuid;
 extern crate serde;
 extern crate serde_json;
 
@@ -117,7 +117,7 @@ fn worker_thread(input: &mut thread_init, task: thread_common::ThreadTask) -> Re
     Ok(())
 }
 
-pub(crate) fn wibble(size: u32) -> u32 {
+pub(crate) fn wibble(shared_config_referance: &Arc<Mutex<cfg::Config>>) -> u32 {
     //let mut books = HashSet::new();
     let data_inc = Arc::new(start_mpsc_usize(4));
 
