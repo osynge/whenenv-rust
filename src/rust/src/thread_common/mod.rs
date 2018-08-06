@@ -2,6 +2,7 @@ use cfg;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::sync::Mutex;
+use thread_comunication::worker_thread;
 
 #[derive(Hash, Clone, Eq, PartialEq, Debug)]
 pub enum ThreadTask {
