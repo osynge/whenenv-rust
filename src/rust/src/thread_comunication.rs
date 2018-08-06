@@ -7,6 +7,9 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::thread;
 use tokio_threadpool;
+use futures::future::{lazy, Future};
+
+
 use cfg;
 use uuid;
 extern crate serde;
