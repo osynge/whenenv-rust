@@ -7,6 +7,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::thread;
 use tokio_threadpool;
+use cfg;
 use uuid;
 extern crate serde;
 extern crate serde_json;
