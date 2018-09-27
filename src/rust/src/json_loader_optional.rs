@@ -8,7 +8,7 @@ use std::fmt;
 use std::marker::PhantomData;
 
 #[derive(Deserialize, Debug)]
-pub struct JdlVariables {
+pub struct DeserializeJdlVariables {
     #[serde(default = "default_vec_string")]
     pub require_keys: Vec<String>,
 
@@ -19,9 +19,9 @@ pub struct JdlVariables {
     pub require_values: HashMap<String, String>,
 }
 
-impl Default for JdlVariables {
+impl Default for DeserializeJdlVariables {
     fn default() -> Self {
-        JdlVariables {
+        DeserializeJdlVariables {
             require_keys: vec![],
             provides_keys: vec![],
             require_values: HashMap::new(),
@@ -30,7 +30,7 @@ impl Default for JdlVariables {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Jdl {
+pub struct DeserializeJdl {
     #[serde(default = "default_string")]
     pub name: String,
     #[serde(default = "default_vec_string")]
@@ -40,7 +40,7 @@ pub struct Jdl {
     #[serde(default = "default_string")]
     pub script: String,
     #[serde(default)]
-    pub variables: JdlVariables,
+    pub variables: DeserializeJdlVariables,
 }
 
 fn default_string() -> String {
