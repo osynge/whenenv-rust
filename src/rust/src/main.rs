@@ -1,15 +1,20 @@
+extern crate chrono;
 extern crate clap;
-extern crate rusqlite;
+extern crate fern;
 #[macro_use]
 extern crate log;
-extern crate chrono;
-extern crate fern;
-extern crate rustc_serialize;
-extern crate serde_yaml;
-extern crate uuid;
 #[cfg(test)]
 #[macro_use]
 extern crate proptest;
+extern crate rusqlite;
+extern crate rustc_serialize;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
+extern crate serde_yaml;
+extern crate uuid;
+
 
 mod actions_process;
 mod actions_process_list_provides;
@@ -35,10 +40,15 @@ mod db_variable_pair;
 mod elephant;
 mod jobs_load;
 mod json_loader_elephant;
+mod json_loader_optional;
 mod loader;
 use std::sync::Arc;
 use std::sync::Mutex;
 use uuid::Uuid;
+
+
+
+
 
 fn main() {
     let t = cfg::Config::new().unwrap();
