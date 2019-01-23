@@ -1,5 +1,7 @@
 extern crate chrono;
 extern crate clap;
+#[macro_use]
+extern crate dbg;
 extern crate fern;
 #[macro_use]
 extern crate log;
@@ -14,7 +16,6 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate serde_yaml;
 extern crate uuid;
-
 
 mod actions_process;
 mod actions_process_list_provides;
@@ -45,10 +46,6 @@ mod loader;
 use std::sync::Arc;
 use std::sync::Mutex;
 use uuid::Uuid;
-
-
-
-
 
 fn main() {
     let t = cfg::Config::new().unwrap();
