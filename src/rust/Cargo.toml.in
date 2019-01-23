@@ -15,7 +15,7 @@ fern = "*"
 chrono = "*"
 serde_derive = "*"
 serde_json = "*"
-
+dbg = "1.0.4"
 
 [dev-dependencies]
 proptest = "*"
