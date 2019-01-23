@@ -86,12 +86,13 @@ pub fn pk_job_by_name(
     let mut stmt = conn
         .prepare("SELECT id, fk_file, name  FROM JOB WHERE name = ?1")
         .unwrap();
-    let job_iter =
-        stmt.query_map(&[&bill], |row| Job {
+    let job_iter = stmt
+        .query_map(&[&bill], |row| Job {
             id: row.get(0),
             fk_file: row.get(1),
             name: row.get(2),
-        }).unwrap();
+        })
+        .unwrap();
     let mut found = 0;
     for person in job_iter {
         let bill = person.unwrap();

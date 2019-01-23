@@ -16,7 +16,8 @@ pub fn table_create_fs_dir(conn: &Connection) -> &Connection {
                   FOREIGN KEY(fk_type) REFERENCES FS_DIR_TYPE(id) ON UPDATE CASCADE
                   )",
         &[],
-    ).unwrap();
+    )
+    .unwrap();
     return conn;
 }
 
@@ -84,14 +85,15 @@ pub fn list_fs_dir_by_all(
     fk_fs_type: &i32,
     name: &str,
 ) -> Result<Vec<FsDir>, &'static str> {
-    let mut stmt =
-        conn.prepare(
+    let mut stmt = conn
+        .prepare(
             "SELECT FS_DIR.id, FS_DIR.fk_type, FS_DIR.name  FROM FS_DIR
         INNER JOIN FS_DIR_TYPE
         on FS_DIR.fk_type = FS_DIR_TYPE.id
         WHERE
         FS_DIR.fk_type = ?1",
-        ).unwrap();
+        )
+        .unwrap();
     let fs_dir_iter = stmt.query_map(&[fk_fs_type], |row| FsDir {
         id: row.get(0),
         fk_type: row.get(1),

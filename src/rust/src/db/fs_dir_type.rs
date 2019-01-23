@@ -13,7 +13,8 @@ pub fn table_create_fs_dir_type(conn: &Connection) -> &Connection {
                   name            TEXT NOT NULL UNIQUE
                   )",
         &[],
-    ).unwrap();
+    )
+    .unwrap();
     return conn;
 }
 
@@ -51,11 +52,12 @@ pub fn list_fs_dir_type(conn: &Connection) -> Vec<FsDirType> {
 
 pub fn fs_dir_type_list(conn: &Connection) {
     let mut stmt = conn.prepare("SELECT id, name  FROM FS_DIR_TYPE").unwrap();
-    let person_iter =
-        stmt.query_map(&[], |row| FsDirType {
+    let person_iter = stmt
+        .query_map(&[], |row| FsDirType {
             id: row.get(0),
             name: row.get(1),
-        }).unwrap();
+        })
+        .unwrap();
 
     for person in person_iter {
         info!("Found fs_dir_type {:?}", person.unwrap());

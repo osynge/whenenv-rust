@@ -43,11 +43,15 @@ pub fn insert_job_require_variable_pair(
                   VALUES (?1, ?2)",
         &[&me.fk_job, &me.fk_variable_pair],
     );
-    if variable_pair_instance.is_err() {
-        return Err("Insert failed");
+    match variable_pair_instance {
+        Ok(_) => {
+            return Ok(0);
+        }
+        Err(msg) => {
+            //dbg!(msg);
+            return Err("Insert failed");
+        }
     }
-    variable_pair_instance.unwrap();
-    return Ok(0);
 }
 
 pub fn list_job_require_variable_pair(conn: &Connection) -> Vec<JobRequireVariablePair> {
@@ -74,12 +78,13 @@ pub fn job_require_variable_pair_list(conn: &Connection) {
     let mut stmt = conn
         .prepare("SELECT id, fk_job, fk_variable_pair FROM JOB_REQUIRE_VALUE")
         .unwrap();
-    let person_iter =
-        stmt.query_map(&[], |row| JobRequireVariablePair {
+    let person_iter = stmt
+        .query_map(&[], |row| JobRequireVariablePair {
             id: row.get(0),
             fk_job: row.get(1),
             fk_variable_pair: row.get(2),
-        }).unwrap();
+        })
+        .unwrap();
 
     for person in person_iter {
         info!("Found variable_pair {:?}", person.unwrap());
@@ -98,18 +103,24 @@ pub fn pk_job_require_variable_pair_by_all(
         fk_job: row.get(1),
         fk_variable_pair: row.get(2),
     });
-    if variable_pair_iter.is_err() {
-        return Err("Insert failed dfdf");
+    match variable_pair_iter {
+        Ok(iter) => {
+            let mut found = 0;
+            for person in iter {
+                let bill = person.unwrap();
+                output = bill.id;
+                //dbg!(output);
+                found = 1;
+            }
+            if found != 0 {
+                return Ok(output);
+            }
+
+            return Err("None found");
+        }
+        Err(iter_err) => {
+            dbg!("pk_job_require_variable_pair_by_all failed");
+            return Err("Insert failed dfdf");
+        }
     }
-    let result = variable_pair_iter.unwrap();
-    let mut found = 0;
-    for person in result {
-        let bill = person.unwrap();
-        output = bill.id;
-        found = 1;
-    }
-    if found != 0 {
-        return Ok(output);
-    }
-    return Err("None found");
 }

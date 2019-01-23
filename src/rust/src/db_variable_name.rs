@@ -13,7 +13,8 @@ pub fn table_create_variable_name(conn: &Connection) -> &Connection {
                   name      TEXT NOT NULL UNIQUE
                   )",
         &[],
-    ).unwrap();
+    )
+    .unwrap();
     return conn;
 }
 
@@ -55,11 +56,12 @@ pub fn variable_name_list(conn: &Connection) {
     let mut stmt = conn
         .prepare("SELECT id, name, fk_provider, sq_order FROM VARIABLE_NAME")
         .unwrap();
-    let person_iter =
-        stmt.query_map(&[], |row| VariableName {
+    let person_iter = stmt
+        .query_map(&[], |row| VariableName {
             id: row.get(0),
             name: row.get(1),
-        }).unwrap();
+        })
+        .unwrap();
 
     for person in person_iter {
         info!("Found variable_name {:?}", person.unwrap());

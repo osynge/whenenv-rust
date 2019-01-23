@@ -17,7 +17,8 @@ pub fn table_create_job_require_variable(conn: &Connection) {
                   FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )",
         &[],
-    ).unwrap();
+    )
+    .unwrap();
 }
 
 pub fn insert_job_require_variable(
@@ -66,12 +67,13 @@ pub fn job_require_variable_list(conn: &Connection) {
     let mut stmt = conn
         .prepare("SELECT id, fk_job, fk_variable  FROM JOB_REQUIRE_VARIABLE")
         .unwrap();
-    let person_iter =
-        stmt.query_map(&[], |row| JobRequireVariable {
+    let person_iter = stmt
+        .query_map(&[], |row| JobRequireVariable {
             id: row.get(0),
             fk_job: row.get(1),
             fk_variable: row.get(2),
-        }).unwrap();
+        })
+        .unwrap();
 
     for person in person_iter {
         info!("Found job_require_variable {:?}", person.unwrap());

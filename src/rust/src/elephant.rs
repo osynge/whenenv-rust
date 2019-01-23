@@ -40,9 +40,11 @@ pub fn elephant_directory(conn: &Connection, fk_directory_type: &i32, text: &Str
     let mut pk_variable: i32 = 0;
     let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory_type, &text);
     match list_fs_dir_by_all_result {
-        Ok(pk) => for item in pk {
-            pk_variable = item.id;
-        },
+        Ok(pk) => {
+            for item in pk {
+                pk_variable = item.id;
+            }
+        }
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory_type, &text);
             if doink.is_err() {
@@ -79,9 +81,11 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
     let mut pk_variable: i32 = 0;
     let list_fs_dir_by_all_result = db::list_fs_dir_by_all(conn, &fk_directory, &text);
     match list_fs_dir_by_all_result {
-        Ok(pk) => for item in pk {
-            pk_variable = item.id;
-        },
+        Ok(pk) => {
+            for item in pk {
+                pk_variable = item.id;
+            }
+        }
         Err(_) => {
             let doink = db::insert_fs_dir(conn, &fk_directory, &text);
             if doink.is_err() {
@@ -92,10 +96,12 @@ pub fn elephant_file(conn: &Connection, fk_directory: &i32, text: &str) -> i32 {
                 Ok(_) => {
                     let doin3k = db::list_fs_dir_by_all(conn, &fk_directory, &text);
                     match doin3k {
-                        Ok(pk) => for item in pk {
-                            pk_variable = item.id;
-                            return pk_variable;
-                        },
+                        Ok(pk) => {
+                            for item in pk {
+                                pk_variable = item.id;
+                                return pk_variable;
+                            }
+                        }
                         Err(_) => {
                             error!("Failed to select variable");
                             return 0;
@@ -372,11 +378,6 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
         }
         Err(_) => {
             let doink = db::insert_job_require_variable_pair(conn, &job, &variable_pair);
-            if doink.is_err() {
-                error!("Failed to insert job_depend_pair:{}{}", variable_pair, job);
-
-                return 0;
-            }
             match doink {
                 Ok(_) => {
                     let doin3k =
@@ -392,7 +393,10 @@ pub fn elephant_job_depend_pair_pk(conn: &Connection, job: &i32, variable_pair: 
                     }
                 }
                 Err(_) => {
-                    error!("Failed to insert job_depend");
+                    error!(
+                        "Failed to insert insert_job_require_variable_pair:{}{}",
+                        variable_pair, job
+                    );
                     return 0;
                 }
             }

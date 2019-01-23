@@ -60,12 +60,14 @@ pub fn deligate(conn: &Connection, cfg_rt_arc_mu: &Arc<Mutex<cfg::Config>>) {
         let str_job_files_list = String::from("job_files");
         let result_dir_type = elephant::elephant_directory_type(&conn, &str_job_files_list);
         match result_dir_type {
-            Ok(pk_directory_type_jobs) => for in_dir in cfg_rt.path_jobs.iter() {
-                let dirname = in_dir.to_string();
-                let pk_directory =
-                    elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
-                let _ = listy(&conn, &pk_directory, &dirname);
-            },
+            Ok(pk_directory_type_jobs) => {
+                for in_dir in cfg_rt.path_jobs.iter() {
+                    let dirname = in_dir.to_string();
+                    let pk_directory =
+                        elephant::elephant_directory(&conn, &pk_directory_type_jobs, &dirname);
+                    let _ = listy(&conn, &pk_directory, &dirname);
+                }
+            }
             Err(_) => {}
         }
     }
@@ -73,12 +75,14 @@ pub fn deligate(conn: &Connection, cfg_rt_arc_mu: &Arc<Mutex<cfg::Config>>) {
         let str_shell_files_list = String::from("shell_files");
         let result_dir_type = elephant::elephant_directory_type(&conn, &str_shell_files_list);
         match result_dir_type {
-            Ok(pk_directory_type_shell) => for in_dir in cfg_rt.path_shell.iter() {
-                let dirname = in_dir.to_string();
-                let pk_directory =
-                    elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
-                let _ = listy(&conn, &pk_directory, &dirname);
-            },
+            Ok(pk_directory_type_shell) => {
+                for in_dir in cfg_rt.path_shell.iter() {
+                    let dirname = in_dir.to_string();
+                    let pk_directory =
+                        elephant::elephant_directory(&conn, &pk_directory_type_shell, &dirname);
+                    let _ = listy(&conn, &pk_directory, &dirname);
+                }
+            }
             Err(_) => {}
         }
     }

@@ -20,7 +20,8 @@ pub fn table_create_job_depend(conn: &Connection) -> &Connection {
                   FOREIGN KEY(fk_variable) REFERENCES VARIABLE_NAME(id) ON UPDATE CASCADE
                   )",
         &[],
-    ).unwrap();
+    )
+    .unwrap();
     return conn;
 }
 
@@ -73,13 +74,14 @@ pub fn job_depend_list(conn: &Connection) {
     let mut stmt = conn
         .prepare("SELECT id, fk_job, fk_variable, sq_order FROM JOBDEPEND")
         .unwrap();
-    let person_iter =
-        stmt.query_map(&[], |row| JobDepend {
+    let person_iter = stmt
+        .query_map(&[], |row| JobDepend {
             id: row.get(0),
             fk_job: row.get(1),
             fk_variable: row.get(2),
             sq_order: row.get(3),
-        }).unwrap();
+        })
+        .unwrap();
 
     for person in person_iter {
         info!("Found job_depend {:?}", person.unwrap());
