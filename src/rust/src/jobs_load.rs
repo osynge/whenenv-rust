@@ -10,15 +10,13 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
-pub fn listy2(direcory: &str) -> Vec<String> {
-    let mut items = Vec::<String>::new();
-
+pub fn list_dir(direcory: &str, items: &mut Vec<String>) -> Result<(), &'static str> {
     let path = Path::new(direcory);
     if path.exists() == false {
-        return items;
+        return Err("Path does not exist");
     }
     if path.is_dir() == false {
-        return items;
+        return Err("Is not a directory");
     }
     for entry in path.read_dir().expect("read_dir call failed") {
         if let Ok(entry) = entry {
@@ -32,7 +30,7 @@ pub fn listy2(direcory: &str) -> Vec<String> {
             items.push(path);
         }
     }
-    return items;
+    Ok(())
 }
 
 pub fn loader(name: &str) -> String {
@@ -242,8 +240,12 @@ pub fn load(conn: &Connection) {
     for directory in db::list_fs_dir(&conn) {
         let foo = directory.id;
         let foo_name = directory.name;
-        let file_list = listy2(&foo_name);
-        for fnccc in file_list {
+        let mut dir_content = vec![];
+        match list_dir(&foo_name, &mut dir_content) {
+            Ok(_) => {}
+            Err(error) => continue,
+        }
+        for fnccc in dir_content {
             //println!("An input file: {}", fnccc);
             let s1 = fnccc.clone();
             let _ = db::insert_fs_file(&conn, foo, fnccc);
