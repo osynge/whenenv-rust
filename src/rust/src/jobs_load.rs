@@ -260,12 +260,24 @@ pub fn load(conn: &Connection) {
     if result_dir_type.is_err() {
         return;
     }
+
     let pk_directory_type_jobs = result_dir_type.unwrap();
+    let mut jdl_content = Vec::<json_loader_optional::DeserializeJdl>::new();
     for filename in db::list_fs_file_type(&conn, &pk_directory_type_jobs) {
         let name = String::from(filename.name);
         let name2 = name.clone();
-        let loader_rc = loader(name2.trim());
-        scores.insert(name, loader_rc);
+        let content = loader(name2.trim());
+        let content2 = content.clone();
+        scores.insert(name, content2);
+
+        let json_from_str = serde_json::from_str(&content);
+        match json_from_str {
+            Ok(p) => {
+                jdl_content.push(p);
+                //json_loader_elephant_deps_depth1(conn, &pk_file, &json);
+            }
+            Err(_) => {}
+        }
     }
     // iterate over everything.
     for (filename, contents) in &scores {
